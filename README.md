@@ -1,73 +1,117 @@
-# React + TypeScript + Vite
+# 🌐 Moment Web (Frontend)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Interface web da rede social **Moment**, focada em experiência simples, rápida e moderna.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 🧠 Sobre o projeto
 
-## React Compiler
+O frontend do Moment entrega uma experiência leve e fluida, com foco em:
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+* Feed infinito
+* Interações rápidas (Loved e ReMont)
+* Perfil de usuário
+* Autenticação segura com cookies
+* UI limpa e moderna
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## ⚛️ Tecnologias
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+* React
+* TypeScript
+* Vite
+* React Query
+* Axios
+* Tailwind CSS
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+---
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## ⚙️ Configuração
+
+### 1. Clone o projeto
+
+```
+git clone https://github.com/seu-user/moment-frontend.git
+cd moment-frontend
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### 2. Instale as dependências
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
 ```
+npm install
+```
+
+### 3. Configure o .env
+
+```
+VITE_API_URL=http://localhost:3000
+```
+
+---
+
+## ▶️ Rodando o projeto
+
+```
+npm run dev
+```
+
+App:
+
+```
+http://localhost:5173
+```
+
+---
+
+## 🔗 Integração com backend
+
+O frontend consome a API do backend via:
+
+* Cookies HTTP-only (auth segura)
+* React Query (cache e sincronização)
+* Axios (requisições)
+
+---
+
+## 💡 Funcionalidades
+
+* Login / Cadastro
+* Feed com scroll infinito
+* Criar post
+* Curtir (Loved)
+* Repost (ReMont)
+* Seguir usuários
+* Bloquear usuários
+* Perfil
+
+---
+
+## 🎨 Design
+
+* Interface minimalista
+* Identidade visual baseada em ametista
+* UX fluida e responsiva
+
+---
+
+## 🚀 Deploy (visão futura)
+
+* Vercel
+* Cloudflare Pages
+* Integração com CDN
+
+---
+
+## 📌 Status
+
+🚧 Em desenvolvimento (MVP)
+
+---
+
+## 👨‍💻 Autor
+
+**Caique Brandão**
+Full Stack Developer
+🔗 GitHub: https://github.com/brandaoca44
+🔗 LinkedIn: https://www.linkedin.com/in/caique-brandão-47319537b
