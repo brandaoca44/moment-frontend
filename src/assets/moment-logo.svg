@@ -1,0 +1,42 @@
+<svg width="980" height="260" viewBox="0 0 980 260" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path
+    d="M60 188C80 98 99 42 138 42C168 42 177 126 204 126C231 126 240 42 270 42C309 42 328 98 348 188"
+    stroke="url(#icon_gradient_1)"
+    stroke-width="42"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+  <path
+    d="M145 160C163 180 183 190 204 190C225 190 245 180 263 160"
+    stroke="url(#icon_gradient_2)"
+    stroke-width="30"
+    stroke-linecap="round"
+  />
+
+  <text
+    x="420"
+    y="171"
+    fill="url(#text_gradient)"
+    font-family="Inter, Nunito Sans, system-ui, sans-serif"
+    font-size="104"
+    font-weight="800"
+    letter-spacing="-4"
+  >
+    Moment
+  </text>
+
+  <defs>
+    <linearGradient id="icon_gradient_1" x1="60" y1="42" x2="354" y2="184" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#7C3AED"/>
+      <stop offset="1" stop-color="#A78BFA"/>
+    </linearGradient>
+    <linearGradient id="icon_gradient_2" x1="145" y1="160" x2="263" y2="160" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#7C3AED"/>
+      <stop offset="1" stop-color="#A78BFA"/>
+    </linearGradient>
+    <linearGradient id="text_gradient" x1="420" y1="70" x2="850" y2="190" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#7C3AED"/>
+      <stop offset="1" stop-color="#8B5CF6"/>
+    </linearGradient>
+  </defs>
+</svg>
