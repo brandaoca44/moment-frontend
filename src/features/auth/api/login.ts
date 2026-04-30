@@ -1,4 +1,3 @@
-import { api } from '@/lib/api';
 import type { MeResponse } from './me';
 
 export type LoginInput = {
@@ -6,9 +5,19 @@ export type LoginInput = {
   password: string;
 };
 
-export function login(data: LoginInput) {
-  return api<MeResponse>('/auth/login', {
+export async function login(data: LoginInput) {
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/auth/login`, {
     method: 'POST',
+    credentials: 'include',
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data),
   });
+
+  const json = await res.json();
+
+  if (!res.ok) {
+    throw new Error(json?.message || 'E-mail ou senha incorretos.');
+  }
+
+  return json as MeResponse;
 }
