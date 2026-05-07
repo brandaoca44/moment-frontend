@@ -1,36 +1,46 @@
-@import url('https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600&family=DM+Sans:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600&family=DM+Sans:wght@300;400;500;600;700;800&display=swap');
 
 :root {
-  --amethyst: #7c3aed;
-  --amethyst-soft: #a78bfa;
-  --amethyst-light: #ede9fe;
-  --amethyst-bg: #f5f0ff;
-
-  --eden-bg: #fbfff9;
+  --bg: #fbfaff;
+  --bg-secondary: #f7f3ff;
   --surface: #ffffff;
-  --surface-soft: #fffdf8;
+  --surface-soft: #fdfcff;
+  --surface-glass: rgba(255, 255, 255, 0.78);
 
-  --text: #272334;
-  --text-soft: #6f667d;
-  --text-muted: #91889f;
+  --sidebar-bg: rgba(255, 255, 255, 0.72);
+  --card-bg: rgba(255, 255, 255, 0.68);
 
-  --border: #ebe7f2;
-  --border-strong: #ddd6fe;
+  --border: #ede9fe;
+  --border-soft: rgba(237, 233, 254, 0.72);
 
-  --danger: #b91c1c;
-  --danger-bg: #fef2f2;
-  --danger-border: #fecaca;
+  --text: #1f2937;
+  --text-soft: #5b5568;
+  --text-muted: #9b94aa;
 
-  --shadow-soft: 0 18px 50px rgba(76, 29, 149, 0.12);
-  --shadow-amethyst: 0 18px 40px rgba(124, 58, 237, 0.24);
+  --amethyst: #7c3aed;
+  --amethyst-light: #a78bfa;
+  --amethyst-bg: #f5f3ff;
+  --amethyst-border: #ddd6fe;
+
+  --danger: #be123c;
+  --danger-bg: #fff1f2;
+  --danger-border: #fecdd3;
+
+  --success: #15803d;
+  --success-bg: #f0fdf4;
+  --success-border: #bbf7d0;
+
+  --shadow-soft: 0 18px 50px rgba(76, 29, 149, 0.08);
+  --shadow-card: 0 12px 32px rgba(76, 29, 149, 0.06);
+  --shadow-amethyst: 0 16px 34px rgba(124, 58, 237, 0.22);
 
   --radius-lg: 28px;
-  --radius-md: 18px;
+  --radius-md: 20px;
   --radius-sm: 14px;
 
   font-family: 'DM Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   color: var(--text);
-  background: var(--eden-bg);
+  background: var(--bg);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -43,16 +53,16 @@
 
 html {
   min-height: 100%;
-  background: var(--eden-bg);
+  background: var(--bg);
 }
 
 body {
   min-height: 100vh;
   margin: 0;
   background:
-    radial-gradient(circle at top left, rgba(237, 233, 254, 0.9), transparent 34%),
-    radial-gradient(circle at bottom right, rgba(220, 252, 231, 0.55), transparent 30%),
-    linear-gradient(135deg, #fbfff9, #ffffff 48%, #faf5ff);
+    radial-gradient(circle at top left, rgba(167, 139, 250, 0.12), transparent 34%),
+    radial-gradient(circle at bottom right, rgba(221, 214, 254, 0.22), transparent 32%),
+    var(--bg);
   color: var(--text);
 }
 
@@ -68,7 +78,9 @@ button {
     transform 180ms ease,
     box-shadow 180ms ease,
     opacity 180ms ease,
-    background 180ms ease;
+    background 180ms ease,
+    border-color 180ms ease,
+    color 180ms ease;
 }
 
 button:not(:disabled):hover {
@@ -80,23 +92,67 @@ button:disabled {
   cursor: not-allowed;
 }
 
-input {
+input,
+textarea,
+select {
   transition:
     border-color 180ms ease,
     box-shadow 180ms ease,
     background 180ms ease;
 }
 
-input:focus {
+input:focus,
+textarea:focus,
+select:focus {
   border-color: var(--amethyst) !important;
-  box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.12);
-  background: #ffffff !important;
+  box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.10);
+  background: var(--surface) !important;
+  outline: none;
 }
 
 a {
   color: inherit;
 }
 
+::selection {
+  background: rgba(124, 58, 237, 0.16);
+}
+
 #root {
   min-height: 100vh;
+}
+
+.moment-title {
+  font-family: 'Lora', serif;
+  letter-spacing: -0.02em;
+}
+
+.moment-card {
+  background: var(--surface-glass);
+  backdrop-filter: blur(18px);
+  border: 1px solid var(--border-soft);
+  box-shadow: var(--shadow-card);
+}
+
+.moment-soft-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border), transparent);
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
