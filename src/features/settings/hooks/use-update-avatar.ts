@@ -1,11 +1,14 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { updateMe } from '../api/settings';
+import { uploadAvatar, updateAvatarUrl } from '../api/settings';
 
-export function useUpdateMe() {
+export function useUpdateAvatar() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: updateMe,
+    mutationFn: async (file: File) => {
+      const upload = await uploadAvatar(file);
+      return updateAvatarUrl(upload.data.url);
+    },
     onSuccess: (data) => {
       queryClient.setQueryData(['auth', 'me'], data);
       queryClient.invalidateQueries({ queryKey: ['auth', 'me'] });

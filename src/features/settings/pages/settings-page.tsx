@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useMe } from '@/features/auth/hooks/use-me';
 import { useUpdateMe } from '../hooks/use-update-me';
+import { useUpdateAvatar } from '../hooks/use-update-avatar';
 import { useUpdatePassword } from '../hooks/use-update-password';
 import { useDeleteMe } from '../hooks/use-delete-me';
 import { ThemeSelector } from '@/features/feed/components/theme-selector';
@@ -9,6 +10,7 @@ type Section = 'profile' | 'appearance' | 'password' | 'danger';
 
 type SettingsUser =
   | {
+      id: string;
       name: string;
       username: string;
       email: string;
@@ -159,6 +161,12 @@ export function SettingsPage() {
           font-weight: 950;
           font-size: 24px;
           letter-spacing: -0.04em;
+        }
+
+        .settings-avatar-image {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
         }
 
         .settings-hero-content {
@@ -348,6 +356,72 @@ export function SettingsPage() {
           line-height: 1.65;
         }
 
+        .settings-avatar-panel {
+          display: grid;
+          grid-template-columns: 92px minmax(0, 1fr);
+          gap: 18px;
+          align-items: center;
+          padding: 18px;
+          margin-bottom: 20px;
+          border-radius: 24px;
+          background: var(--surface-elevated);
+          border: 1px solid var(--border-soft);
+          box-shadow: var(--shadow-xs);
+        }
+
+        .settings-avatar-preview {
+          width: 92px;
+          height: 92px;
+          border-radius: 30px;
+          display: grid;
+          place-items: center;
+          overflow: hidden;
+          color: #fff;
+          font-size: 28px;
+          font-weight: 950;
+          letter-spacing: -0.04em;
+          background: linear-gradient(135deg, var(--amethyst), var(--amethyst-light));
+          border: 4px solid var(--glass-highlight);
+          box-shadow: var(--shadow-amethyst);
+        }
+
+        .settings-avatar-preview img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+
+        .settings-avatar-copy {
+          min-width: 0;
+        }
+
+        .settings-avatar-title {
+          margin: 0;
+          color: var(--text);
+          font-size: 15px;
+          font-weight: 950;
+          letter-spacing: -0.01em;
+        }
+
+        .settings-avatar-description {
+          margin: 6px 0 0;
+          color: var(--text-muted);
+          font-size: 13px;
+          line-height: 1.6;
+          font-weight: 650;
+        }
+
+        .settings-avatar-actions {
+          display: flex;
+          gap: 10px;
+          flex-wrap: wrap;
+          margin-top: 14px;
+        }
+
+        .settings-file-input {
+          display: none;
+        }
+
         .settings-form {
           display: flex;
           flex-direction: column;
@@ -385,6 +459,10 @@ export function SettingsPage() {
             background 180ms ease,
             box-shadow 180ms ease,
             transform 180ms var(--ease-premium);
+        }
+
+        .settings-input.with-at {
+          padding-left: 34px;
         }
 
         .settings-input::placeholder {
@@ -622,6 +700,10 @@ export function SettingsPage() {
           .settings-section {
             padding: 24px;
           }
+
+          .settings-avatar-panel {
+            grid-template-columns: 1fr;
+          }
         }
 
         @media (max-width: 520px) {
@@ -649,7 +731,7 @@ export function SettingsPage() {
               <img
                 src={user.avatar}
                 alt={user.name}
-                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                className="settings-avatar-image"
               />
             ) : (
               getInitials(user?.name)
@@ -721,30 +803,137 @@ function AppearanceSection() {
 
 function ProfileSection({ user }: { user: SettingsUser }) {
   const updateMe = useUpdateMe();
+  const updateAvatar = useUpdateAvatar();
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+
   const [name, setName] = useState(user?.name ?? '');
   const [username, setUsername] = useState(user?.username ?? '');
-  const [success, setSuccess] = useState(false);
+  const [avatarPreview, setAvatarPreview] = useState(user?.avatar ?? '');
+  const [success, setSuccess] = useState('');
+  const [avatarError, setAvatarError] = useState('');
+
+  useEffect(() => {
+    setName(user?.name ?? '');
+    setUsername(user?.username ?? '');
+    setAvatarPreview(user?.avatar ?? '');
+  }, [user?.name, user?.username, user?.avatar]);
+
+  useEffect(() => {
+    return () => {
+      if (avatarPreview.startsWith('blob:')) {
+        URL.revokeObjectURL(avatarPreview);
+      }
+    };
+  }, [avatarPreview]);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setSuccess(false);
+    setSuccess('');
+
+    const normalizedUsername = username.trim().replace(/^@/, '');
 
     try {
-      await updateMe.mutateAsync({ name, username });
-      setSuccess(true);
-      setTimeout(() => setSuccess(false), 3000);
+      await updateMe.mutateAsync({
+        name: name.trim(),
+        username: normalizedUsername,
+      });
+
+      setUsername(normalizedUsername);
+      setSuccess('Perfil atualizado com sucesso.');
+      setTimeout(() => setSuccess(''), 3000);
     } catch {
       // tratado pelo isError
     }
   }
+
+  async function handleAvatarChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    event.target.value = '';
+
+    if (!file) return;
+
+    setAvatarError('');
+    setSuccess('');
+
+    if (!file.type.startsWith('image/')) {
+      setAvatarError('Escolha uma imagem válida para o avatar.');
+      return;
+    }
+
+    const maxSizeInMb = 5;
+
+    if (file.size > maxSizeInMb * 1024 * 1024) {
+      setAvatarError(`A imagem precisa ter até ${maxSizeInMb}MB.`);
+      return;
+    }
+
+    const nextPreview = URL.createObjectURL(file);
+
+    setAvatarPreview((current) => {
+      if (current.startsWith('blob:')) {
+        URL.revokeObjectURL(current);
+      }
+
+      return nextPreview;
+    });
+
+    try {
+      await updateAvatar.mutateAsync(file);
+      setSuccess('Foto de perfil atualizada com sucesso.');
+      setTimeout(() => setSuccess(''), 3000);
+    } catch {
+      // tratado pelo isError
+    }
+  }
+
+  const normalizedUsername = username.trim().replace(/^@/, '');
+  const hasProfileChanges =
+    name.trim() !== (user?.name ?? '') ||
+    normalizedUsername !== (user?.username ?? '');
 
   return (
     <section className="settings-section">
       <div className="settings-section-header">
         <h2 className="settings-section-title">Informações do perfil</h2>
         <p className="settings-section-subtitle">
-          Atualize como as pessoas veem você dentro do Moment.
+          Atualize sua presença no Moment com calma. Nome, username e foto devem parecer seus.
         </p>
+      </div>
+
+      <div className="settings-avatar-panel">
+        <div className="settings-avatar-preview">
+          {avatarPreview ? (
+            <img src={avatarPreview} alt={user?.name ?? 'Avatar'} />
+          ) : (
+            getInitials(user?.name)
+          )}
+        </div>
+
+        <div className="settings-avatar-copy">
+          <p className="settings-avatar-title">Foto de perfil</p>
+          <p className="settings-avatar-description">
+            Escolha uma imagem limpa e confortável para o seu Moment.
+          </p>
+
+          <div className="settings-avatar-actions">
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/png,image/jpeg,image/jpg,image/webp"
+              className="settings-file-input"
+              onChange={handleAvatarChange}
+            />
+
+            <button
+              type="button"
+              className="settings-secondary-button"
+              onClick={() => fileInputRef.current?.click()}
+              disabled={updateAvatar.isPending}
+            >
+              {updateAvatar.isPending ? 'Enviando...' : 'Trocar foto'}
+            </button>
+          </div>
+        </div>
       </div>
 
       <form onSubmit={handleSubmit} className="settings-form">
@@ -766,8 +955,7 @@ function ProfileSection({ user }: { user: SettingsUser }) {
             <input
               value={username}
               onChange={(event) => setUsername(event.target.value)}
-              className="settings-input"
-              style={{ paddingLeft: 34 }}
+              className="settings-input with-at"
               placeholder="seuusername"
               required
             />
@@ -797,15 +985,25 @@ function ProfileSection({ user }: { user: SettingsUser }) {
           </div>
         ) : null}
 
-        {success ? (
-          <div className="settings-feedback success">
-            Perfil atualizado com sucesso.
+        {updateAvatar.isError ? (
+          <div className="settings-feedback error">
+            {updateAvatar.error instanceof Error
+              ? updateAvatar.error.message
+              : 'Erro ao atualizar foto de perfil.'}
           </div>
+        ) : null}
+
+        {avatarError ? (
+          <div className="settings-feedback error">{avatarError}</div>
+        ) : null}
+
+        {success ? (
+          <div className="settings-feedback success">{success}</div>
         ) : null}
 
         <button
           type="submit"
-          disabled={updateMe.isPending}
+          disabled={updateMe.isPending || !hasProfileChanges}
           className="settings-primary-button"
         >
           {updateMe.isPending ? 'Salvando...' : 'Salvar alterações'}
