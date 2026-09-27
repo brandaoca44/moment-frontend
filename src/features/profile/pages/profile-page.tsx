@@ -1,8 +1,16 @@
 import { useEffect, useMemo, useRef } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useMe } from '@/features/auth/hooks/use-me';
-import { useFollowUser, useProfile, useUserPosts } from '../hooks/use-profile';
+import { useFollowUser, useProfile, useTogglePin, useUserPosts } from '../hooks/use-profile';
 import type { ProfilePost } from '../api/profile';
+import { PostCard } from '@/features/feed/components/post-card';
+
+function formatCount(value: number) {
+  return new Intl.NumberFormat('pt-BR', {
+    notation: value >= 1000 ? 'compact' : 'standard',
+    maximumFractionDigits: 1,
+  }).format(value);
+}
 
 function getInitials(name?: string) {
   if (!name) return '?';
@@ -24,69 +32,7 @@ function formatDate(iso: string) {
   }).format(new Date(iso));
 }
 
-function formatPostDate(iso: string) {
-  return new Intl.DateTimeFormat('pt-BR', {
-    day: '2-digit',
-    month: 'short',
-  }).format(new Date(iso));
-}
 
-function formatCount(value: number) {
-  return new Intl.NumberFormat('pt-BR', {
-    notation: value >= 1000 ? 'compact' : 'standard',
-    maximumFractionDigits: 1,
-  }).format(value);
-}
-
-function ProfilePostCard({ post }: { post: ProfilePost }) {
-  return (
-    <article className="profile-post-card">
-      <header className="profile-post-header">
-        <div className="profile-post-avatar">
-          {post.author.avatar ? (
-            <img src={post.author.avatar} alt={post.author.name} />
-          ) : (
-            getInitials(post.author.name)
-          )}
-        </div>
-
-        <div className="profile-post-author">
-          <strong>{post.author.name}</strong>
-          <span>@{post.author.username}</span>
-        </div>
-
-        <time className="profile-post-date" dateTime={post.createdAt}>
-          {formatPostDate(post.createdAt)}
-        </time>
-      </header>
-
-      {post.content && <p className="profile-post-content">{post.content}</p>}
-
-      {post.image && (
-        <img src={post.image} alt="Imagem do momento" className="profile-post-image" />
-      )}
-
-      <footer className="profile-post-footer">
-        <span className="profile-post-stat" aria-label={`${post._count.likes} loveds`}>
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
-          </svg>
-          {formatCount(post._count.likes)}
-        </span>
-
-        <span className="profile-post-stat" aria-label={`${post._count.remonts} remonts`}>
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M17 1l4 4-4 4" />
-            <path d="M3 11V9a4 4 0 0 1 4-4h14" />
-            <path d="M7 23l-4-4 4-4" />
-            <path d="M21 13v2a4 4 0 0 1-4 4H3" />
-          </svg>
-          {formatCount(post._count.remonts)}
-        </span>
-      </footer>
-    </article>
-  );
-}
 
 export function ProfilePage() {
   const { username } = useParams<{ username: string }>();
@@ -105,6 +51,7 @@ export function ProfilePage() {
   const isOwnProfile = Boolean(me?.id && profile?.id && me.id === profile.id);
 
   const followMutation = useFollowUser(targetUsername, profile?.id);
+  const pinMutation = useTogglePin();
 
   const {
     data: postsData,
@@ -139,6 +86,9 @@ export function ProfilePage() {
   }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
   const posts = postsData?.pages.flatMap((page) => page.data) ?? [];
+  const orderedPosts = profile?.pinnedPostId
+    ? [...posts].sort((a, b) => Number(b.id === profile.pinnedPostId) - Number(a.id === profile.pinnedPostId))
+    : posts;
   const isInitialLoading = meLoading || profileLoading || !targetUsername;
 
   return (
@@ -148,7 +98,7 @@ export function ProfilePage() {
           position: relative;
           max-width: 660px;
           margin: 0 auto;
-          font-family: 'DM Sans', sans-serif;
+          font-family: 'Inter', sans-serif;
           animation: fadeIn 240ms ease both;
         }
 
@@ -158,6 +108,7 @@ export function ProfilePage() {
           top: -220px;
           left: 50%;
           width: 720px;
+          max-width: 100vw;
           height: 720px;
           border-radius: 999px;
           transform: translateX(-50%);
@@ -295,7 +246,7 @@ export function ProfilePage() {
           align-items: center;
           justify-content: center;
           border: 1px solid transparent;
-          font-family: 'DM Sans', sans-serif;
+          font-family: 'Inter', sans-serif;
           font-size: 14px;
           font-weight: 900;
           text-decoration: none;
@@ -419,6 +370,13 @@ export function ProfilePage() {
           display: flex;
           flex-direction: column;
           gap: 14px;
+        }
+
+        .profile-repost-notice {
+          margin: 0 0 -6px 14px;
+          color: var(--amethyst);
+          font-size: 12px;
+          font-weight: 800;
         }
 
         .profile-post-card {
@@ -805,8 +763,32 @@ export function ProfilePage() {
 
             {posts.length > 0 && (
               <div className="profile-posts-list">
-                {posts.map((post) => (
-                  <ProfilePostCard key={post.id} post={post} />
+                {orderedPosts.map((post: ProfilePost) => (
+                  <div key={post.id}>
+                    {isOwnProfile && post.remonted && post.user.id !== profile.id && (
+                      <div className="profile-repost-notice">
+                        Você republicou este momento
+                      </div>
+                    )}
+                    <PostCard
+                      post={{
+                          id: post.id,
+                          content: post.content,
+                          imageUrl: post.imageUrl,
+                          createdAt: post.createdAt,
+                          editedAt: post.editedAt,
+                          user: post.user,
+                        }}
+                        repliesCount={post._count.replies}
+                      likesCount={post._count.likes}
+                        remontsCount={post._count.remonts}
+                        liked={post.liked ?? false}
+                        remonted={post.remonted ?? false}
+                        pinned={profile?.pinnedPostId === post.id}
+                        onTogglePin={isOwnProfile ? () => pinMutation.mutate(post.id) : undefined}
+                        pinPending={pinMutation.isPending}
+                      />
+                  </div>
                 ))}
               </div>
             )}

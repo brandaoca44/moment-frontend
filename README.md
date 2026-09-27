@@ -9,7 +9,7 @@ Interface web da rede social **Moment**, focada em experiência simples, rápida
 O frontend do Moment entrega uma experiência leve e fluida, com foco em:
 
 * Feed infinito
-* Interações rápidas (Loved e ReMont)
+* Interações rápidas (Curtir e Republicar)
 * Perfil de usuário
 * Autenticação segura com cookies
 * UI limpa e moderna
@@ -79,8 +79,8 @@ O frontend consome a API do backend via:
 * Login / Cadastro
 * Feed com scroll infinito
 * Criar post
-* Curtir (Loved)
-* Repost (ReMont)
+* Curtir
+* Republicar
 * Seguir usuários
 * Bloquear usuários
 * Perfil

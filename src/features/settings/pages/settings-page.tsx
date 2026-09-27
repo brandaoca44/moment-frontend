@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type ReactElement } from 'react';
 import { useMe } from '@/features/auth/hooks/use-me';
 import { useUpdateMe } from '../hooks/use-update-me';
 import { useUpdateAvatar } from '../hooks/use-update-avatar';
@@ -58,7 +58,7 @@ function IconDanger() {
   );
 }
 
-const menuItems: Array<{ id: Section; label: string; description: string; icon: JSX.Element }> = [
+const menuItems: Array<{ id: Section; label: string; description: string; icon: ReactElement }> = [
   {
     id: 'profile',
     label: 'Perfil',
@@ -99,7 +99,7 @@ export function SettingsPage() {
           position: relative;
           max-width: 820px;
           margin: 0 auto;
-          font-family: 'DM Sans', sans-serif;
+          font-family: 'Inter', sans-serif;
           animation: settingsFadeIn 260ms var(--ease-premium) both;
         }
 
@@ -109,6 +109,7 @@ export function SettingsPage() {
           top: -180px;
           left: 56%;
           width: 680px;
+          max-width: 100vw;
           height: 680px;
           border-radius: 999px;
           background: radial-gradient(circle, rgba(124, 58, 237, 0.10), transparent 70%);
@@ -449,7 +450,7 @@ export function SettingsPage() {
           background: var(--surface-elevated);
           padding: 0 16px;
           font-size: 15px;
-          font-family: 'DM Sans', sans-serif;
+          font-family: 'Inter', sans-serif;
           font-weight: 650;
           color: var(--text);
           outline: none;
@@ -528,7 +529,7 @@ export function SettingsPage() {
           background: linear-gradient(135deg, var(--amethyst), var(--amethyst-light));
           color: #fff;
           font-size: 14.5px;
-          font-family: 'DM Sans', sans-serif;
+          font-family: 'Inter', sans-serif;
           font-weight: 950;
           box-shadow: var(--shadow-amethyst);
         }
@@ -554,7 +555,7 @@ export function SettingsPage() {
           background: var(--surface-elevated);
           color: var(--text-soft);
           font-size: 14px;
-          font-family: 'DM Sans', sans-serif;
+          font-family: 'Inter', sans-serif;
           font-weight: 850;
           cursor: pointer;
           box-shadow: var(--shadow-xs);
@@ -613,7 +614,7 @@ export function SettingsPage() {
           background: var(--danger-bg);
           color: var(--danger);
           font-size: 14px;
-          font-family: 'DM Sans', sans-serif;
+          font-family: 'Inter', sans-serif;
           font-weight: 950;
           cursor: pointer;
           box-shadow: var(--shadow-xs);

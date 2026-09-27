@@ -13,24 +13,29 @@ export type ProfileUser = {
   };
   isFollowing?: boolean;
   isFollowedBy?: boolean;
+  pinnedPostId?: string | null;
 };
 
 export type ProfilePost = {
+  editedAt?: string | null;
   id: string;
   content: string;
-  image: string | null;
+  imageUrl: string | null;
   createdAt: string;
   moderationStatus: string;
-  author: {
+  user: {
     id: string;
     name: string;
     username: string;
     avatar: string | null;
   };
   _count: {
+    replies?: number;
     likes: number;
     remonts: number;
   };
+  liked?: boolean;
+  remonted?: boolean;
 };
 
 export type ProfileResponse = {
@@ -45,7 +50,7 @@ export type UserPostsResponse = {
   message?: string | null;
   meta?: {
     nextCursor?: string | null;
-    hasNextPage: boolean;
+    hasMore: boolean;
   };
 };
 
@@ -62,7 +67,7 @@ export function getProfile(username: string) {
 }
 
 export function getUserPosts(userId: string, cursor?: string) {
-  const params = new URLSearchParams({ userId });
+  const params = new URLSearchParams({ userId, limit: '50' });
 
   if (cursor) {
     params.set('cursor', cursor);
@@ -77,4 +82,11 @@ export function followUser(userId: string) {
 
 export function unfollowUser(userId: string) {
   return api<FollowResponse>(`/users/${userId}/follow`, { method: 'DELETE' });
+}
+
+export function togglePin(postId: string) {
+  return api<{ success: boolean; data: { pinned: boolean } }>(
+    `/posts/${postId}/pin`,
+    { method: 'POST' },
+  );
 }

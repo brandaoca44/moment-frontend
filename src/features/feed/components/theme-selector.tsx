@@ -197,7 +197,7 @@ export function ThemeSelector({ standalone = false }: { standalone?: boolean }) 
           color: var(--amethyst);
           letter-spacing: 0.08em;
           text-transform: uppercase;
-          font-family: 'DM Sans', sans-serif;
+          font-family: 'Inter', sans-serif;
         }
 
         @media (max-width: 560px) {

@@ -4,11 +4,13 @@ import {
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query';
+import type { InfiniteData } from '@tanstack/react-query';
 import {
   followUser,
   getProfile,
   getUserPosts,
   unfollowUser,
+  togglePin,
   type ProfileResponse,
   type UserPostsResponse,
 } from '../api/profile';
@@ -29,13 +31,24 @@ export function useProfile(username: string) {
 }
 
 export function useUserPosts(userId: string) {
-  return useInfiniteQuery<UserPostsResponse, Error, UserPostsResponse, ReturnType<typeof profileKeys.posts>, string | undefined>({
+  return useInfiniteQuery<UserPostsResponse, Error, InfiniteData<UserPostsResponse>, ReturnType<typeof profileKeys.posts>, string | undefined>({
     queryKey: profileKeys.posts(userId),
     queryFn: ({ pageParam }) => getUserPosts(userId, pageParam),
     initialPageParam: undefined,
     getNextPageParam: (lastPage) =>
-      lastPage.meta?.hasNextPage ? lastPage.meta.nextCursor ?? undefined : undefined,
+      lastPage.meta?.hasMore ? lastPage.meta.nextCursor ?? undefined : undefined,
     enabled: userId.trim().length > 0,
+  });
+}
+
+export function useTogglePin() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: togglePin,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: profileKeys.all });
+      queryClient.invalidateQueries({ queryKey: ['user-posts'] });
+    },
   });
 }
 

@@ -41,10 +41,12 @@ export function FeedPage() {
     <>
       <style>{`
         .feed-page {
+          width: 100%;
+          min-width: 0;
           position: relative;
           max-width: 640px;
           margin: 0 auto;
-          font-family: 'DM Sans', sans-serif;
+          font-family: 'Inter', sans-serif;
           animation: feedFadeIn 260ms var(--ease-premium) both;
         }
 
@@ -54,6 +56,7 @@ export function FeedPage() {
           top: -220px;
           left: 50%;
           width: 720px;
+          max-width: 100vw;
           height: 720px;
           border-radius: 999px;
           background: radial-gradient(circle, rgba(124, 58, 237, 0.11), transparent 68%);
@@ -112,6 +115,8 @@ export function FeedPage() {
         }
 
         .feed-tab {
+          min-width: 0;
+          overflow-wrap: anywhere;
           flex: 1;
           min-height: 44px;
           padding: 0 14px;
@@ -121,7 +126,7 @@ export function FeedPage() {
           font-size: 14.5px;
           font-weight: 850;
           cursor: pointer;
-          font-family: 'DM Sans', sans-serif;
+          font-family: 'Inter', sans-serif;
           color: var(--text-muted);
           transition:
             transform 180ms var(--ease-premium),
@@ -146,6 +151,8 @@ export function FeedPage() {
         }
 
         .feed-composer-wrap {
+          min-width: 0;
+          max-width: 100%;
           margin-bottom: 16px;
         }
 
@@ -263,6 +270,8 @@ export function FeedPage() {
         }
 
         .feed-posts-list {
+          min-width: 0;
+          max-width: 100%;
           display: flex;
           flex-direction: column;
           gap: 14px;
@@ -335,7 +344,7 @@ export function FeedPage() {
           <p className="feed-kicker">Moment</p>
           <h1 className="feed-title">O que está fazendo no momento?</h1>
           <p className="feed-subtitle">
-            Compartilhe pequenos recortes do dia, sem barulho, sem disputa e sem pressa.
+
           </p>
         </header>
 
@@ -396,10 +405,11 @@ export function FeedPage() {
             <PostCard
               key={post.id}
               post={post}
+              repliesCount={post._count.replies}
               likesCount={post._count.likes}
               remontsCount={post._count.remonts}
-              liked={false}
-              remonted={false}
+              liked={post.liked ?? false}
+              remonted={post.remonted ?? false}
             />
           ))}
         </div>

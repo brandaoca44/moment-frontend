@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600&family=DM+Sans:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Lora:wght@400;500;600&display=swap');
 
 :root {
   --bg: #fbfaff;
@@ -38,7 +38,7 @@
   --radius-md: 20px;
   --radius-sm: 14px;
 
-  font-family: 'DM Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   color: var(--text);
   background: var(--bg);
   font-synthesis: none;
@@ -54,11 +54,16 @@
 html {
   min-height: 100%;
   background: var(--bg);
+  overflow-x: hidden;
+  overscroll-behavior-x: none;
 }
 
 body {
   min-height: 100vh;
   margin: 0;
+  overflow-x: hidden;
+  overscroll-behavior-x: none;
+  touch-action: pan-y pinch-zoom;
   background:
     radial-gradient(circle at top left, rgba(167, 139, 250, 0.12), transparent 34%),
     radial-gradient(circle at bottom right, rgba(221, 214, 254, 0.22), transparent 32%),
@@ -120,6 +125,10 @@ a {
 
 #root {
   min-height: 100vh;
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 .moment-title {

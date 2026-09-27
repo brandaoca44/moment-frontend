@@ -1,0 +1,13 @@
+.conversation { width: 100%; min-width: 0; max-width: 640px; margin: 0 auto; overflow-wrap: anywhere; }
+.conversation h1 { font-family: 'Instrument Serif', serif; font-size: 32px; }
+.conversation h2 { font-size: 18px; }
+.reply-composer, .reply-card { margin-top: 16px; padding: 16px; border: 1px solid var(--border); border-radius: 16px; background: var(--surface); min-width: 0; }
+.reply-composer label { display: block; margin-bottom: 10px; font-weight: 600; }
+.reply-composer textarea { width: 100%; min-width: 0; min-height: 100px; resize: vertical; padding: 12px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface-soft); color: var(--text); font-size: 16px; }
+.reply-controls, .reply-card header { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; justify-content: space-between; }
+.reply-controls { margin-top: 10px; }
+.reply-composer button, .reply-card button, .conversation > button, .conversation > p button { padding: 9px 14px; border: 1px solid var(--amethyst-border); border-radius: 12px; color: var(--amethyst); background: var(--amethyst-bg); cursor: pointer; }
+.conversation .post-delete-btn { padding: 0; }
+.reply-card header time { font-size: 12px; color: var(--text-muted); }
+.reply-card p { white-space: pre-wrap; line-height: 1.6; }
+.conversation [role="alert"] { color: var(--danger); }

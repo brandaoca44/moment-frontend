@@ -1,0 +1,44 @@
+.recovery-page {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  box-sizing: border-box;
+  color: #1f2937;
+  background: radial-gradient(circle at top left, #ede9fe, transparent 45%), #faf7ff;
+  font-family: 'Inter', sans-serif;
+}
+.recovery-card {
+  width: 100%;
+  max-width: 460px;
+  padding: clamp(24px, 6vw, 40px);
+  box-sizing: border-box;
+  border: 1px solid #ede9fe;
+  border-radius: 24px;
+  background: #fff;
+  box-shadow: 0 24px 64px #4c1d9514;
+}
+.recovery-card h1 { font-family: 'Lora', serif; font-size: 28px; margin: 24px 0 12px; }
+.recovery-description, .recovery-hint { color: #625a70; line-height: 1.6; }
+.recovery-description { margin-bottom: 24px; }
+.recovery-form { display: grid; gap: 12px; }
+.recovery-form label { font-size: 14px; font-weight: 600; }
+.recovery-form input {
+  width: 100%; box-sizing: border-box; min-height: 50px;
+  border: 1px solid #d1cbdc; border-radius: 12px; padding: 12px 14px;
+  background: #fafafa; color: #111827; font: inherit;
+}
+.recovery-form button, .recovery-primary-link {
+  display: block; text-align: center; margin-top: 8px;
+  padding: 14px; border: 0; border-radius: 12px;
+  background: #7c3aed; color: white; font: inherit; font-weight: 700;
+  cursor: pointer; text-decoration: none;
+}
+.recovery-form button:disabled { opacity: .6; cursor: wait; }
+.recovery-card :focus-visible { outline: 3px solid #a78bfa; outline-offset: 3px; }
+.recovery-back, .recovery-link { color: #6d28d9; font-weight: 600; }
+.recovery-back { display: block; text-align: center; margin-top: 24px; }
+.recovery-error, .recovery-success { padding: 14px; border-radius: 12px; line-height: 1.5; }
+.recovery-error { background: #fef2f2; color: #991b1b; }
+.recovery-success { background: #f0fdf4; color: #166534; }
+.recovery-hint { margin: 0 0 8px; font-size: 13px; }

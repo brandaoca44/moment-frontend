@@ -1,3 +1,4 @@
+import '../components/auth-layout.css';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useRegister } from '../hooks/use-register';
@@ -33,11 +34,11 @@ export function RegisterPage() {
   }
 
   return (
-    <main style={pageStyle}>
-      <section style={cardStyle}>
+    <main className="auth-page" style={pageStyle}>
+      <section className="auth-card" style={cardStyle}>
 
         {/* Painel esquerdo — brand */}
-        <aside style={brandPanelStyle}>
+        <aside className="auth-brand" style={brandPanelStyle}>
           <div style={brandContentStyle}>
             <img
               src={momentLogo}
@@ -76,7 +77,7 @@ export function RegisterPage() {
         </aside>
 
         {/* Painel direito — formulário */}
-        <section style={formPanelStyle}>
+        <section className="auth-form-panel" style={formPanelStyle}>
           <div style={formBoxStyle}>
             <img
               src={momentIcon}
@@ -217,7 +218,7 @@ export function RegisterPage() {
 
 const pageStyle: React.CSSProperties = {
   minHeight: '100vh',
-  padding: 24,
+  padding: 'var(--auth-page-padding)',
   display: 'grid',
   placeItems: 'center',
   background:
@@ -229,9 +230,9 @@ const pageStyle: React.CSSProperties = {
 const cardStyle: React.CSSProperties = {
   width: '100%',
   maxWidth: 1080,
-  minHeight: 660,
+  minHeight: 'var(--auth-card-height)',
   display: 'grid',
-  gridTemplateColumns: '1.1fr 0.9fr',
+  gridTemplateColumns: 'var(--auth-columns)',
   borderRadius: 28,
   overflow: 'hidden',
   background: '#ffffff',
@@ -241,10 +242,10 @@ const cardStyle: React.CSSProperties = {
 
 const brandPanelStyle: React.CSSProperties = {
   position: 'relative',
-  padding: 64,
+  padding: 'var(--auth-panel-padding)',
   background:
     'linear-gradient(160deg, rgba(237, 233, 254, 0.95), rgba(196, 181, 253, 0.75))',
-  display: 'flex',
+  display: 'var(--auth-brand-display)',
   flexDirection: 'column',
   justifyContent: 'space-between',
   overflow: 'hidden',
@@ -273,7 +274,7 @@ const brandTextStyle: React.CSSProperties = {
   color: '#5b5570',
   fontSize: 17,
   lineHeight: 1.65,
-  fontFamily: "'DM Sans', sans-serif",
+  fontFamily: "'Inter', sans-serif",
 };
 
 const pillsRowStyle: React.CSSProperties = {
@@ -289,7 +290,7 @@ const pillStyle: React.CSSProperties = {
   fontSize: 14,
   fontWeight: 600,
   color: '#4c1d95',
-  fontFamily: "'DM Sans', sans-serif",
+  fontFamily: "'Inter', sans-serif",
   background: 'rgba(255,255,255,0.55)',
   border: '1px solid rgba(124,58,237,0.18)',
   borderRadius: 100,
@@ -328,14 +329,14 @@ const decorativeSubStyle: React.CSSProperties = {
   margin: '4px 0 0',
   fontSize: 12,
   color: AMETHYST,
-  fontFamily: "'DM Sans', sans-serif",
+  fontFamily: "'Inter', sans-serif",
   fontWeight: 600,
 };
 
 const formPanelStyle: React.CSSProperties = {
   display: 'grid',
   placeItems: 'center',
-  padding: 64,
+  padding: 'var(--auth-panel-padding)',
   background: '#ffffff',
   overflowY: 'auto',
 };
@@ -359,7 +360,7 @@ const subtitleStyle: React.CSSProperties = {
   marginTop: 8,
   color: '#8a8498',
   fontSize: 16,
-  fontFamily: "'DM Sans', sans-serif",
+  fontFamily: "'Inter', sans-serif",
 };
 
 const formStyle: React.CSSProperties = {
@@ -382,7 +383,7 @@ const labelStyle: React.CSSProperties = {
   fontSize: 14,
   fontWeight: 600,
   color: '#374151',
-  fontFamily: "'DM Sans', sans-serif",
+  fontFamily: "'Inter', sans-serif",
 };
 
 const inputStyle: React.CSSProperties = {
@@ -396,7 +397,7 @@ const inputStyle: React.CSSProperties = {
   color: '#111827',
   outline: 'none',
   boxSizing: 'border-box',
-  fontFamily: "'DM Sans', sans-serif",
+  fontFamily: "'Inter', sans-serif",
 };
 
 const usernameWrapStyle: React.CSSProperties = {
@@ -411,7 +412,7 @@ const usernameAtStyle: React.CSSProperties = {
   fontSize: 15,
   color: AMETHYST,
   fontWeight: 700,
-  fontFamily: "'DM Sans', sans-serif",
+  fontFamily: "'Inter', sans-serif",
   pointerEvents: 'none',
 };
 
@@ -430,7 +431,7 @@ const buttonStyle: React.CSSProperties = {
   fontWeight: 700,
   cursor: 'pointer',
   boxShadow: '0 16px 32px rgba(124, 58, 237, 0.28)',
-  fontFamily: "'DM Sans', sans-serif",
+  fontFamily: "'Inter', sans-serif",
   marginTop: 4,
 };
 
@@ -441,7 +442,7 @@ const errorStyle: React.CSSProperties = {
   borderRadius: 14,
   padding: 13,
   fontSize: 14,
-  fontFamily: "'DM Sans', sans-serif",
+  fontFamily: "'Inter', sans-serif",
 };
 
 const termsStyle: React.CSSProperties = {
@@ -450,7 +451,7 @@ const termsStyle: React.CSSProperties = {
   color: '#9ca3af',
   textAlign: 'center',
   lineHeight: 1.6,
-  fontFamily: "'DM Sans', sans-serif",
+  fontFamily: "'Inter', sans-serif",
 };
 
 const termsLinkStyle: React.CSSProperties = {
@@ -464,7 +465,7 @@ const footerTextStyle: React.CSSProperties = {
   textAlign: 'center',
   color: '#7b738c',
   fontSize: 15,
-  fontFamily: "'DM Sans', sans-serif",
+  fontFamily: "'Inter', sans-serif",
 };
 
 const linkStyle: React.CSSProperties = {
@@ -485,7 +486,7 @@ const footerCopyStyle: React.CSSProperties = {
   margin: 0,
   fontSize: 13,
   color: '#a78bfa',
-  fontFamily: "'DM Sans', sans-serif",
+  fontFamily: "'Inter', sans-serif",
 };
 
 const footerLinksStyle: React.CSSProperties = {
@@ -498,6 +499,6 @@ const footerLinkStyle: React.CSSProperties = {
   fontSize: 13,
   color: '#7c3aed',
   textDecoration: 'none',
-  fontFamily: "'DM Sans', sans-serif",
+  fontFamily: "'Inter', sans-serif",
   fontWeight: 500,
 };

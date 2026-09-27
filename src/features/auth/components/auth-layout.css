@@ -1,0 +1,32 @@
+.auth-page {
+  --auth-page-padding: 24px;
+  --auth-panel-padding: clamp(24px, 5vw, 64px);
+  --auth-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  --auth-card-height: 660px;
+  --auth-brand-display: flex;
+  grid-template-columns: minmax(0, 1fr);
+  width: 100%;
+}
+
+.auth-page *, .auth-card, .auth-form-panel {
+  min-width: 0;
+}
+
+.auth-page img { max-width: 100%; object-fit: contain; }
+.auth-page footer { max-width: 100%; text-align: center; }
+.auth-page footer > div { flex-wrap: wrap; justify-content: center; }
+.auth-page p, .auth-page h1, .auth-page h2 { overflow-wrap: anywhere; }
+
+@media (max-width: 760px) {
+  .auth-page {
+    --auth-page-padding: 16px 12px;
+    --auth-panel-padding: 28px 20px;
+    --auth-columns: minmax(0, 1fr);
+    --auth-card-height: auto;
+    --auth-brand-display: none;
+    align-content: start;
+    min-height: 100dvh;
+  }
+
+  .auth-page input { font-size: 16px !important; }
+}
