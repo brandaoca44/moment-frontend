@@ -1,4 +1,6 @@
 import { useMemo, useState } from 'react';
+import { ReportButton } from '@/features/reports/report-button';
+import { useMe } from '@/features/auth/hooks/use-me';
 import { ExpandableImage } from '@/components/ui/expandable-image';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
@@ -24,6 +26,7 @@ function UserCard({ user }: { user: SuggestedUser }) {
 }
 
 function PostCard({ post }: { post: Post }) {
+  const me = useMe().data?.data.user;
   return <article className="explore-post">
     <Link to={`/profile/${encodeURIComponent(post.user.username)}`} className="explore-post-author">
       <Avatar user={post.user} size={40} />
@@ -31,6 +34,7 @@ function PostCard({ post }: { post: Post }) {
     </Link>
     {post.editedAt && <small title={new Date(post.editedAt).toLocaleString("pt-BR")}>Editado</small>}
     <p>{post.content}</p>
+    {me?.id !== post.user.id && <ReportButton targetType="POST" targetId={post.id} />}
     {post.imageUrl && <ExpandableImage className="explore-post-image" src={post.imageUrl} alt="Imagem do momento" />}
     <footer><Link to={`/posts/${post.id}`}>Responder ({post._count.replies ?? 0})</Link><span>{post._count.likes} {post._count.likes === 1 ? 'curtida' : 'curtidas'}</span><span>{post._count.remonts} {post._count.remonts === 1 ? 'republicação' : 'republicações'}</span></footer>
   </article>;

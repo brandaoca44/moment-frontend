@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { ReportButton } from '@/features/reports/report-button';
 import { useState } from 'react';
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -672,7 +673,9 @@ export function PostCard({ post, repliesCount = 0, likesCount, remontsCount, lik
 
         <div className="post-card-inner">
 
-          <Avatar name={post.user.name} avatar={post.user.avatar} />
+          <Link to={`/profile/${encodeURIComponent(post.user.username)}`} aria-label={`Ver perfil de ${post.user.name}`} style={{ flexShrink: 0, alignSelf: 'flex-start' }}>
+            <Avatar name={post.user.name} avatar={post.user.avatar} />
+          </Link>
 
 
 
@@ -682,9 +685,9 @@ export function PostCard({ post, repliesCount = 0, likesCount, remontsCount, lik
 
               <div className="post-user-info">
 
-                <span className="post-name">{post.user.name}</span>
+                <Link className="post-name" style={{ textDecoration: 'none' }} to={`/profile/${encodeURIComponent(post.user.username)}`}>{post.user.name}</Link>
 
-                <span className="post-username">@{post.user.username}</span>
+                <Link className="post-username" style={{ textDecoration: 'none' }} to={`/profile/${encodeURIComponent(post.user.username)}`}>@{post.user.username}</Link>
 
                 <span className="post-dot">·</span>
 
@@ -695,6 +698,7 @@ export function PostCard({ post, repliesCount = 0, likesCount, remontsCount, lik
               </div>
 
               <div className="post-header-actions">
+                {!isOwn && <ReportButton targetType="POST" targetId={post.id} />}
 
                 {isOwn && <span className="post-own-badge">seu post</span>}
 

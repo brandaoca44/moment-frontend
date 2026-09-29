@@ -145,11 +145,11 @@ export function LoginPage() {
             © {new Date().getFullYear()} Moment. Todos os direitos reservados.
           </p>
           <div style={footerLinksStyle}>
-            <a href="#" style={footerLinkStyle}>Termos de uso</a>
+            <Link to="/terms" style={footerLinkStyle}>Termos de uso</Link>
             <span style={{ color: '#c4b5fd' }}>·</span>
-            <a href="#" style={footerLinkStyle}>Privacidade</a>
+            <Link to="/privacy" style={footerLinkStyle}>Privacidade</Link>
             <span style={{ color: '#c4b5fd' }}>·</span>
-            <a href="#" style={footerLinkStyle}>Suporte</a>
+            <Link to="/support" style={footerLinkStyle}>Suporte</Link>
           </div>
         </footer>
     </main>

@@ -5,6 +5,7 @@ export type MeResponse = {
   data: {
     user: {
       id: string;
+      canModerate?: boolean;
       name: string;
       username: string;
       email: string;

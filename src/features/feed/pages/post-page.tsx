@@ -1,9 +1,11 @@
 import { useState } from 'react';
+import { ReportButton } from '@/features/reports/report-button';
 import { Link, useParams } from 'react-router-dom';
 import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { createReply, deleteReply, getPost, getReplies } from '../api/feed';
 import { useMe } from '@/features/auth/hooks/use-me';
 import { PostCard } from '../components/post-card';
+import { ReplyLikeButton } from '../components/reply-like-button';
 import './post-page.css';
 
 export function PostPage() {
@@ -50,7 +52,11 @@ export function PostPage() {
       {replies.data?.pages.flatMap(page => page.data).map(reply => <article className="reply-card" key={reply.id}>
         <header><Link to={`/profile/${encodeURIComponent(reply.user.username)}`}><strong>{reply.user.name}</strong> @{reply.user.username}</Link><time dateTime={reply.createdAt}>{new Date(reply.createdAt).toLocaleString('pt-BR')}</time></header>
         <p>{reply.content}</p>
+        <div className="reply-actions">
+        <ReplyLikeButton postId={id} reply={reply} />
+        {me?.id !== reply.user.id && <ReportButton targetType="REPLY" targetId={reply.id} />}
         {(me?.id === reply.user.id || me?.id === post.user.id) && <button type="button" disabled={remove.isPending} onClick={() => { if (window.confirm('Excluir esta resposta? Essa ação não pode ser desfeita.')) remove.mutate(reply.id); }}>Excluir resposta</button>}
+        </div>
       </article>)}
       {replies.data?.pages[0]?.data.length === 0 && <p>Seja a primeira pessoa a responder.</p>}
       {replies.hasNextPage && <button disabled={replies.isFetchingNextPage} onClick={() => replies.fetchNextPage()}>{replies.isFetchingNextPage ? 'Carregando...' : 'Ver mais respostas'}</button>}

@@ -1,4 +1,6 @@
 import '../components/auth-layout.css';
+import '@/features/legal/legal.css';
+import { POLICY_VERSION } from '@/features/legal/policies';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useRegister } from '../hooks/use-register';
@@ -17,7 +19,9 @@ export function RegisterPage() {
     username: '',
     email: '',
     password: '',
+    birthDate: '',
   });
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -26,7 +30,7 @@ export function RegisterPage() {
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     try {
-      await register.mutateAsync(form);
+      await register.mutateAsync({ ...form, acceptedTerms, termsVersion: POLICY_VERSION });
       navigate('/', { replace: true });
     } catch {
       // erro capturado pelo register.isError
@@ -96,7 +100,7 @@ export function RegisterPage() {
               <div style={rowStyle}>
                 <div style={fieldStyle}>
                   <label htmlFor="name" style={labelStyle}>
-                    Nome completo
+                    Nome de exibição
                   </label>
                   <input
                     id="name"
@@ -166,6 +170,12 @@ export function RegisterPage() {
                 />
               </div>
 
+              <div style={fieldStyle}>
+                <label htmlFor="birthDate" style={labelStyle}>Data de nascimento (não aparece no perfil)</label>
+                <input id="birthDate" name="birthDate" type="date" autoComplete="bday" value={form.birthDate} onChange={handleChange} style={inputStyle} required max={new Date().toISOString().slice(0, 10)} />
+                <small>Idade prevista: 14+. O cadastro de adolescentes aguarda a implementação das proteções e ainda não está disponível.</small>
+              </div>
+              <label className="policy-checkbox"><input type="checkbox" checked={acceptedTerms} onChange={e => setAcceptedTerms(e.target.checked)} required /><span>Li e aceito os <Link to="/terms" target="_blank" rel="noopener noreferrer">Termos de Uso</Link> e li o aviso de <Link to="/privacy" target="_blank" rel="noopener noreferrer">Privacidade</Link>.</span></label>
               {register.isError ? (
                 <div style={errorStyle}>
                   {register.error instanceof Error
@@ -176,7 +186,7 @@ export function RegisterPage() {
 
               <button
                 type="submit"
-                disabled={register.isPending}
+                disabled={register.isPending || !acceptedTerms}
                 style={buttonStyle}
               >
                 {register.isPending ? 'Criando conta...' : 'Criar conta'}
@@ -184,9 +194,9 @@ export function RegisterPage() {
 
               <p style={termsStyle}>
                 Ao criar uma conta você concorda com nossos{' '}
-                <a href="#" style={termsLinkStyle}>Termos de uso</a>
+                <Link to="/terms" style={termsLinkStyle}>Termos de uso</Link>
                 {' '}e{' '}
-                <a href="#" style={termsLinkStyle}>Política de privacidade</a>.
+                <Link to="/privacy" style={termsLinkStyle}>Política de privacidade</Link>.
               </p>
             </form>
 
@@ -205,11 +215,11 @@ export function RegisterPage() {
           © {new Date().getFullYear()} Moment. Todos os direitos reservados.
         </p>
         <div style={footerLinksStyle}>
-          <a href="#" style={footerLinkStyle}>Termos de uso</a>
+          <Link to="/terms" style={footerLinkStyle}>Termos de uso</Link>
           <span style={{ color: '#c4b5fd' }}>·</span>
-          <a href="#" style={footerLinkStyle}>Privacidade</a>
+          <Link to="/privacy" style={footerLinkStyle}>Privacidade</Link>
           <span style={{ color: '#c4b5fd' }}>·</span>
-          <a href="#" style={footerLinkStyle}>Suporte</a>
+          <Link to="/support" style={footerLinkStyle}>Suporte</Link>
         </div>
       </footer>
     </main>

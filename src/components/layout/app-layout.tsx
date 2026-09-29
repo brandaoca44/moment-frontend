@@ -5,6 +5,8 @@ import {
   useNavigate,
 } from 'react-router-dom';
 import { useState } from 'react';
+import { LegalLinks } from '@/features/legal/legal-pages';
+import { StationShortcuts } from '@/features/stations/station-shortcuts';
 
 import { useMe } from '@/features/auth/hooks/use-me';
 import { useLogout } from '@/features/auth/hooks/use-logout';
@@ -161,6 +163,7 @@ const navItems = [
     label: 'Configurações',
     icon: <IconSettings />,
   },
+  { to: '/communities', label: 'Estações', icon: <IconUser /> },
 ];
 
 function getInitials(name?: string) {
@@ -824,6 +827,9 @@ export function AppLayout() {
                   )}
               </NavLink>
             ))}
+            {user?.canModerate && <NavLink to="/moderation" className="app-nav-link" onClick={() => setIsMobileMenuOpen(false)}>Moderação</NavLink>}
+            <StationShortcuts close={() => setIsMobileMenuOpen(false)} />
+            <LegalLinks />
           </nav>
 
           <div className="app-user-section">

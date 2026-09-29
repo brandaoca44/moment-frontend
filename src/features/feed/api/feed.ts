@@ -27,6 +27,8 @@ export type Post = {
 };
 
 export type Reply = {
+  liked: boolean;
+  likesCount: number;
   id: string;
   content: string;
   createdAt: string;
@@ -35,6 +37,13 @@ export type Reply = {
 
 export function getPost(id: string) {
   return api<{ data: Post }>(`/posts/${encodeURIComponent(id)}`);
+}
+
+export function setReplyLike(postId: string, replyId: string, liked: boolean) {
+  return api<{ data: { liked: boolean; likesCount: number } }>(
+    `/posts/${encodeURIComponent(postId)}/replies/${encodeURIComponent(replyId)}/like`,
+    { method: liked ? 'PUT' : 'DELETE' },
+  );
 }
 
 export function getReplies(id: string, cursor?: string) {

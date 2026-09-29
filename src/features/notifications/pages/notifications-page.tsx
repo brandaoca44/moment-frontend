@@ -192,7 +192,7 @@ function getNotificationPresentation(
   ) {
     return {
       icon: <HeartIcon />,
-      label: 'amou seu Moment',
+      label: 'curtiu seu momento',
       className: 'notification-kind-loved',
     };
   }
@@ -203,7 +203,7 @@ function getNotificationPresentation(
   ) {
     return {
       icon: <RemontIcon />,
-      label: 'fez ReMont do seu Moment',
+      label: 'republicou seu momento',
       className: 'notification-kind-remont',
     };
   }

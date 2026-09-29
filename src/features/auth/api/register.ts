@@ -1,6 +1,9 @@
 import type { MeResponse } from './me';
 
 export type RegisterInput = {
+  birthDate: string;
+  acceptedTerms: boolean;
+  termsVersion: string;
   name: string;
   username: string;
   email: string;

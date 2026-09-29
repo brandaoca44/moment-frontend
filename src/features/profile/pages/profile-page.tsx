@@ -4,6 +4,7 @@ import { useMe } from '@/features/auth/hooks/use-me';
 import { useFollowUser, useProfile, useTogglePin, useUserPosts } from '../hooks/use-profile';
 import type { ProfilePost } from '../api/profile';
 import { PostCard } from '@/features/feed/components/post-card';
+import { PositiveMarks } from '@/features/stations/positive-marks';
 
 function formatCount(value: number) {
   return new Intl.NumberFormat('pt-BR', {
@@ -707,6 +708,7 @@ export function ProfilePage() {
                 </div>
               </div>
 
+              <PositiveMarks userId={profile.id} own={isOwnProfile} />
               <div className="profile-meta-row">
                 <div className="profile-counters" aria-label="Estatísticas do perfil">
                   <div className="profile-counter">
