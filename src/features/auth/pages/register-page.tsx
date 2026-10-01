@@ -1,3 +1,4 @@
+import { t, useLanguage } from '@/i18n';
 import '../components/auth-layout.css';
 import '@/features/legal/legal.css';
 import { POLICY_VERSION } from '@/features/legal/policies';
@@ -11,6 +12,7 @@ const AMETHYST = '#7c3aed';
 const AMETHYST_LIGHT = '#a78bfa';
 
 export function RegisterPage() {
+  useLanguage();
   const navigate = useNavigate();
   const register = useRegister();
 
@@ -52,20 +54,16 @@ export function RegisterPage() {
 
             <div>
               <h1 style={brandTitleStyle}>
-                Seu jardim digital
-                <br />
-                começa aqui.
-              </h1>
+                {t(" Seu jardim digital ")}<br />
+                {t(" começa aqui. ")}</h1>
               <p style={brandTextStyle}>
-                Crie sua conta e entre em um espaço onde você pode
-                ser livre, autêntico e conectado com o que realmente importa.
-              </p>
+                {t(" Crie sua conta e entre em um espaço onde você pode ser livre, autêntico e conectado com o que realmente importa. ")}</p>
             </div>
 
             <div style={pillsRowStyle}>
-              <span style={pillStyle}>✦ Gratuito para sempre</span>
-              <span style={pillStyle}>✦ Sem anúncios invasivos</span>
-              <span style={pillStyle}>✦ Você no controle</span>
+              <span style={pillStyle}>{t("✦ Gratuito para sempre")}</span>
+              <span style={pillStyle}>{t("✦ Sem anúncios invasivos")}</span>
+              <span style={pillStyle}>{t("✦ Você no controle")}</span>
             </div>
           </div>
 
@@ -73,8 +71,7 @@ export function RegisterPage() {
             <img src={momentIcon} alt="" style={{ width: 52, height: 52 }} />
             <div>
               <p style={decorativeQuoteStyle}>
-                "Um espaço só seu."
-              </p>
+                {t(" \"Um espaço só seu.\" ")}</p>
               <p style={decorativeSubStyle}>— Moment</p>
             </div>
           </div>
@@ -90,23 +87,21 @@ export function RegisterPage() {
             />
 
             <div style={{ marginTop: 24, marginBottom: 32 }}>
-              <h2 style={titleStyle}>Criar sua conta</h2>
+              <h2 style={titleStyle}>{t("Criar sua conta")}</h2>
               <p style={subtitleStyle}>
-                Leva menos de um minuto.
-              </p>
+                {t(" Leva menos de um minuto. ")}</p>
             </div>
 
             <form onSubmit={handleSubmit} style={formStyle}>
               <div style={rowStyle}>
                 <div style={fieldStyle}>
                   <label htmlFor="name" style={labelStyle}>
-                    Nome de exibição
-                  </label>
+                    {t(" Nome de exibição ")}</label>
                   <input
                     id="name"
                     name="name"
                     type="text"
-                    placeholder="Seu nome"
+                    placeholder={t("Seu nome")}
                     autoComplete="name"
                     value={form.name}
                     onChange={handleChange}
@@ -117,8 +112,7 @@ export function RegisterPage() {
 
                 <div style={fieldStyle}>
                   <label htmlFor="username" style={labelStyle}>
-                    Username
-                  </label>
+                    {t(" Username ")}</label>
                   <div style={usernameWrapStyle}>
                     <span style={usernameAtStyle}>@</span>
                     <input
@@ -138,8 +132,7 @@ export function RegisterPage() {
 
               <div style={fieldStyle}>
                 <label htmlFor="email" style={labelStyle}>
-                  E-mail
-                </label>
+                  {t(" E-mail ")}</label>
                 <input
                   id="email"
                   name="email"
@@ -155,13 +148,12 @@ export function RegisterPage() {
 
               <div style={fieldStyle}>
                 <label htmlFor="password" style={labelStyle}>
-                  Senha
-                </label>
+                  {t(" Senha ")}</label>
                 <input
                   id="password"
                   name="password"
                   type="password"
-                  placeholder="Mínimo 8 caracteres"
+                  placeholder={t("Mínimo 8 caracteres")}
                   autoComplete="new-password"
                   value={form.password}
                   onChange={handleChange}
@@ -171,16 +163,16 @@ export function RegisterPage() {
               </div>
 
               <div style={fieldStyle}>
-                <label htmlFor="birthDate" style={labelStyle}>Data de nascimento (não aparece no perfil)</label>
+                <label htmlFor="birthDate" style={labelStyle}>{t("Data de nascimento (não aparece no perfil)")}</label>
                 <input id="birthDate" name="birthDate" type="date" autoComplete="bday" value={form.birthDate} onChange={handleChange} style={inputStyle} required max={new Date().toISOString().slice(0, 10)} />
-                <small>Idade prevista: 14+. O cadastro de adolescentes aguarda a implementação das proteções e ainda não está disponível.</small>
+                <small>{t("Idade prevista: 14+. O cadastro de adolescentes aguarda a implementação das proteções e ainda não está disponível.")}</small>
               </div>
-              <label className="policy-checkbox"><input type="checkbox" checked={acceptedTerms} onChange={e => setAcceptedTerms(e.target.checked)} required /><span>Li e aceito os <Link to="/terms" target="_blank" rel="noopener noreferrer">Termos de Uso</Link> e li o aviso de <Link to="/privacy" target="_blank" rel="noopener noreferrer">Privacidade</Link>.</span></label>
+              <label className="policy-checkbox"><input type="checkbox" checked={acceptedTerms} onChange={e => setAcceptedTerms(e.target.checked)} required /><span>{t("Li e aceito os ")}<Link to="/terms" target="_blank" rel="noopener noreferrer">{t("Termos de Uso")}</Link> {t(" e li o aviso de ")}<Link to="/privacy" target="_blank" rel="noopener noreferrer">{t("Privacidade")}</Link>.</span></label>
               {register.isError ? (
                 <div style={errorStyle}>
                   {register.error instanceof Error
                     ? register.error.message
-                    : 'Não foi possível criar a conta. Tente novamente.'}
+                    : t("Não foi possível criar a conta. Tente novamente.")}
                 </div>
               ) : null}
 
@@ -189,22 +181,21 @@ export function RegisterPage() {
                 disabled={register.isPending || !acceptedTerms}
                 style={buttonStyle}
               >
-                {register.isPending ? 'Criando conta...' : 'Criar conta'}
+                {register.isPending ? t("Criando conta...") : t("Criar conta")}
               </button>
 
               <p style={termsStyle}>
-                Ao criar uma conta você concorda com nossos{' '}
-                <Link to="/terms" style={termsLinkStyle}>Termos de uso</Link>
-                {' '}e{' '}
-                <Link to="/privacy" style={termsLinkStyle}>Política de privacidade</Link>.
+                {t(" Ao criar uma conta você concorda com nossos")}{' '}
+                <Link to="/terms" style={termsLinkStyle}>{t("Termos de uso")}</Link>
+                {' '}{t("e")}{' '}
+                <Link to="/privacy" style={termsLinkStyle}>{t("Política de privacidade")}</Link>.
               </p>
             </form>
 
             <p style={footerTextStyle}>
-              Já tem uma conta?{' '}
+              {t(" Já tem uma conta?")}{' '}
               <Link to="/login" style={linkStyle}>
-                Entrar
-              </Link>
+                {t(" Entrar ")}</Link>
             </p>
           </div>
         </section>
@@ -212,14 +203,13 @@ export function RegisterPage() {
 
       <footer style={footerStyle}>
         <p style={footerCopyStyle}>
-          © {new Date().getFullYear()} Moment. Todos os direitos reservados.
-        </p>
+          © {new Date().getFullYear()} {t(" Moment. Todos os direitos reservados. ")}</p>
         <div style={footerLinksStyle}>
-          <Link to="/terms" style={footerLinkStyle}>Termos de uso</Link>
+          <Link to="/terms" style={footerLinkStyle}>{t("Termos de uso")}</Link>
           <span style={{ color: '#c4b5fd' }}>·</span>
-          <Link to="/privacy" style={footerLinkStyle}>Privacidade</Link>
+          <Link to="/privacy" style={footerLinkStyle}>{t("Privacidade")}</Link>
           <span style={{ color: '#c4b5fd' }}>·</span>
-          <Link to="/support" style={footerLinkStyle}>Suporte</Link>
+          <Link to="/support" style={footerLinkStyle}>{t("Suporte")}</Link>
         </div>
       </footer>
     </main>
@@ -275,7 +265,7 @@ const brandTitleStyle: React.CSSProperties = {
   fontWeight: 800,
   letterSpacing: -0.8,
   color: '#312e81',
-  fontFamily: "'Lora', serif",
+  fontFamily: "var(--font-ui)",
 };
 
 const brandTextStyle: React.CSSProperties = {
@@ -284,7 +274,7 @@ const brandTextStyle: React.CSSProperties = {
   color: '#5b5570',
   fontSize: 17,
   lineHeight: 1.65,
-  fontFamily: "'Inter', sans-serif",
+  fontFamily: "var(--font-ui)",
 };
 
 const pillsRowStyle: React.CSSProperties = {
@@ -300,7 +290,7 @@ const pillStyle: React.CSSProperties = {
   fontSize: 14,
   fontWeight: 600,
   color: '#4c1d95',
-  fontFamily: "'Inter', sans-serif",
+  fontFamily: "var(--font-ui)",
   background: 'rgba(255,255,255,0.55)',
   border: '1px solid rgba(124,58,237,0.18)',
   borderRadius: 100,
@@ -331,7 +321,7 @@ const decorativeQuoteStyle: React.CSSProperties = {
   fontSize: 15,
   fontWeight: 600,
   color: '#312e81',
-  fontFamily: "'Lora', serif",
+  fontFamily: "var(--font-ui)",
   fontStyle: 'italic',
 };
 
@@ -339,7 +329,7 @@ const decorativeSubStyle: React.CSSProperties = {
   margin: '4px 0 0',
   fontSize: 12,
   color: AMETHYST,
-  fontFamily: "'Inter', sans-serif",
+  fontFamily: "var(--font-ui)",
   fontWeight: 600,
 };
 
@@ -363,14 +353,14 @@ const titleStyle: React.CSSProperties = {
   fontWeight: 600,
   letterSpacing: -0.6,
   color: '#1f2937',
-  fontFamily: "'Lora', serif",
+  fontFamily: "var(--font-ui)",
 };
 
 const subtitleStyle: React.CSSProperties = {
   marginTop: 8,
   color: '#8a8498',
   fontSize: 16,
-  fontFamily: "'Inter', sans-serif",
+  fontFamily: "var(--font-ui)",
 };
 
 const formStyle: React.CSSProperties = {
@@ -393,7 +383,7 @@ const labelStyle: React.CSSProperties = {
   fontSize: 14,
   fontWeight: 600,
   color: '#374151',
-  fontFamily: "'Inter', sans-serif",
+  fontFamily: "var(--font-ui)",
 };
 
 const inputStyle: React.CSSProperties = {
@@ -407,7 +397,7 @@ const inputStyle: React.CSSProperties = {
   color: '#111827',
   outline: 'none',
   boxSizing: 'border-box',
-  fontFamily: "'Inter', sans-serif",
+  fontFamily: "var(--font-ui)",
 };
 
 const usernameWrapStyle: React.CSSProperties = {
@@ -422,7 +412,7 @@ const usernameAtStyle: React.CSSProperties = {
   fontSize: 15,
   color: AMETHYST,
   fontWeight: 700,
-  fontFamily: "'Inter', sans-serif",
+  fontFamily: "var(--font-ui)",
   pointerEvents: 'none',
 };
 
@@ -441,7 +431,7 @@ const buttonStyle: React.CSSProperties = {
   fontWeight: 700,
   cursor: 'pointer',
   boxShadow: '0 16px 32px rgba(124, 58, 237, 0.28)',
-  fontFamily: "'Inter', sans-serif",
+  fontFamily: "var(--font-ui)",
   marginTop: 4,
 };
 
@@ -452,7 +442,7 @@ const errorStyle: React.CSSProperties = {
   borderRadius: 14,
   padding: 13,
   fontSize: 14,
-  fontFamily: "'Inter', sans-serif",
+  fontFamily: "var(--font-ui)",
 };
 
 const termsStyle: React.CSSProperties = {
@@ -461,7 +451,7 @@ const termsStyle: React.CSSProperties = {
   color: '#9ca3af',
   textAlign: 'center',
   lineHeight: 1.6,
-  fontFamily: "'Inter', sans-serif",
+  fontFamily: "var(--font-ui)",
 };
 
 const termsLinkStyle: React.CSSProperties = {
@@ -475,7 +465,7 @@ const footerTextStyle: React.CSSProperties = {
   textAlign: 'center',
   color: '#7b738c',
   fontSize: 15,
-  fontFamily: "'Inter', sans-serif",
+  fontFamily: "var(--font-ui)",
 };
 
 const linkStyle: React.CSSProperties = {
@@ -496,7 +486,7 @@ const footerCopyStyle: React.CSSProperties = {
   margin: 0,
   fontSize: 13,
   color: '#a78bfa',
-  fontFamily: "'Inter', sans-serif",
+  fontFamily: "var(--font-ui)",
 };
 
 const footerLinksStyle: React.CSSProperties = {
@@ -509,6 +499,6 @@ const footerLinkStyle: React.CSSProperties = {
   fontSize: 13,
   color: '#7c3aed',
   textDecoration: 'none',
-  fontFamily: "'Inter', sans-serif",
+  fontFamily: "var(--font-ui)",
   fontWeight: 500,
 };

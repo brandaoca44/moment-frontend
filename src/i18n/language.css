@@ -1,0 +1,10 @@
+.language-picker { color: var(--text); font-family: var(--font-ui); }
+.language-compact { position: absolute; top: 18px; right: 18px; z-index: 20; }
+.language-globe { display: flex; align-items: center; gap: 7px; border: 1px solid var(--border); border-radius: 24px; padding: 10px 12px; background: var(--surface); color: var(--text); cursor: pointer; font-size: 12px; }
+.language-options { display: grid; gap: 4px; width: min(100%, 340px); }
+.language-options button { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 44px; padding: 10px 14px; border: 0; border-radius: 12px; background: transparent; color: var(--text); text-align: left; cursor: pointer; }
+.language-options button:hover, .language-options button[aria-pressed=true] { background: var(--surface-soft); }
+.language-compact .language-options { position: absolute; right: 0; top: calc(100% + 8px); width: min(260px, calc(100vw - 36px)); padding: 6px; border: 1px solid var(--border); border-radius: 16px; background: var(--surface); box-shadow: var(--shadow-card); }
+.language-picker button:focus-visible { outline: 2px solid var(--amethyst); outline-offset: 2px; }
+.auth-page { position: relative; }
+@media(max-width: 520px) { .auth-page { padding-top: 76px !important; } }

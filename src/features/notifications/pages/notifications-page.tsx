@@ -1,3 +1,7 @@
+import { relativeTime } from '@/i18n';
+import { getLanguage } from '@/i18n';
+import { systemMessage } from '@/i18n/system-message';
+import { t, useLanguage } from '@/i18n';
 import type { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -14,6 +18,7 @@ import {
 const NOTIFICATIONS_LIMIT = 30;
 
 function HeartIcon() {
+  useLanguage();
   return (
     <svg
       width="18"
@@ -31,6 +36,7 @@ function HeartIcon() {
 }
 
 function RemontIcon() {
+  useLanguage();
   return (
     <svg
       width="18"
@@ -52,6 +58,7 @@ function RemontIcon() {
 }
 
 function UserPlusIcon() {
+  useLanguage();
   return (
     <svg
       width="18"
@@ -72,6 +79,7 @@ function UserPlusIcon() {
 }
 
 function MentionIcon() {
+  useLanguage();
   return (
     <svg
       width="18"
@@ -90,6 +98,7 @@ function MentionIcon() {
 }
 
 function BellIcon() {
+  useLanguage();
   return (
     <svg
       width="20"
@@ -108,6 +117,7 @@ function BellIcon() {
 }
 
 function CheckIcon() {
+  useLanguage();
   return (
     <svg
       width="16"
@@ -136,40 +146,7 @@ function getInitials(name?: string) {
     .toUpperCase();
 }
 
-function formatNotificationDate(date: string) {
-  const createdAt = new Date(date);
-  const now = new Date();
-
-  const difference =
-    Math.max(0, now.getTime() - createdAt.getTime()) / 1000;
-
-  if (difference < 60) {
-    return 'agora';
-  }
-
-  const minutes = Math.floor(difference / 60);
-
-  if (minutes < 60) {
-    return `${minutes} min`;
-  }
-
-  const hours = Math.floor(minutes / 60);
-
-  if (hours < 24) {
-    return `${hours} h`;
-  }
-
-  const days = Math.floor(hours / 24);
-
-  if (days < 7) {
-    return `${days} d`;
-  }
-
-  return new Intl.DateTimeFormat('pt-BR', {
-    day: '2-digit',
-    month: 'short',
-  }).format(createdAt);
-}
+function formatNotificationDate(value: string) { return relativeTime(value); }
 
 type NotificationPresentation = {
   icon: ReactNode;
@@ -182,7 +159,7 @@ function getNotificationPresentation(
 ): NotificationPresentation {
   const normalized = type.toUpperCase();
   if (normalized === 'REPLY') {
-    return { icon: <MentionIcon />, label: 'respondeu ao seu momento', className: 'notification-kind-mention' };
+    return { icon: <MentionIcon />, label: t("respondeu ao seu momento"), className: 'notification-kind-mention' };
   }
 
   if (
@@ -192,7 +169,7 @@ function getNotificationPresentation(
   ) {
     return {
       icon: <HeartIcon />,
-      label: 'curtiu seu momento',
+      label: t("curtiu seu momento"),
       className: 'notification-kind-loved',
     };
   }
@@ -203,7 +180,7 @@ function getNotificationPresentation(
   ) {
     return {
       icon: <RemontIcon />,
-      label: 'republicou seu momento',
+      label: t("republicou seu momento"),
       className: 'notification-kind-remont',
     };
   }
@@ -214,7 +191,7 @@ function getNotificationPresentation(
   ) {
     return {
       icon: <UserPlusIcon />,
-      label: 'começou a seguir você',
+      label: t("começou a seguir você"),
       className: 'notification-kind-follow',
     };
   }
@@ -225,19 +202,20 @@ function getNotificationPresentation(
   ) {
     return {
       icon: <MentionIcon />,
-      label: 'mencionou você em um Moment',
+      label: t("mencionou você em um Moment"),
       className: 'notification-kind-mention',
     };
   }
 
   return {
     icon: <BellIcon />,
-    label: 'interagiu com você',
+    label: t("interagiu com você"),
     className: 'notification-kind-default',
   };
 }
 
 function NotificationSkeleton() {
+  useLanguage();
   return (
     <div className="notification-skeleton">
       <div className="notification-skeleton-avatar" />
@@ -261,6 +239,18 @@ function NotificationItem({
   isMarkingRead,
   onMarkAsRead,
 }: NotificationItemProps) {
+  useLanguage();
+  if (notification.type === 'SYSTEM') return (
+    <article className={notification.read ? 'notification-item' : 'notification-item notification-item-unread'}>
+      <div className="notification-content">
+        <strong>Moment</strong>
+        <p>{systemMessage(notification.message ?? '')}</p>
+        <small>{new Date(notification.createdAt).toLocaleString(getLanguage())}</small>
+        {notification.href?.startsWith('/') && !notification.href.startsWith('//') && <p><Link to={notification.href} onClick={() => onMarkAsRead(notification.id)}>{t("Ver detalhes")}</Link></p>}
+        {!notification.read && <button disabled={isMarkingRead} onClick={() => onMarkAsRead(notification.id)}>{t("Marcar como lida")}</button>}
+      </div>
+    </article>
+  );
   const presentation = getNotificationPresentation(
     notification.type,
   );
@@ -286,14 +276,14 @@ function NotificationItem({
       {!notification.read && (
         <span
           className="notification-unread-dot"
-          aria-label="Não lida"
+          aria-label={t("Não lida")}
         />
       )}
 
       <Link
         to={profileUrl}
         className="notification-avatar-link"
-        aria-label={`Abrir perfil de ${notification.actor.name}`}
+        aria-label={`${t("Abrir perfil de")} ${notification.actor.name}`}
       >
         <div className="notification-avatar">
           {notification.actor.avatar ? (
@@ -333,7 +323,7 @@ function NotificationItem({
           </span>
         </div>
 
-        {notification.postId && <Link to={`/posts/${notification.postId}`}>Ver conversa</Link>}
+        {notification.postId && <Link to={`/posts/${notification.postId}`}>{t("Ver conversa")}</Link>}
         {notification.post?.content && (
           <div className="notification-post-preview">
             <p>
@@ -362,7 +352,7 @@ function NotificationItem({
             <CheckIcon />
             {isMarkingRead
               ? 'Marcando...'
-              : 'Marcar como lida'}
+              : t("Marcar como lida")}
           </button>
         )}
       </div>
@@ -371,6 +361,7 @@ function NotificationItem({
 }
 
 export function NotificationsPage() {
+  useLanguage();
   const notificationsQuery =
     useNotifications(NOTIFICATIONS_LIMIT);
 
@@ -406,7 +397,7 @@ export function NotificationsPage() {
           width: 100%;
           max-width: 680px;
           margin: 0 auto;
-          font-family: 'Inter', sans-serif;
+          font-family: var(--font-ui);
         }
 
         .notifications-page::before {
@@ -420,7 +411,7 @@ export function NotificationsPage() {
           transform: translateX(-50%);
           background: radial-gradient(
             circle,
-            rgba(124, 58, 237, 0.11),
+            rgba(var(--accent-rgb, 124, 58, 237), 0.11),
             transparent 68%
           );
           filter: blur(30px);
@@ -448,7 +439,7 @@ export function NotificationsPage() {
         .notifications-title {
           margin: 0;
           color: var(--text);
-          font-family: 'Instrument Serif', serif;
+          font-family: var(--font-ui);
           font-size: clamp(38px, 6vw, 52px);
           font-weight: 400;
           line-height: 1.08;
@@ -525,7 +516,7 @@ export function NotificationsPage() {
           overflow: hidden;
           border: 1px solid var(--border-soft);
           border-radius: 28px;
-          background: var(--card-bg);
+          background: var(--card-background, var(--card-bg));
           box-shadow: var(--shadow-sm);
           backdrop-filter: blur(20px);
           -webkit-backdrop-filter: blur(20px);
@@ -549,15 +540,15 @@ export function NotificationsPage() {
         }
 
         .notification-item:hover {
-          background: var(--surface-glass);
+          background: var(--panel-background, var(--surface-glass));
         }
 
         .notification-item-unread {
           background:
             linear-gradient(
               90deg,
-              rgba(124, 58, 237, 0.075),
-              rgba(167, 139, 250, 0.025)
+              rgba(var(--accent-rgb, 124, 58, 237), 0.075),
+              rgba(var(--accent-soft-rgb, 167, 139, 250), 0.025)
             );
         }
 
@@ -691,7 +682,7 @@ export function NotificationsPage() {
           padding: 12px 13px;
           border: 1px solid var(--border-soft);
           border-radius: 16px;
-          background: var(--surface-glass);
+          background: var(--panel-background, var(--surface-glass));
         }
 
         .notification-post-preview p {
@@ -745,7 +736,7 @@ export function NotificationsPage() {
           padding: 42px 24px;
           border: 1px solid var(--border-soft);
           border-radius: 28px;
-          background: var(--card-bg);
+          background: var(--card-background, var(--card-bg));
           text-align: center;
           box-shadow: var(--shadow-sm);
         }
@@ -767,7 +758,7 @@ export function NotificationsPage() {
         .notifications-state h2 {
           margin: 0;
           color: var(--text);
-          font-family: 'Instrument Serif', serif;
+          font-family: var(--font-ui);
           font-size: 29px;
           font-weight: 400;
           letter-spacing: -0.01em;
@@ -905,17 +896,13 @@ export function NotificationsPage() {
         <header className="notifications-header">
           <div>
             <p className="notifications-eyebrow">
-              Seu espaço
-            </p>
+              {t(" Seu espaço ")}</p>
 
             <h1 className="notifications-title">
-              Notificações
-            </h1>
+              {t(" Notificações ")}</h1>
 
             <p className="notifications-subtitle">
-              Pequenos sinais das pessoas que fazem parte dos
-              seus momentos.
-            </p>
+              {t(" Pequenos sinais das pessoas que fazem parte dos seus momentos. ")}</p>
           </div>
 
           <button
@@ -931,7 +918,7 @@ export function NotificationsPage() {
 
             {markAllAsRead.isPending
               ? 'Marcando...'
-              : 'Marcar todas como lidas'}
+              : t("Marcar todas como lidas")}
           </button>
         </header>
 
@@ -947,10 +934,10 @@ export function NotificationsPage() {
                 {unreadCount > 0
                   ? `${unreadCount} ${
                       unreadCount === 1
-                        ? 'notificação não lida'
-                        : 'notificações não lidas'
+                        ? t("notificação não lida")
+                        : t("notificações não lidas")
                     }`
-                  : 'Você está em dia com seus momentos'}
+                  : t("Você está em dia com seus momentos")}
               </span>
             </div>
           )}
@@ -969,20 +956,17 @@ export function NotificationsPage() {
               <BellIcon />
             </div>
 
-            <h2>Algo ficou em silêncio.</h2>
+            <h2>{t("Algo ficou em silêncio.")}</h2>
 
             <p>
-              Não conseguimos carregar suas notificações agora.
-              Tente novamente em alguns instantes.
-            </p>
+              {t(" Não conseguimos carregar suas notificações agora. Tente novamente em alguns instantes. ")}</p>
 
             <button
               type="button"
               className="notifications-retry"
               onClick={() => notificationsQuery.refetch()}
             >
-              Tentar novamente
-            </button>
+              {t(" Tentar novamente ")}</button>
           </div>
         )}
 
@@ -994,13 +978,10 @@ export function NotificationsPage() {
                 <BellIcon />
               </div>
 
-              <h2>Ainda está tranquilo por aqui.</h2>
+              <h2>{t("Ainda está tranquilo por aqui.")}</h2>
 
               <p>
-                Quando alguém seguir você, curtir, republicar ou
-                mencionar um dos seus momentos, você verá por
-                aqui.
-              </p>
+                {t(" Quando alguém seguir você, curtir, republicar ou mencionar um dos seus momentos, você verá por aqui. ")}</p>
             </div>
           )}
 

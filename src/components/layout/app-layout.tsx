@@ -1,3 +1,4 @@
+import { t, useLanguage } from '@/i18n';
 import {
   Link,
   NavLink,
@@ -17,6 +18,7 @@ import momentIcon from '@/assets/moment-icon.svg';
 const NOTIFICATIONS_LIMIT = 30;
 
 function IconHome() {
+  useLanguage();
   return (
     <svg
       width="20"
@@ -36,6 +38,7 @@ function IconHome() {
 }
 
 function IconUser() {
+  useLanguage();
   return (
     <svg
       width="20"
@@ -54,6 +57,7 @@ function IconUser() {
 }
 
 function IconBell() {
+  useLanguage();
   return (
     <svg
       width="20"
@@ -72,6 +76,7 @@ function IconBell() {
 }
 
 function IconSearch() {
+  useLanguage();
   return (
     <svg
       width="20"
@@ -90,6 +95,7 @@ function IconSearch() {
 }
 
 function IconSettings() {
+  useLanguage();
   return (
     <svg
       width="20"
@@ -108,6 +114,7 @@ function IconSettings() {
 }
 
 function IconLogout() {
+  useLanguage();
   return (
     <svg
       width="18"
@@ -127,6 +134,7 @@ function IconLogout() {
 }
 
 function IconMore() {
+  useLanguage();
   return (
     <svg width="21" height="21" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
       <circle cx="5" cy="12" r="1.8" />
@@ -139,31 +147,35 @@ function IconMore() {
 const navItems = [
   {
     to: '/',
-    label: 'Início',
+    get label() { return t("Início"); },
     icon: <IconHome />,
   },
   {
     to: '/profile',
-    label: 'Perfil',
+    get label() { return t("Perfil"); },
+    icon: <IconUser />,
+  },
+  {
+    to: '/communities',
+    get label() { return t("Estações"); },
     icon: <IconUser />,
   },
   {
     to: '/notifications',
-    label: 'Notificações',
+    get label() { return t("Notificações"); },
     icon: <IconBell />,
     notifications: true,
   },
   {
     to: '/explore',
-    label: 'Explorar',
+    get label() { return t("Explorar"); },
     icon: <IconSearch />,
   },
   {
     to: '/settings',
-    label: 'Configurações',
+    get label() { return t("Configurações"); },
     icon: <IconSettings />,
   },
-  { to: '/communities', label: 'Estações', icon: <IconUser /> },
 ];
 
 function getInitials(name?: string) {
@@ -179,6 +191,7 @@ function getInitials(name?: string) {
 }
 
 export function AppLayout() {
+  useLanguage();
   const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -231,12 +244,12 @@ export function AppLayout() {
           background:
             radial-gradient(
               circle at top left,
-              rgba(167, 139, 250, 0.11),
+              rgba(var(--accent-soft-rgb, 167, 139, 250), 0.11),
               transparent 32%
             ),
             radial-gradient(
               circle at 82% 8%,
-              rgba(124, 58, 237, 0.08),
+              rgba(var(--accent-rgb, 124, 58, 237), 0.08),
               transparent 28%
             ),
             transparent;
@@ -258,7 +271,7 @@ export function AppLayout() {
             ),
             radial-gradient(
               circle at bottom center,
-              rgba(167, 139, 250, 0.06),
+              rgba(var(--accent-soft-rgb, 167, 139, 250), 0.06),
               transparent 34%
             );
         }
@@ -312,7 +325,7 @@ export function AppLayout() {
 
         .app-logo-text {
           color: var(--amethyst);
-          font-family: 'Instrument Serif', serif;
+          font-family: var(--font-ui);
           font-size: 30px;
           font-weight: 400;
           letter-spacing: -0.02em;
@@ -337,7 +350,7 @@ export function AppLayout() {
           border: 1px solid transparent;
           border-radius: 18px;
           color: var(--text-soft);
-          font-family: 'Helvetica Neue', Arial, sans-serif;
+          font-family: var(--font-ui);
           font-size: 15px;
           font-weight: 750;
           text-decoration: none;
@@ -356,7 +369,7 @@ export function AppLayout() {
           background:
             radial-gradient(
               circle at top left,
-              rgba(167, 139, 250, 0.18),
+              rgba(var(--accent-soft-rgb, 167, 139, 250), 0.18),
               transparent 45%
             );
           opacity: 0;
@@ -394,12 +407,12 @@ export function AppLayout() {
         }
 
         .app-nav-link.active {
-          border-color: rgba(167, 139, 250, 0.28);
+          border-color: rgba(var(--accent-soft-rgb, 167, 139, 250), 0.28);
           background:
             linear-gradient(
               135deg,
-              rgba(124, 58, 237, 0.14),
-              rgba(167, 139, 250, 0.08)
+              rgba(var(--accent-rgb, 124, 58, 237), 0.14),
+              rgba(var(--accent-soft-rgb, 167, 139, 250), 0.08)
             );
           color: var(--amethyst);
           box-shadow: var(--shadow-amethyst);
@@ -451,7 +464,7 @@ export function AppLayout() {
           background:
             radial-gradient(
               circle at top left,
-              rgba(167, 139, 250, 0.14),
+              rgba(var(--accent-soft-rgb, 167, 139, 250), 0.14),
               transparent 46%
             );
         }
@@ -531,7 +544,7 @@ export function AppLayout() {
           flex-shrink: 0;
           border: 1px solid var(--border-soft);
           border-radius: 15px;
-          background: var(--surface-glass);
+          background: var(--panel-background, var(--surface-glass));
           color: var(--text-muted);
           cursor: pointer;
           transition:
@@ -579,7 +592,7 @@ export function AppLayout() {
           overflow: hidden;
           border: 1px solid var(--border-soft);
           border-radius: 26px;
-          background: var(--card-bg);
+          background: var(--card-background, var(--card-bg));
           box-shadow: var(--shadow-sm);
           backdrop-filter: blur(20px);
           -webkit-backdrop-filter: blur(20px);
@@ -593,7 +606,7 @@ export function AppLayout() {
           background:
             radial-gradient(
               circle at top right,
-              rgba(167, 139, 250, 0.16),
+              rgba(var(--accent-soft-rgb, 167, 139, 250), 0.16),
               transparent 42%
             );
         }
@@ -783,7 +796,7 @@ export function AppLayout() {
               onClick={() => setIsMobileMenuOpen((open) => !open)}
               aria-expanded={isMobileMenuOpen}
               aria-controls="mobile-navigation"
-              aria-label={isMobileMenuOpen ? 'Fechar menu' : 'Abrir menu'}
+              aria-label={isMobileMenuOpen ? t("Fechar menu") : t("Abrir menu")}
             >
               <IconMore />
             </button>
@@ -792,7 +805,7 @@ export function AppLayout() {
           <nav
             id="mobile-navigation"
             className={`app-nav${isMobileMenuOpen ? ' mobile-open' : ''}`}
-            aria-label="Navegação principal"
+            aria-label={t("Navegação principal")}
           >
             {navItems.map((item) => (
               <NavLink
@@ -827,7 +840,7 @@ export function AppLayout() {
                   )}
               </NavLink>
             ))}
-            {user?.canModerate && <NavLink to="/moderation" className="app-nav-link" onClick={() => setIsMobileMenuOpen(false)}>Moderação</NavLink>}
+            {user?.canModerate && <NavLink to="/moderation" className="app-nav-link" onClick={() => setIsMobileMenuOpen(false)}>{t("Moderação")}</NavLink>}
             <StationShortcuts close={() => setIsMobileMenuOpen(false)} />
             <LegalLinks />
           </nav>
@@ -864,8 +877,8 @@ export function AppLayout() {
               className="app-logout-btn"
               onClick={handleLogout}
               disabled={logout.isPending}
-              title="Sair"
-              aria-label="Sair"
+              title={t("Sair")}
+              aria-label={t("Sair")}
             >
               <IconLogout />
             </button>
@@ -879,13 +892,10 @@ export function AppLayout() {
         <aside className="app-right-column">
           <div className="app-right-card">
             <p className="app-right-card-title">
-              Em breve
-            </p>
+              {t(" Em breve ")}</p>
 
             <p className="app-right-card-text">
-              Sugestões de pessoas e momentos populares
-              aparecerão aqui de forma leve e cuidadosa.
-            </p>
+              {t(" Sugestões de pessoas e momentos populares aparecerão aqui de forma leve e cuidadosa. ")}</p>
           </div>
         </aside>
       </div>

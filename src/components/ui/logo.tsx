@@ -22,7 +22,7 @@ export function Logo({ size = 48 }: { size?: number }) {
           color: '#fff',
           fontSize: size / 2,
           fontWeight: 900,
-          boxShadow: '0 8px 20px rgba(124, 58, 237, 0.3)',
+          boxShadow: '0 8px 20px rgba(var(--accent-rgb, 124, 58, 237), 0.3)',
         }}
       >
         M

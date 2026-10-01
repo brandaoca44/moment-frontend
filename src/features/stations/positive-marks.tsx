@@ -1,8 +1,9 @@
+import { t, useLanguage } from '@/i18n';
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import "./stations.css";
 const marks = [
-  ["WELCOMES", "💛 Acolhe", "Faz as pessoas se sentirem bem-vindas."],
+  ["STYLE", "✦ Tem estilo", "Expressa personalidade através do seu estilo."],
   ["INSPIRES", "💡 Inspira", "Compartilha ideias e experiências que inspiram."],
   ["DELIGHTS", "✨ Alegra", "Traz humor e leveza às conversas."],
 ];
@@ -16,10 +17,13 @@ type Data = {
 export function PositiveMarks({
   userId,
   own,
+  settings = false,
 }: {
   userId: string;
   own: boolean;
+  settings?: boolean;
 }) {
+  useLanguage();
   const client = useQueryClient();
   const query = useQuery({
     queryKey: ["marks", userId],
@@ -49,24 +53,25 @@ export function PositiveMarks({
     onSuccess: () => client.invalidateQueries({ queryKey: ["marks", userId] }),
   });
   if (query.isPending)
-    return <p role="status">Carregando marcas positivas...</p>;
+    return <p role="status">{t("Carregando marcas positivas...")}</p>;
   if (query.isError)
-    return <p role="alert">Não foi possível carregar as marcas positivas.</p>;
+    return <p role="alert">{t("Não foi possível carregar as marcas positivas.")}</p>;
   if (!data) return null;
+  if (own && !settings && !data.showsMarks) return null;
   return (
-    <section className="marks-panel" aria-label="Marcas positivas">
-      {(data.showsMarks || own) && (
+    <section className={settings ? 'marks-settings' : 'marks-panel'} aria-label={t("Marcas positivas")}>
+      {!settings && data.showsMarks && (
         <>
           <div className="mark-options">
             {marks.map(([kind, label, description]) =>
               own ? (
-                <span className="mark-value" title={description} key={kind}>
-                  {label}{" "}
+                <span className="mark-value" title={t(description)} key={kind}>
+                  {t(label)}{" "}
                   <span className="mark-count">{data.counts[kind] ?? 0}</span>
                 </span>
               ) : (
                 <button
-                  title={description}
+                  title={t(description)}
                   key={kind}
                   aria-pressed={data.mine.includes(kind)}
                   disabled={
@@ -76,7 +81,7 @@ export function PositiveMarks({
                   }
                   onClick={() => action.mutate({ kind })}
                 >
-                  {label}{" "}
+                  {t(label)}{" "}
                   <span className="mark-count">{data.counts[kind] ?? 0}</span>
                 </button>
               ),
@@ -85,15 +90,13 @@ export function PositiveMarks({
         </>
       )}
       {!own && !data.showsMarks && (
-        <p>Este perfil prefere não exibir as marcas.</p>
+        <p>{t("Este perfil prefere não exibir as marcas.")}</p>
       )}
       {!own && !data.canGive && data.showsMarks && (
         <details className="marks-help">
-          <summary>Sobre as marcas</summary>
+          <summary>{t("Sobre as marcas")}</summary>
           <small>
-            Marcas disponíveis após uma conversa pública entre vocês, se o
-            perfil aceitar recebê-las.
-          </small>
+            {t(" Marcas disponíveis após uma conversa pública entre vocês, se o perfil aceitar recebê-las. ")}</small>
         </details>
       )}
       {!own && !data.showsMarks && data.mine.length > 0 && (
@@ -101,37 +104,38 @@ export function PositiveMarks({
           disabled={action.isPending}
           onClick={() => action.mutate({ kind: data.mine[0] })}
         >
-          Retirar uma marca enviada
-        </button>
+          {t(" Retirar uma marca enviada ")}</button>
       )}
-      {own && (
-        <details>
-          <summary>Preferências das marcas</summary>
+      {own && settings && (
+        <>
+          <h3>{t("Marcas positivas")}</h3>
+          <p>{t("Escolha se deseja receber marcas e mostrá-las no seu perfil. As alterações são salvas automaticamente.")}</p>
           <label>
             <input
               type="checkbox"
+              role="switch"
               checked={data.acceptsMarks}
               disabled={action.isPending}
               onChange={(e) =>
                 action.mutate({ setting: { acceptsMarks: e.target.checked } })
               }
             />{" "}
-            Aceitar marcas positivas
-          </label>
+            {t(" Aceitar marcas positivas ")}</label>
           <label>
             <input
               type="checkbox"
+              role="switch"
               checked={data.showsMarks}
               disabled={action.isPending}
               onChange={(e) =>
                 action.mutate({ setting: { showsMarks: e.target.checked } })
               }
             />{" "}
-            Exibir símbolos e totais no perfil
-          </label>
-        </details>
+            {t(" Exibir símbolos e totais no perfil ")}</label>
+          {action.isSuccess && <small role="status">{t("Preferências salvas.")}</small>}
+        </>
       )}
-      {action.isError && <p role="alert">{action.error.message}</p>}
+      {action.isError && <p role="alert">{t(action.error.message)}</p>}
     </section>
   );
 }

@@ -1,3 +1,5 @@
+import { getLanguage } from '@/i18n';
+import { t, useLanguage } from '@/i18n';
 import { useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -8,6 +10,7 @@ import './reports.css';
 import { PendingContent } from './pending-content';
 
 function ReviewCard({ report }: { report: Report }) {
+  useLanguage();
   const [open, setOpen] = useState(false);
   const [note, setNote] = useState('');
   const client = useQueryClient();
@@ -16,40 +19,41 @@ function ReviewCard({ report }: { report: Report }) {
   } });
   return <details className="report-card" onToggle={event => setOpen(event.currentTarget.open)}>
     <summary className="report-summary">
-      <span className="report-summary-title">{report.targetType === 'FORUM' ? 'Estação' : report.targetType === 'POST' ? 'Momento' : 'Resposta'} · {reasons[report.reason]}</span>
-      <small>{new Date(report.createdAt).toLocaleString('pt-BR')} · {open ? 'Recolher' : 'Ver denúncia'}</small>
+      <span className="report-summary-title">{report.targetType === 'FORUM' ? t("Estação") : report.targetType === 'POST' ? 'Momento' : 'Resposta'} · {reasons[report.reason]}</span>
+      <small>{new Date(report.createdAt).toLocaleString(getLanguage())} · {open ? t("Recolher") : t("Ver denúncia")}</small>
     </summary>
     {open && <div className="report-expanded">
-    <h3>Conteúdo no momento da denúncia</h3><p className="report-content">{report.contentSnapshot}</p>
+    <h3>{t("Conteúdo no momento da denúncia")}</h3><p className="report-content">{report.contentSnapshot}</p>
     {report.imageSnapshot && <ExpandableImage src={report.imageSnapshot} alt="Imagem denunciada" className="report-image" />}
-    {report.details && <><h3>Relato</h3><p className="report-content">{report.details}</p></>}
-    <h3>Situação atual</h3>
-    {report.current ? <><p>{report.current.moderationStatus === 'APPROVED' ? 'Disponível' : 'Fora da exibição pública'}</p><p className="report-content">{report.current.content}</p></> : <p>O conteúdo já foi excluído.</p>}
+    {report.details && <><h3>{t("Relato")}</h3><p className="report-content">{report.details}</p></>}
+    <h3>{t("Situação atual")}</h3>
+    {report.current ? <><p>{report.current.moderationStatus === 'APPROVED' ? t("Disponível") : t("Fora da exibição pública")}</p><p className="report-content">{report.current.content}</p></> : <p>{t("O conteúdo já foi excluído.")}</p>}
     {report.status === 'PENDING' ? <>
-      <label>Justificativa da decisão<textarea maxLength={1000} value={note} disabled={review.isPending} onChange={event => setNote(event.target.value)} /></label>
-      <div className="report-controls"><button disabled={!note.trim() || review.isPending} onClick={() => review.mutate('DISMISS')}>Encerrar sem retirar</button><button disabled={!note.trim() || review.isPending || !report.current} onClick={() => { if (window.confirm('Retirar este conteúdo da exibição pública, incluindo a versão atual?')) review.mutate('HIDE'); }}>Retirar conteúdo</button></div>
-      {review.isError && <p role="alert">{review.error.message}</p>}
-    </> : <p>Decisão: {report.status === 'HIDDEN' ? 'Conteúdo retirado' : 'Encerrada sem retirada'}. {report.reviewNote}</p>}
+      <label>{t("Justificativa da decisão")}<textarea maxLength={1000} value={note} disabled={review.isPending} onChange={event => setNote(event.target.value)} /></label>
+      <div className="report-controls"><button disabled={!note.trim() || review.isPending} onClick={() => review.mutate('DISMISS')}>{t("Encerrar sem retirar")}</button><button disabled={!note.trim() || review.isPending || !report.current} onClick={() => { if (window.confirm('Retirar este conteúdo da exibição pública, incluindo a versão atual?')) review.mutate('HIDE'); }}>{t("Retirar conteúdo")}</button></div>
+      {review.isError && <p role="alert">{t(review.error.message)}</p>}
+    </> : <p>{t("Decisão: ")}{report.status === 'HIDDEN' ? t("Conteúdo retirado") : t("Encerrada sem retirada")}. {report.reviewNote}</p>}
     </div>}
   </details>;
 }
 
 export function ReportsPage() {
+  useLanguage();
   const me = useMe();
   const [status, setStatus] = useState('PENDING');
   const [reason, setReason] = useState('');
   const allowed = me.data?.data.user.canModerate === true;
   const reports = useInfiniteQuery({ queryKey: ['reports', status, reason], queryFn: ({ pageParam }) => getReports(status, pageParam, reason), initialPageParam: undefined as string | undefined, getNextPageParam: page => page.meta.nextCursor ?? undefined, enabled: allowed });
-  if (me.isLoading) return <p>Carregando...</p>;
+  if (me.isLoading) return <p>{t("Carregando...")}</p>;
   if (!allowed) return <Navigate to="/" replace />;
-  return <section className="reports-page"><h1>Moderação de denúncias</h1>
+  return <section className="reports-page"><h1>{t("Moderação de denúncias")}</h1>
     <PendingContent />
-    <label>Mostrar<select value={status} onChange={event => setStatus(event.target.value)}><option value="PENDING">Pendentes</option><option value="DISMISSED">Encerradas sem retirada</option><option value="HIDDEN">Conteúdo retirado</option></select></label>
-    <label>Categoria<select value={reason} onChange={event => setReason(event.target.value)}><option value="">Todas as categorias</option>{Object.entries(reasons).map(([key, label]) => <option key={key} value={key}>{label}</option>)}</select></label>
-    {reports.isPending && <p role="status">Carregando denúncias...</p>}
-    {reports.isError && <p role="alert">{reports.error.message} <button onClick={() => reports.refetch()}>Tentar novamente</button></p>}
+    <label>{t("Mostrar")}<select value={status} onChange={event => setStatus(event.target.value)}><option value="PENDING">{t("Pendentes")}</option><option value="DISMISSED">{t("Encerradas sem retirada")}</option><option value="HIDDEN">{t("Conteúdo retirado")}</option></select></label>
+    <label>{t("Categoria")}<select value={reason} onChange={event => setReason(event.target.value)}><option value="">{t("Todas as categorias")}</option>{Object.entries(reasons).map(([key, label]) => <option key={key} value={key}>{label}</option>)}</select></label>
+    {reports.isPending && <p role="status">{t("Carregando denúncias...")}</p>}
+    {reports.isError && <p role="alert">{t(reports.error.message)} <button onClick={() => reports.refetch()}>{t("Tentar novamente")}</button></p>}
     {reports.data?.pages.flatMap(page => page.data).map(report => <ReviewCard key={`${status}-${reason}-${report.id}`} report={report} />)}
-    {reports.data?.pages[0].data.length === 0 && <p>Nenhuma denúncia nesta fila.</p>}
-    {reports.hasNextPage && <button disabled={reports.isFetchingNextPage} onClick={() => reports.fetchNextPage()}>Carregar mais</button>}
+    {reports.data?.pages[0].data.length === 0 && <p>{t("Nenhuma denúncia nesta fila.")}</p>}
+    {reports.hasNextPage && <button disabled={reports.isFetchingNextPage} onClick={() => reports.fetchNextPage()}>{t("Carregar mais")}</button>}
   </section>;
 }

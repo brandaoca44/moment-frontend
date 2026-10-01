@@ -1,3 +1,5 @@
+import { getLanguage } from '@/i18n';
+import { t, useLanguage } from '@/i18n';
 import { useState } from "react";
 import {
   useInfiniteQuery,
@@ -14,6 +16,7 @@ type Pending = {
   createdAt: string;
 };
 function PendingCard({ item, type }: { item: Pending; type: string }) {
+  useLanguage();
   const client = useQueryClient();
   const [note, setNote] = useState("");
   const [open, setOpen] = useState(false);
@@ -44,7 +47,7 @@ function PendingCard({ item, type }: { item: Pending; type: string }) {
     >
       <summary>
         {type === "POST" ? "Momento" : "Resposta"} ·{" "}
-        {new Date(item.createdAt).toLocaleString("pt-BR")}
+        {new Date(item.createdAt).toLocaleString(getLanguage())}
       </summary>
       {open && (
         <div className="report-expanded">
@@ -57,13 +60,9 @@ function PendingCard({ item, type }: { item: Pending; type: string }) {
             />
           )}
           <p>
-            Verifique contexto, nudez, assédio, campanha política, destino
-            comercial e possíveis dados pessoais antes de aprovar. Um domínio
-            conhecido não garante um vendedor confiável.
-          </p>
+            {t(" Verifique contexto, nudez, assédio, campanha política, destino comercial e possíveis dados pessoais antes de aprovar. Um domínio conhecido não garante um vendedor confiável. ")}</p>
           <label>
-            Justificativa
-            <textarea
+            {t(" Justificativa ")}<textarea
               value={note}
               onChange={(e) => setNote(e.target.value)}
               maxLength={1000}
@@ -74,22 +73,21 @@ function PendingCard({ item, type }: { item: Pending; type: string }) {
               disabled={review.isPending || !note.trim()}
               onClick={() => review.mutate("APPROVE")}
             >
-              Aprovar publicação
-            </button>
+              {t(" Aprovar publicação ")}</button>
             <button
               disabled={review.isPending || !note.trim()}
               onClick={() => review.mutate("HIDE")}
             >
-              Rejeitar publicação
-            </button>
+              {t(" Rejeitar publicação ")}</button>
           </div>
-          {review.isError && <p role="alert">{review.error.message}</p>}
+          {review.isError && <p role="alert">{t(review.error.message)}</p>}
         </div>
       )}
     </details>
   );
 }
 export function PendingContent() {
+  useLanguage();
   const [type, setType] = useState("POST");
   const query = useInfiniteQuery({
     queryKey: ["pending-content", type],
@@ -102,25 +100,21 @@ export function PendingContent() {
   });
   return (
     <details className="report-card">
-      <summary>Publicações aguardando moderação</summary>
+      <summary>{t("Publicações aguardando moderação")}</summary>
       <div className="report-expanded">
         <p>
-          Esta fila inclui retenções automáticas e falhas temporárias da
-          moderação. Publicações das Estações ficam na fila de revisão das
-          Estações.
-        </p>
+          {t(" Esta fila inclui retenções automáticas e falhas temporárias da moderação. Publicações das Estações ficam na fila de revisão das Estações. ")}</p>
         <label>
-          Tipo
-          <select value={type} onChange={(e) => setType(e.target.value)}>
-            <option value="POST">Momentos</option>
-            <option value="REPLY">Respostas</option>
+          {t(" Tipo ")}<select value={type} onChange={(e) => setType(e.target.value)}>
+            <option value="POST">{t("Momentos")}</option>
+            <option value="REPLY">{t("Respostas")}</option>
           </select>
         </label>
-        {query.isPending && <p role="status">Carregando...</p>}
+        {query.isPending && <p role="status">{t("Carregando...")}</p>}
         {query.isError && (
           <p role="alert">
-            {query.error.message}{" "}
-            <button onClick={() => query.refetch()}>Tentar novamente</button>
+            {t(query.error.message)}{" "}
+            <button onClick={() => query.refetch()}>{t("Tentar novamente")}</button>
           </p>
         )}
         {query.data?.pages
@@ -129,15 +123,14 @@ export function PendingContent() {
             <PendingCard key={`${type}-${item.id}`} item={item} type={type} />
           ))}
         {query.data?.pages[0].data.length === 0 && (
-          <p>Nenhuma publicação aguardando revisão.</p>
+          <p>{t("Nenhuma publicação aguardando revisão.")}</p>
         )}
         {query.hasNextPage && (
           <button
             disabled={query.isFetchingNextPage}
             onClick={() => query.fetchNextPage()}
           >
-            Carregar mais
-          </button>
+            {t(" Carregar mais ")}</button>
         )}
       </div>
     </details>

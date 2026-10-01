@@ -1,3 +1,4 @@
+import { t, useLanguage } from '@/i18n';
 import { useEffect, useRef, useState, type ReactElement } from 'react';
 import { useMe } from '@/features/auth/hooks/use-me';
 import { useUpdateMe } from '../hooks/use-update-me';
@@ -5,8 +6,14 @@ import { useUpdateAvatar } from '../hooks/use-update-avatar';
 import { useUpdatePassword } from '../hooks/use-update-password';
 import { useDeleteMe } from '../hooks/use-delete-me';
 import { ThemeSelector } from '@/features/feed/components/theme-selector';
+import { ProfileBlock } from '@/features/profile/components/profile-block';
+import { ContentPreferences } from '@/features/profile/components/content-preference';
+import { EmailConfirmation } from '@/features/profile/components/email-confirmation';
+import { PositiveMarks } from '@/features/stations/positive-marks';
+import { LanguagePicker } from '@/i18n/language-picker';
+import { Globe } from 'lucide-react';
 
-type Section = 'profile' | 'appearance' | 'password' | 'danger';
+type Section = 'profile' | 'appearance' | 'password' | 'privacy' | 'danger' | 'language';
 
 type SettingsUser =
   | {
@@ -19,6 +26,7 @@ type SettingsUser =
   | undefined;
 
 function IconPalette() {
+  useLanguage();
   return (
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <circle cx="13.5" cy="6.5" r="1.5" />
@@ -31,6 +39,7 @@ function IconPalette() {
 }
 
 function IconProfile() {
+  useLanguage();
   return (
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <circle cx="12" cy="8" r="4" />
@@ -40,6 +49,7 @@ function IconProfile() {
 }
 
 function IconLock() {
+  useLanguage();
   return (
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <rect x="5" y="11" width="14" height="10" rx="2" />
@@ -49,6 +59,7 @@ function IconLock() {
 }
 
 function IconDanger() {
+  useLanguage();
   return (
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <path d="M12 9v4" />
@@ -61,31 +72,39 @@ function IconDanger() {
 const menuItems: Array<{ id: Section; label: string; description: string; icon: ReactElement }> = [
   {
     id: 'profile',
-    label: 'Perfil',
-    description: 'Nome e username',
+    get label() { return t("Perfil"); },
+    get description() { return t("Nome e username"); },
     icon: <IconProfile />,
   },
   {
     id: 'appearance',
-    label: 'Aparência',
-    description: 'Tema e visual',
+    get label() { return t("Aparência"); },
+    get description() { return t("Tema e visual"); },
     icon: <IconPalette />,
   },
+  { id: 'language', get label() { return t('Idiomas'); }, get description() { return t('Escolha o idioma do Moment.'); }, icon: <Globe size={18} /> },
   {
     id: 'password',
-    label: 'Senha',
-    description: 'Segurança da conta',
+    get label() { return t("Segurança"); },
+    get description() { return t("Segurança da conta"); },
+    icon: <IconLock />,
+  },
+  {
+    id: 'privacy',
+    get label() { return t("Privacidade"); },
+    get description() { return t("Bloqueios e conteúdo"); },
     icon: <IconLock />,
   },
   {
     id: 'danger',
-    label: 'Conta',
-    description: 'Ações sensíveis',
+    get label() { return t("Conta"); },
+    get description() { return t("Ações sensíveis"); },
     icon: <IconDanger />,
   },
 ];
 
 export function SettingsPage() {
+  useLanguage();
   const { data: meData } = useMe();
   const user = meData?.data?.user;
 
@@ -99,7 +118,7 @@ export function SettingsPage() {
           position: relative;
           max-width: 820px;
           margin: 0 auto;
-          font-family: 'Inter', sans-serif;
+          font-family: var(--font-ui);
           animation: settingsFadeIn 260ms var(--ease-premium) both;
         }
 
@@ -112,7 +131,7 @@ export function SettingsPage() {
           max-width: 100vw;
           height: 680px;
           border-radius: 999px;
-          background: radial-gradient(circle, rgba(124, 58, 237, 0.10), transparent 70%);
+          background: radial-gradient(circle, rgba(var(--accent-rgb, 124, 58, 237), 0.10), transparent 70%);
           transform: translateX(-50%);
           pointer-events: none;
           z-index: -1;
@@ -125,7 +144,7 @@ export function SettingsPage() {
           border-radius: 32px;
           padding: 30px;
           margin-bottom: 24px;
-          background: var(--surface-glass);
+          background: var(--panel-background, var(--surface-glass));
           border: 1px solid var(--glass-border);
           box-shadow: var(--shadow-md);
           display: flex;
@@ -140,7 +159,7 @@ export function SettingsPage() {
           position: absolute;
           inset: 0;
           background:
-            radial-gradient(circle at top right, rgba(167, 139, 250, 0.22), transparent 42%),
+            radial-gradient(circle at top right, rgba(var(--accent-soft-rgb, 167, 139, 250), 0.22), transparent 42%),
             linear-gradient(135deg, var(--glass-highlight), transparent 56%);
           pointer-events: none;
         }
@@ -188,7 +207,7 @@ export function SettingsPage() {
           margin: 0;
           font-size: clamp(30px, 5vw, 38px);
           line-height: 1.12;
-          font-family: 'Instrument Serif', serif;
+          font-family: var(--font-ui);
           font-weight: 400;
           letter-spacing: -0.012em;
           color: var(--text);
@@ -215,7 +234,7 @@ export function SettingsPage() {
           top: 24px;
           padding: 10px;
           border-radius: 26px;
-          background: var(--surface-glass);
+          background: var(--panel-background, var(--surface-glass));
           border: 1px solid var(--border-soft);
           box-shadow: var(--shadow-sm);
           backdrop-filter: blur(22px);
@@ -223,6 +242,7 @@ export function SettingsPage() {
         }
 
         .settings-menu-item {
+          font-family: var(--font-ui);
           position: relative;
           overflow: hidden;
           width: 100%;
@@ -248,7 +268,7 @@ export function SettingsPage() {
           content: '';
           position: absolute;
           inset: 0;
-          background: radial-gradient(circle at top left, rgba(167, 139, 250, 0.18), transparent 48%);
+          background: radial-gradient(circle at top left, rgba(var(--accent-soft-rgb, 167, 139, 250), 0.18), transparent 48%);
           opacity: 0;
           pointer-events: none;
           transition: opacity 180ms ease;
@@ -267,8 +287,8 @@ export function SettingsPage() {
         }
 
         .settings-menu-item.active {
-          background: linear-gradient(135deg, rgba(124, 58, 237, 0.14), rgba(167, 139, 250, 0.08));
-          border-color: rgba(167, 139, 250, 0.26);
+          background: linear-gradient(135deg, rgba(var(--accent-rgb, 124, 58, 237), 0.14), rgba(var(--accent-soft-rgb, 167, 139, 250), 0.08));
+          border-color: rgba(var(--accent-soft-rgb, 167, 139, 250), 0.26);
           color: var(--amethyst);
           box-shadow: var(--shadow-amethyst);
         }
@@ -299,14 +319,16 @@ export function SettingsPage() {
         }
 
         .settings-menu-label strong {
-          font-size: 14px;
-          font-weight: 850;
+          font-size: 15px;
+          font-weight: 750;
+          line-height: 1.35;
         }
 
         .settings-menu-label span {
           font-size: 12px;
           color: var(--text-muted);
-          font-weight: 650;
+          font-weight: 400;
+          line-height: 1.4;
         }
 
         .settings-section {
@@ -314,7 +336,7 @@ export function SettingsPage() {
           overflow: hidden;
           padding: 30px;
           border-radius: 28px;
-          background: var(--surface-glass);
+          background: var(--panel-background, var(--surface-glass));
           border: 1px solid var(--border-soft);
           box-shadow: var(--shadow-card);
           backdrop-filter: blur(22px);
@@ -343,7 +365,7 @@ export function SettingsPage() {
           margin: 0;
           font-size: 23px;
           line-height: 1.22;
-          font-family: 'Instrument Serif', serif;
+          font-family: var(--font-ui);
           font-weight: 400;
           letter-spacing: -0.01em;
           color: var(--text);
@@ -450,7 +472,7 @@ export function SettingsPage() {
           background: var(--surface-elevated);
           padding: 0 16px;
           font-size: 15px;
-          font-family: 'Inter', sans-serif;
+          font-family: var(--font-ui);
           font-weight: 650;
           color: var(--text);
           outline: none;
@@ -473,12 +495,12 @@ export function SettingsPage() {
 
         .settings-input:focus {
           border-color: var(--amethyst-border);
-          box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.10), var(--shadow-xs);
+          box-shadow: 0 0 0 4px rgba(var(--accent-rgb, 124, 58, 237), 0.10), var(--shadow-xs);
           transform: translateY(-1px);
         }
 
         .settings-input.disabled {
-          background: var(--surface-glass);
+          background: var(--panel-background, var(--surface-glass));
           color: var(--text-muted);
           cursor: not-allowed;
           opacity: 0.85;
@@ -529,14 +551,14 @@ export function SettingsPage() {
           background: linear-gradient(135deg, var(--amethyst), var(--amethyst-light));
           color: #fff;
           font-size: 14.5px;
-          font-family: 'Inter', sans-serif;
+          font-family: var(--font-ui);
           font-weight: 950;
           box-shadow: var(--shadow-amethyst);
         }
 
         .settings-primary-button:hover:not(:disabled) {
           transform: translateY(-2px);
-          box-shadow: 0 18px 42px rgba(124, 58, 237, 0.24);
+          box-shadow: 0 18px 42px rgba(var(--accent-rgb, 124, 58, 237), 0.24);
         }
 
         .settings-primary-button:disabled,
@@ -555,7 +577,7 @@ export function SettingsPage() {
           background: var(--surface-elevated);
           color: var(--text-soft);
           font-size: 14px;
-          font-family: 'Inter', sans-serif;
+          font-family: var(--font-ui);
           font-weight: 850;
           cursor: pointer;
           box-shadow: var(--shadow-xs);
@@ -614,7 +636,7 @@ export function SettingsPage() {
           background: var(--danger-bg);
           color: var(--danger);
           font-size: 14px;
-          font-family: 'Inter', sans-serif;
+          font-family: var(--font-ui);
           font-weight: 950;
           cursor: pointer;
           box-shadow: var(--shadow-xs);
@@ -740,12 +762,10 @@ export function SettingsPage() {
           </div>
 
           <div className="settings-hero-content">
-            <p className="settings-kicker">Configurações</p>
-            <h1 className="settings-title">Seu espaço no Moment</h1>
+            <p className="settings-kicker">{t("Configurações")}</p>
+            <h1 className="settings-title">{t("Seu espaço no Moment")}</h1>
             <p className="settings-subtitle">
-              Ajuste sua conta com calma. O Moment foi feito para parecer leve,
-              seguro e confortável.
-            </p>
+              {t(" Ajuste sua conta com calma. O Moment foi feito para parecer leve, seguro e confortável. ")}</p>
           </div>
         </header>
 
@@ -772,9 +792,15 @@ export function SettingsPage() {
           </aside>
 
           <main>
-            {activeSection === 'profile' && <ProfileSection user={user} />}
+            {activeSection === 'profile' && <><ProfileSection user={user} />{user && <section className="settings-section" style={{ marginTop: 20 }}><PositiveMarks userId={user.id} own settings /></section>}</>}
             {activeSection === 'appearance' && <AppearanceSection />}
-            {activeSection === 'password' && <PasswordSection />}
+            {activeSection === 'language' && <section className="settings-section"><h2>{t('Idiomas')}</h2><p>{t('Escolha o idioma do Moment.')}</p><LanguagePicker /></section>}
+            {activeSection === 'password' && <><PasswordSection /><section className="settings-section" style={{ marginTop: 20 }}><EmailConfirmation /></section></>}
+            {activeSection === 'privacy' && <section className="settings-section">
+              <div className="settings-section-header"><h2 className="settings-section-title">{t("Privacidade e conteúdo")}</h2><p className="settings-section-subtitle">{t("Gerencie quem pode interagir com você e o que aparece nas suas listas.")}</p></div>
+              <ProfileBlock />
+              <ContentPreferences />
+            </section>}
             {activeSection === 'danger' && (
               <DangerSection
                 showConfirm={showDeleteConfirm}
@@ -789,13 +815,13 @@ export function SettingsPage() {
 }
 
 function AppearanceSection() {
+  useLanguage();
   return (
     <section className="settings-section">
       <div className="settings-section-header">
-        <h2 className="settings-section-title">Aparência</h2>
+        <h2 className="settings-section-title">{t("Aparência")}</h2>
         <p className="settings-section-subtitle">
-          Escolha o tema que combina com o seu momento. Cada opção mantém a leitura confortável.
-        </p>
+          {t(" Escolha o tema que combina com o seu momento. Cada opção mantém a leitura confortável. ")}</p>
       </div>
       <ThemeSelector />
     </section>
@@ -803,6 +829,7 @@ function AppearanceSection() {
 }
 
 function ProfileSection({ user }: { user: SettingsUser }) {
+  useLanguage();
   const updateMe = useUpdateMe();
   const updateAvatar = useUpdateAvatar();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -840,7 +867,7 @@ function ProfileSection({ user }: { user: SettingsUser }) {
       });
 
       setUsername(normalizedUsername);
-      setSuccess('Perfil atualizado com sucesso.');
+      setSuccess(t("Perfil atualizado com sucesso."));
       setTimeout(() => setSuccess(''), 3000);
     } catch {
       // tratado pelo isError
@@ -857,7 +884,7 @@ function ProfileSection({ user }: { user: SettingsUser }) {
     setSuccess('');
 
     if (!file.type.startsWith('image/')) {
-      setAvatarError('Escolha uma imagem válida para o avatar.');
+      setAvatarError(t("Escolha uma imagem válida para o avatar."));
       return;
     }
 
@@ -880,7 +907,7 @@ function ProfileSection({ user }: { user: SettingsUser }) {
 
     try {
       await updateAvatar.mutateAsync(file);
-      setSuccess('Foto de perfil atualizada com sucesso.');
+      setSuccess(t("Foto de perfil atualizada com sucesso."));
       setTimeout(() => setSuccess(''), 3000);
     } catch {
       // tratado pelo isError
@@ -895,10 +922,9 @@ function ProfileSection({ user }: { user: SettingsUser }) {
   return (
     <section className="settings-section">
       <div className="settings-section-header">
-        <h2 className="settings-section-title">Informações do perfil</h2>
+        <h2 className="settings-section-title">{t("Informações do perfil")}</h2>
         <p className="settings-section-subtitle">
-          Atualize sua presença no Moment com calma. Nome, username e foto devem parecer seus.
-        </p>
+          {t(" Atualize sua presença no Moment com calma. Nome, username e foto devem parecer seus. ")}</p>
       </div>
 
       <div className="settings-avatar-panel">
@@ -911,10 +937,9 @@ function ProfileSection({ user }: { user: SettingsUser }) {
         </div>
 
         <div className="settings-avatar-copy">
-          <p className="settings-avatar-title">Foto de perfil</p>
+          <p className="settings-avatar-title">{t("Foto de perfil")}</p>
           <p className="settings-avatar-description">
-            Escolha uma imagem limpa e confortável para o seu Moment.
-          </p>
+            {t(" Escolha uma imagem limpa e confortável para o seu Moment. ")}</p>
 
           <div className="settings-avatar-actions">
             <input
@@ -931,7 +956,7 @@ function ProfileSection({ user }: { user: SettingsUser }) {
               onClick={() => fileInputRef.current?.click()}
               disabled={updateAvatar.isPending}
             >
-              {updateAvatar.isPending ? 'Enviando...' : 'Trocar foto'}
+              {updateAvatar.isPending ? t("Enviando...") : t("Trocar foto")}
             </button>
           </div>
         </div>
@@ -939,18 +964,18 @@ function ProfileSection({ user }: { user: SettingsUser }) {
 
       <form onSubmit={handleSubmit} className="settings-form">
         <label className="settings-field">
-          <span className="settings-label">Nome completo</span>
+          <span className="settings-label">{t("Nome completo")}</span>
           <input
             value={name}
             onChange={(event) => setName(event.target.value)}
             className="settings-input"
-            placeholder="Seu nome"
+            placeholder={t("Seu nome")}
             required
           />
         </label>
 
         <label className="settings-field">
-          <span className="settings-label">Username</span>
+          <span className="settings-label">{t("Username")}</span>
           <div className="settings-at-wrap">
             <span className="settings-at">@</span>
             <input
@@ -962,27 +987,25 @@ function ProfileSection({ user }: { user: SettingsUser }) {
             />
           </div>
           <span className="settings-hint">
-            Use apenas letras, números e underscore.
-          </span>
+            {t(" Use apenas letras, números e underscore. ")}</span>
         </label>
 
         <label className="settings-field">
-          <span className="settings-label">E-mail</span>
+          <span className="settings-label">{t("E-mail")}</span>
           <input
             value={user?.email ?? ''}
             className="settings-input disabled"
             disabled
           />
           <span className="settings-hint">
-            O e-mail fica protegido e não pode ser alterado por aqui.
-          </span>
+            {t(" O e-mail fica protegido e não pode ser alterado por aqui. ")}</span>
         </label>
 
         {updateMe.isError ? (
           <div className="settings-feedback error">
             {updateMe.error instanceof Error
               ? updateMe.error.message
-              : 'Erro ao atualizar perfil.'}
+              : t("Erro ao atualizar perfil.")}
           </div>
         ) : null}
 
@@ -990,7 +1013,7 @@ function ProfileSection({ user }: { user: SettingsUser }) {
           <div className="settings-feedback error">
             {updateAvatar.error instanceof Error
               ? updateAvatar.error.message
-              : 'Erro ao atualizar foto de perfil.'}
+              : t("Erro ao atualizar foto de perfil.")}
           </div>
         ) : null}
 
@@ -1007,7 +1030,7 @@ function ProfileSection({ user }: { user: SettingsUser }) {
           disabled={updateMe.isPending || !hasProfileChanges}
           className="settings-primary-button"
         >
-          {updateMe.isPending ? 'Salvando...' : 'Salvar alterações'}
+          {updateMe.isPending ? t("Salvando...") : t("Salvar alterações")}
         </button>
       </form>
     </section>
@@ -1015,6 +1038,7 @@ function ProfileSection({ user }: { user: SettingsUser }) {
 }
 
 function PasswordSection() {
+  useLanguage();
   const updatePassword = useUpdatePassword();
   const [form, setForm] = useState({
     currentPassword: '',
@@ -1032,7 +1056,7 @@ function PasswordSection() {
     event.preventDefault();
 
     if (form.newPassword !== form.confirmPassword) {
-      setMatchError('As senhas não coincidem.');
+      setMatchError(t("As senhas não coincidem."));
       return;
     }
 
@@ -1049,15 +1073,14 @@ function PasswordSection() {
   return (
     <section className="settings-section">
       <div className="settings-section-header">
-        <h2 className="settings-section-title">Segurança da conta</h2>
+        <h2 className="settings-section-title">{t("Segurança da conta")}</h2>
         <p className="settings-section-subtitle">
-          Ao alterar a senha, sua sessão será encerrada para manter sua conta segura.
-        </p>
+          {t(" Ao alterar a senha, sua sessão será encerrada para manter sua conta segura. ")}</p>
       </div>
 
       <form onSubmit={handleSubmit} className="settings-form">
         <label className="settings-field">
-          <span className="settings-label">Senha atual</span>
+          <span className="settings-label">{t("Senha atual")}</span>
           <input
             name="currentPassword"
             type="password"
@@ -1070,20 +1093,20 @@ function PasswordSection() {
         </label>
 
         <label className="settings-field">
-          <span className="settings-label">Nova senha</span>
+          <span className="settings-label">{t("Nova senha")}</span>
           <input
             name="newPassword"
             type="password"
             value={form.newPassword}
             onChange={handleChange}
             className="settings-input"
-            placeholder="Mínimo 8 caracteres"
+            placeholder={t("Mínimo 8 caracteres")}
             required
           />
         </label>
 
         <label className="settings-field">
-          <span className="settings-label">Confirmar nova senha</span>
+          <span className="settings-label">{t("Confirmar nova senha")}</span>
           <input
             name="confirmPassword"
             type="password"
@@ -1104,7 +1127,7 @@ function PasswordSection() {
           <div className="settings-feedback error">
             {updatePassword.error instanceof Error
               ? updatePassword.error.message
-              : 'Erro ao alterar senha.'}
+              : t("Erro ao alterar senha.")}
           </div>
         ) : null}
 
@@ -1113,7 +1136,7 @@ function PasswordSection() {
           disabled={updatePassword.isPending}
           className="settings-primary-button"
         >
-          {updatePassword.isPending ? 'Alterando...' : 'Alterar senha'}
+          {updatePassword.isPending ? 'Alterando...' : t("Alterar senha")}
         </button>
       </form>
     </section>
@@ -1127,6 +1150,7 @@ function DangerSection({
   showConfirm: boolean;
   setShowConfirm: (value: boolean) => void;
 }) {
+  useLanguage();
   const deleteMe = useDeleteMe();
   const [password, setPassword] = useState('');
 
@@ -1134,19 +1158,15 @@ function DangerSection({
     <section className="settings-section">
       <div className="settings-section-header">
         <h2 className="settings-section-title" style={{ color: 'var(--danger)' }}>
-          Encerrar conta
-        </h2>
+          {t(" Encerrar conta ")}</h2>
         <p className="settings-section-subtitle">
-          Esta área existe para proteger você de ações impulsivas. Pense com calma.
-        </p>
+          {t(" Esta área existe para proteger você de ações impulsivas. Pense com calma. ")}</p>
       </div>
 
       <div className="settings-danger-card">
-        <p className="settings-danger-title">Deletar minha conta</p>
+        <p className="settings-danger-title">{t("Deletar minha conta")}</p>
         <p className="settings-danger-text">
-          Todos os seus dados, posts, relações sociais e informações serão removidos
-          permanentemente. Esta ação não pode ser desfeita.
-        </p>
+          {t(" Todos os seus dados, posts, relações sociais e informações serão removidos permanentemente. Esta ação não pode ser desfeita. ")}</p>
 
         {!showConfirm ? (
           <button
@@ -1155,24 +1175,22 @@ function DangerSection({
             className="settings-danger-button"
             style={{ marginTop: 16 }}
           >
-            Deletar minha conta
-          </button>
+            {t(" Deletar minha conta ")}</button>
         ) : (
           <div className="settings-form" style={{ marginTop: 18 }}>
             <label className="settings-field">
-              <span className="settings-label">Confirme sua senha</span>
+              <span className="settings-label">{t("Confirme sua senha")}</span>
               <input
                 type="password"
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}
                 className="settings-input"
-                placeholder="Sua senha atual"
+                placeholder={t("Sua senha atual")}
               />
             </label>
 
             <p className="settings-danger-text" style={{ color: 'var(--danger)' }}>
-              Ao confirmar, sua conta será removida permanentemente.
-            </p>
+              {t(" Ao confirmar, sua conta será removida permanentemente. ")}</p>
 
             <div className="settings-actions">
               <button
@@ -1183,8 +1201,7 @@ function DangerSection({
                 }}
                 className="settings-secondary-button"
               >
-                Cancelar
-              </button>
+                {t(" Cancelar ")}</button>
 
               <button
                 type="button"
@@ -1192,7 +1209,7 @@ function DangerSection({
                 disabled={deleteMe.isPending || password.length < 6}
                 className="settings-danger-button"
               >
-                {deleteMe.isPending ? 'Deletando...' : 'Confirmar exclusão'}
+                {deleteMe.isPending ? 'Deletando...' : t("Confirmar exclusão")}
               </button>
             </div>
 
@@ -1200,7 +1217,7 @@ function DangerSection({
               <div className="settings-feedback error">
                 {deleteMe.error instanceof Error
                   ? deleteMe.error.message
-                  : 'Erro ao deletar conta.'}
+                  : t("Erro ao deletar conta.")}
               </div>
             ) : null}
           </div>

@@ -1,4 +1,6 @@
+import { t, useLanguage } from '@/i18n';
 import '../components/auth-layout.css';
+import { LanguagePicker } from '@/i18n/language-picker';
 import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useLogin } from '../hooks/use-login';
@@ -9,6 +11,7 @@ const AMETHYST = '#7c3aed';
 const AMETHYST_LIGHT = '#a78bfa';
 
 export function LoginPage() {
+  useLanguage();
   const navigate = useNavigate();
   const location = useLocation();
   const login = useLogin();
@@ -32,6 +35,7 @@ export function LoginPage() {
 
   return (
     <main className="auth-page" style={pageStyle}>
+      <LanguagePicker compact />
       <section className="auth-card" style={cardStyle}>
         
         {/* Painel esquerdo — brand */}
@@ -45,14 +49,10 @@ export function LoginPage() {
 
             <div>
               <h1 style={brandTitleStyle}>
-                Compartilhe momentos.
-                <br />
-                Crie conexões.
-              </h1>
+                {t(" Compartilhe momentos. ")}<br />
+                {t(" Crie conexões. ")}</h1>
               <p style={brandTextStyle}>
-                O Moment é o seu espaço para compartilhar o que importa,
-                acompanhar o que acontece e viver uma rede social mais leve.
-              </p>
+                {t(" O Moment é o seu espaço para compartilhar o que importa, acompanhar o que acontece e viver uma rede social mais leve. ")}</p>
             </div>
           </div>
 
@@ -72,15 +72,14 @@ export function LoginPage() {
             />
 
             <div style={{ marginTop: 24, marginBottom: 28 }}>
-              <h2 style={titleStyle}>Bem-vindo de volta!</h2>
-              <p style={subtitleStyle}>Faça login para continuar</p>
+              <h2 style={titleStyle}>{t("Bem-vindo de volta!")}</h2>
+              <p style={subtitleStyle}>{t("Faça login para continuar")}</p>
             </div>
 
             <form onSubmit={handleSubmit} style={formStyle}>
               <div style={fieldStyle}>
                 <label htmlFor="email" style={labelStyle}>
-                  E-mail
-                </label>
+                  {t(" E-mail ")}</label>
                 <input
                   id="email"
                   type="email"
@@ -95,8 +94,7 @@ export function LoginPage() {
 
               <div style={fieldStyle}>
                 <label htmlFor="password" style={labelStyle}>
-                  Senha
-                </label>
+                  {t(" Senha ")}</label>
                 <input
                   id="password"
                   type="password"
@@ -110,14 +108,13 @@ export function LoginPage() {
               </div>
 
               <Link to="/forgot-password" style={{ ...linkStyle, textAlign: 'right', fontSize: 14 }}>
-                Esqueci minha senha
-              </Link>
+                {t(" Esqueci minha senha ")}</Link>
 
               {login.isError ? (
                 <div style={errorStyle}>
                   {login.error instanceof Error
                     ? login.error.message
-                    : 'Não foi possível entrar. Tente novamente.'}
+                    : t("Não foi possível entrar. Tente novamente.")}
                 </div>
               ) : null}
 
@@ -126,15 +123,14 @@ export function LoginPage() {
                 disabled={login.isPending}
                 style={buttonStyle}
               >
-                {login.isPending ? 'Entrando...' : 'Entrar'}
+                {login.isPending ? t("Entrando...") : t("Entrar")}
               </button>
             </form>
 
             <p style={footerTextStyle}>
-              Ainda não tem uma conta?{' '}
+              {t(" Ainda não tem uma conta?")}{' '}
               <Link to="/register" style={linkStyle}>
-                Criar conta
-              </Link>
+                {t(" Criar conta ")}</Link>
             </p>
           </div>
         </section>
@@ -142,14 +138,13 @@ export function LoginPage() {
 
       <footer style={footerStyle}>
           <p style={footerCopyStyle}>
-            © {new Date().getFullYear()} Moment. Todos os direitos reservados.
-          </p>
+            © {new Date().getFullYear()} {t(" Moment. Todos os direitos reservados. ")}</p>
           <div style={footerLinksStyle}>
-            <Link to="/terms" style={footerLinkStyle}>Termos de uso</Link>
+            <Link to="/terms" style={footerLinkStyle}>{t("Termos de uso")}</Link>
             <span style={{ color: '#c4b5fd' }}>·</span>
-            <Link to="/privacy" style={footerLinkStyle}>Privacidade</Link>
+            <Link to="/privacy" style={footerLinkStyle}>{t("Privacidade")}</Link>
             <span style={{ color: '#c4b5fd' }}>·</span>
-            <Link to="/support" style={footerLinkStyle}>Suporte</Link>
+            <Link to="/support" style={footerLinkStyle}>{t("Suporte")}</Link>
           </div>
         </footer>
     </main>
@@ -205,7 +200,7 @@ const brandTitleStyle: React.CSSProperties = {
   fontWeight: 800,
   letterSpacing: -0.8,
   color: '#312e81',
-  fontFamily: "'Lora', serif",
+  fontFamily: "var(--font-ui)",
 };
 
 const brandTextStyle: React.CSSProperties = {
@@ -214,7 +209,7 @@ const brandTextStyle: React.CSSProperties = {
   color: '#5b5570',
   fontSize: 17,
   lineHeight: 1.65,
-  fontFamily: "'Inter', sans-serif",
+  fontFamily: "var(--font-ui)",
 };
 
 const decorativeCardStyle: React.CSSProperties = {
@@ -238,7 +233,7 @@ const decorativeTextStyle: React.CSSProperties = {
   fontSize: 22,
   fontWeight: 800,
   color: AMETHYST,
-  fontFamily: "'Lora', serif",
+  fontFamily: "var(--font-ui)",
 };
 
 const formPanelStyle: React.CSSProperties = {
@@ -260,14 +255,14 @@ const titleStyle: React.CSSProperties = {
   fontWeight: 600,
   letterSpacing: -0.6,
   color: '#1f2937',
-  fontFamily: "'Lora', serif",
+  fontFamily: "var(--font-ui)",
 };
 
 const subtitleStyle: React.CSSProperties = {
   marginTop: 8,
   color: '#8a8498',
   fontSize: 16,
-  fontFamily: "'Inter', sans-serif",
+  fontFamily: "var(--font-ui)",
 };
 
 const formStyle: React.CSSProperties = {
@@ -284,7 +279,7 @@ const labelStyle: React.CSSProperties = {
   fontSize: 14,
   fontWeight: 600,
   color: '#374151',
-  fontFamily: "'Inter', sans-serif",
+  fontFamily: "var(--font-ui)",
 };
 
 const inputStyle: React.CSSProperties = {
@@ -298,7 +293,7 @@ const inputStyle: React.CSSProperties = {
   color: '#111827',
   outline: 'none',
   boxSizing: 'border-box',
-  fontFamily: "'Inter', sans-serif",
+  fontFamily: "var(--font-ui)",
 };
 
 const buttonStyle: React.CSSProperties = {
@@ -311,7 +306,7 @@ const buttonStyle: React.CSSProperties = {
   fontWeight: 700,
   cursor: 'pointer',
   boxShadow: '0 16px 32px rgba(124, 58, 237, 0.28)',
-  fontFamily: "'Inter', sans-serif",
+  fontFamily: "var(--font-ui)",
 };
 
 const errorStyle: React.CSSProperties = {
@@ -321,7 +316,7 @@ const errorStyle: React.CSSProperties = {
   borderRadius: 14,
   padding: 13,
   fontSize: 14,
-  fontFamily: "'Inter', sans-serif",
+  fontFamily: "var(--font-ui)",
 };
 
 const footerTextStyle: React.CSSProperties = {
@@ -329,7 +324,7 @@ const footerTextStyle: React.CSSProperties = {
   textAlign: 'center',
   color: '#7b738c',
   fontSize: 15,
-  fontFamily: "'Inter', sans-serif",
+  fontFamily: "var(--font-ui)",
 };
 
 const linkStyle: React.CSSProperties = {
@@ -350,7 +345,7 @@ const footerCopyStyle: React.CSSProperties = {
   margin: 0,
   fontSize: 13,
   color: '#a78bfa',
-  fontFamily: "'Inter', sans-serif",
+  fontFamily: "var(--font-ui)",
 };
 
 const footerLinksStyle: React.CSSProperties = {
@@ -363,6 +358,6 @@ const footerLinkStyle: React.CSSProperties = {
   fontSize: 13,
   color: '#7c3aed',
   textDecoration: 'none',
-  fontFamily: "'Inter', sans-serif",
+  fontFamily: "var(--font-ui)",
   fontWeight: 500,
 };

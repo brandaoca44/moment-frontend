@@ -1,6 +1,8 @@
+import { t, useLanguage } from '@/i18n';
 import { useTheme, themes, type Theme, type ThemeId } from '@/contexts/theme-context';
 
 function ThemePreview({ item }: { item: Theme }) {
+  useLanguage();
   const c = item.colors;
 
   return (
@@ -18,6 +20,7 @@ function ThemePreview({ item }: { item: Theme }) {
 }
 
 export function ThemeSelector({ standalone = false }: { standalone?: boolean }) {
+  useLanguage();
   const { themeId, setTheme } = useTheme();
 
   const inner = (
@@ -55,7 +58,7 @@ export function ThemeSelector({ standalone = false }: { standalone?: boolean }) 
           content: '';
           position: absolute;
           inset: 0;
-          background: radial-gradient(circle at top right, rgba(167, 139, 250, 0.16), transparent 42%);
+          background: radial-gradient(circle at top right, rgba(var(--accent-soft-rgb, 167, 139, 250), 0.16), transparent 42%);
           opacity: 0;
           pointer-events: none;
           transition: opacity 190ms ease;
@@ -185,7 +188,7 @@ export function ThemeSelector({ standalone = false }: { standalone?: boolean }) 
           border-radius: 24px;
           padding: 16px;
           border: 1px solid var(--border-soft);
-          background: var(--surface-glass);
+          background: var(--panel-background, var(--surface-glass));
           box-shadow: var(--shadow-sm);
           backdrop-filter: blur(20px);
         }
@@ -197,7 +200,7 @@ export function ThemeSelector({ standalone = false }: { standalone?: boolean }) 
           color: var(--amethyst);
           letter-spacing: 0.08em;
           text-transform: uppercase;
-          font-family: 'Inter', sans-serif;
+          font-family: var(--font-ui);
         }
 
         @media (max-width: 560px) {
@@ -211,7 +214,7 @@ export function ThemeSelector({ standalone = false }: { standalone?: boolean }) 
         }
       `}</style>
 
-      {standalone ? <p className="theme-selector-title">Mude o tema</p> : null}
+      {standalone ? <p className="theme-selector-title">{t("Mude o tema")}</p> : null}
 
       <div className="theme-selector">
         {Object.values(themes).map((item) => {

@@ -1,10 +1,14 @@
+import { relativeTime } from '@/i18n';
+import { getLanguage } from '@/i18n';
+import { t, useLanguage } from '@/i18n';
 import { Link } from 'react-router-dom';
+import { EmojiText } from '@/components/ui/emoji-text';
 import { ReportButton } from '@/features/reports/report-button';
 import { useState } from 'react';
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { updatePost } from '../api/feed';
+import { updatePost, setPostComments } from '../api/feed';
 
 import { ExpandableImage } from '@/components/ui/expandable-image';
 
@@ -20,31 +24,10 @@ import { useMe } from '@/features/auth/hooks/use-me';
 
 
 
-function timeAgo(dateStr: string) {
-
-  const diff = Date.now() - new Date(dateStr).getTime();
-
-  const mins = Math.floor(diff / 60000);
-
-  if (mins < 1) return 'agora';
-
-  if (mins < 60) return `${mins}min`;
-
-  const hours = Math.floor(mins / 60);
-
-  if (hours < 24) return `${hours}h`;
-
-  const days = Math.floor(hours / 24);
-
-  if (days < 7) return `${days}d`;
-
-  return new Date(dateStr).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' });
-
-}
-
-
+function timeAgo(value: string) { return relativeTime(value); }
 
 function Avatar({ name, avatar, size = 42 }: { name: string; avatar: string | null; size?: number }) {
+  useLanguage();
 
   const initials = name.split(' ').slice(0, 2).map((n) => n[0]).join('').toUpperCase();
 
@@ -104,7 +87,7 @@ function renderContent(content: string) {
 
     ) : (
 
-      <span key={i}>{part}</span>
+      <EmojiText key={i} text={part} />
 
     )
 
@@ -116,7 +99,7 @@ function renderContent(content: string) {
 
 type Props = {
 
-  post: Pick<Post, 'id' | 'content' | 'imageUrl' | 'createdAt' | 'editedAt' | 'user'>;
+  post: Pick<Post, 'id' | 'content' | 'imageUrl' | 'createdAt' | 'editedAt' | 'user' | 'source' | 'commentsEnabled'>;
 
   repliesCount?: number;
   likesCount: number;
@@ -138,6 +121,7 @@ type Props = {
 
 
 export function PostCard({ post, repliesCount = 0, likesCount, remontsCount, liked, remonted, pinned = false, onTogglePin, pinPending = false }: Props) {
+  useLanguage();
 
   const { data: meData } = useMe();
 
@@ -162,6 +146,22 @@ export function PostCard({ post, repliesCount = 0, likesCount, remontsCount, lik
 
 
   const queryClient = useQueryClient();
+  const comments = useMutation({
+    mutationFn: () => setPostComments(post.id, !post.commentsEnabled),
+    onSuccess: async response => {
+      const keys = ['feed', 'user-posts', 'profile-posts', 'explore', 'post'];
+      await Promise.all(keys.map(key => queryClient.cancelQueries({ queryKey: [key] })));
+      const patch = (value: unknown): unknown => {
+        if (Array.isArray(value)) return value.map(patch);
+        if (!value || typeof value !== 'object') return value;
+        const record = value as Record<string, unknown>;
+        if (record.id === post.id && typeof record.content === 'string') return { ...record, commentsEnabled: response.data.commentsEnabled };
+        return Object.fromEntries(Object.entries(record).map(([key, child]) => [key, ['pages', 'data', 'posts'].includes(key) ? patch(child) : child]));
+      };
+      for (const key of keys) queryClient.setQueriesData({ queryKey: [key] }, patch);
+      await Promise.all(keys.map(key => queryClient.invalidateQueries({ queryKey: [key] })));
+    },
+  });
 
   const [editing, setEditing] = useState(false);
 
@@ -201,7 +201,7 @@ export function PostCard({ post, repliesCount = 0, likesCount, remontsCount, lik
 
     if (deletePost.isPending) return;
 
-    if (!window.confirm('Excluir este post? Essa ação não pode ser desfeita.')) return;
+    if (!window.confirm(t("Excluir este post? Essa ação não pode ser desfeita."))) return;
 
     deletePost.mutate(post.id);
 
@@ -257,13 +257,13 @@ export function PostCard({ post, repliesCount = 0, likesCount, remontsCount, lik
 
     if (isOwn && !localRemonted) {
 
-      window.alert('Você não pode republicar sua própria publicação.');
+      window.alert(t("Você não pode republicar sua própria publicação."));
 
       return;
 
     }
 
-    if (!localRemonted && !window.confirm('Republicar este momento no seu perfil?')) {
+    if (!localRemonted && !window.confirm(t("Republicar este momento no seu perfil?"))) {
 
       return;
 
@@ -303,7 +303,7 @@ export function PostCard({ post, repliesCount = 0, likesCount, remontsCount, lik
 
         setLocalRemontsCount(previousCount);
 
-        window.alert(error instanceof Error ? error.message : 'Não foi possível republicar esta publicação.');
+        window.alert(error instanceof Error ? error.message : t("Não foi possível republicar esta publicação."));
 
       },
 
@@ -445,7 +445,7 @@ export function PostCard({ post, repliesCount = 0, likesCount, remontsCount, lik
 
           color: var(--text);
 
-          font-family: 'Inter', sans-serif;
+          font-family: var(--font-ui);
 
         }
 
@@ -457,7 +457,7 @@ export function PostCard({ post, repliesCount = 0, likesCount, remontsCount, lik
 
           color: var(--text-muted);
 
-          font-family: 'Inter', sans-serif;
+          font-family: var(--font-ui);
 
         }
 
@@ -473,7 +473,7 @@ export function PostCard({ post, repliesCount = 0, likesCount, remontsCount, lik
 
           color: var(--text-muted);
 
-          font-family: 'Inter', sans-serif;
+          font-family: var(--font-ui);
 
         }
 
@@ -493,7 +493,7 @@ export function PostCard({ post, repliesCount = 0, likesCount, remontsCount, lik
 
           padding: 2px 10px;
 
-          font-family: 'Inter', sans-serif;
+          font-family: var(--font-ui);
 
         }
 
@@ -509,7 +509,7 @@ export function PostCard({ post, repliesCount = 0, likesCount, remontsCount, lik
 
           line-height: 1.65;
 
-          font-family: 'Inter', sans-serif;
+          font-family: var(--font-ui);
 
           white-space: pre-wrap;
 
@@ -571,7 +571,7 @@ export function PostCard({ post, repliesCount = 0, likesCount, remontsCount, lik
 
           font-weight: 600;
 
-          font-family: 'Inter', sans-serif;
+          font-family: var(--font-ui);
 
           transition: all 0.15s ease;
 
@@ -673,7 +673,7 @@ export function PostCard({ post, repliesCount = 0, likesCount, remontsCount, lik
 
         <div className="post-card-inner">
 
-          <Link to={`/profile/${encodeURIComponent(post.user.username)}`} aria-label={`Ver perfil de ${post.user.name}`} style={{ flexShrink: 0, alignSelf: 'flex-start' }}>
+          <Link to={`/profile/${encodeURIComponent(post.user.username)}`} aria-label={`${t("Ver perfil de")} ${post.user.name}`} style={{ flexShrink: 0, alignSelf: 'flex-start', textDecoration: 'none' }}>
             <Avatar name={post.user.name} avatar={post.user.avatar} />
           </Link>
 
@@ -681,7 +681,7 @@ export function PostCard({ post, repliesCount = 0, likesCount, remontsCount, lik
 
           <div className="post-content-wrap">
 
-            <div className="post-header">
+            <div className={`post-header${!isOwn ? ' post-header-with-menu' : ''}`}>
 
               <div className="post-user-info">
 
@@ -692,17 +692,19 @@ export function PostCard({ post, repliesCount = 0, likesCount, remontsCount, lik
                 <span className="post-dot">·</span>
 
                 <span className="post-time">{timeAgo(post.createdAt)}</span>
+                {post.source && <span className="post-time" title={t("Identificação aproximada informada pelo navegador")}> · {post.source === 'Moment for Android' ? t("Enviado por Android") : post.source === 'Moment for iPhone' ? t("Enviado por iPhone") : post.source === 'Moment Desktop' ? t("Enviado por computador") : t("Enviado pela web")}</span>}
 
-                {displayed.editedAt && <span className="post-time" title={`Editado em ${new Date(displayed.editedAt).toLocaleString('pt-BR')}`}>&middot; Editado</span>}
+                {displayed.editedAt && <span className="post-time" title={`${t("Editado em")} ${new Date(displayed.editedAt).toLocaleString(getLanguage())}`}>{t("· Editado")}</span>}
 
               </div>
 
               <div className="post-header-actions">
-                {!isOwn && <ReportButton targetType="POST" targetId={post.id} />}
+                {!isOwn && <ReportButton targetType="POST" targetId={post.id} authorId={post.user.id} />}
+                {isOwn && <ReportButton targetType="POST" targetId={post.id} canReport={false} menuActions={[{ label: comments.isPending ? t("Salvando…") : post.commentsEnabled ? t("Desativar comentários") : t("Ativar comentários"), disabled: comments.isPending, onSelect: () => comments.mutate() }]} />}
 
-                {isOwn && <span className="post-own-badge">seu post</span>}
+                {isOwn && <span className="post-own-badge">{t("seu post")}</span>}
 
-                {isOwn && <button type="button" className="post-action-btn" disabled={edit.isPending} onClick={() => { setDraft(displayed.content); edit.reset(); setEditing(true); }}>Editar</button>}
+                {isOwn && <button type="button" className="post-action-btn" disabled={edit.isPending} onClick={() => { setDraft(displayed.content); edit.reset(); setEditing(true); }}>{t("Editar")}</button>}
 
                 {isOwn && (
 
@@ -716,9 +718,9 @@ export function PostCard({ post, repliesCount = 0, likesCount, remontsCount, lik
 
                     disabled={deletePost.isPending}
 
-                    title="Excluir post"
+                    title={t("Excluir post")}
 
-                    aria-label="Excluir post"
+                    aria-label={t("Excluir post")}
 
                   >
 
@@ -750,9 +752,9 @@ export function PostCard({ post, repliesCount = 0, likesCount, remontsCount, lik
 
                     disabled={pinPending}
 
-                    title={pinned ? 'Desfixar post' : 'Fixar no perfil'}
+                    title={pinned ? t("Desfixar post") : t("Fixar no perfil")}
 
-                    aria-label={pinned ? 'Desfixar post' : 'Fixar no perfil'}
+                    aria-label={pinned ? t("Desfixar post") : t("Fixar no perfil")}
 
                     style={{ color: pinned ? '#eab308' : 'var(--text-muted)' }}
 
@@ -774,21 +776,23 @@ export function PostCard({ post, repliesCount = 0, likesCount, remontsCount, lik
 
 
 
+            {comments.isError && <p role="alert" className="post-edit-error">{t(comments.error.message)}</p>}
+            {comments.isSuccess && <p role="status" className="post-time">{post.commentsEnabled ? t("Comentários ativados.") : t("Comentários desativados.")}</p>}
             {editing ? <form onSubmit={(event) => { event.preventDefault(); if (draft.trim() && draft.length <= 220 && !edit.isPending) edit.mutate(); }}>
 
-              <textarea className="post-edit-text" aria-label="Editar momento" value={draft} maxLength={220} disabled={edit.isPending} onChange={event => setDraft(event.target.value)} autoFocus />
+              <textarea className="post-edit-text" aria-label={t("Editar momento")} value={draft} maxLength={220} disabled={edit.isPending} onChange={event => setDraft(event.target.value)} autoFocus />
 
               <div className="post-edit-controls">
 
                 <small>{draft.length}/220</small>
 
-                <button type="submit" disabled={edit.isPending || !draft.trim() || draft.trim() === displayed.content}>{edit.isPending ? 'Salvando...' : 'Salvar'}</button>
+                <button type="submit" disabled={edit.isPending || !draft.trim() || draft.trim() === displayed.content}>{edit.isPending ? t("Salvando...") : t("Salvar")}</button>
 
-                <button type="button" disabled={edit.isPending} onClick={() => setEditing(false)}>Cancelar</button>
+                <button type="button" disabled={edit.isPending} onClick={() => setEditing(false)}>{t("Cancelar")}</button>
 
               </div>
 
-              {edit.isError && <p role="alert" className="post-edit-error">{edit.error.message}</p>}
+              {edit.isError && <p role="alert" className="post-edit-error">{t(edit.error.message)}</p>}
 
             </form> : <p className="post-text">{renderContent(displayed.content)}</p>}
 
@@ -798,7 +802,7 @@ export function PostCard({ post, repliesCount = 0, likesCount, remontsCount, lik
 
               <div className="post-image-wrap">
 
-                <ExpandableImage src={post.imageUrl} alt="Imagem do momento" className="post-image" />
+                <ExpandableImage src={post.imageUrl} alt={t("Imagem do momento")} className="post-image" />
 
               </div>
 
@@ -829,9 +833,9 @@ export function PostCard({ post, repliesCount = 0, likesCount, remontsCount, lik
 
                 disabled={toggleLike.isPending}
 
-                title={localLiked ? 'Descurtir' : 'Curtir'}
+                title={localLiked ? t("Descurtir") : t("Curtir")}
 
-                aria-label={localLiked ? 'Descurtir' : 'Curtir'}
+                aria-label={localLiked ? t("Descurtir") : t("Curtir")}
 
                 aria-pressed={localLiked}
 
@@ -847,7 +851,7 @@ export function PostCard({ post, repliesCount = 0, likesCount, remontsCount, lik
 
               </button>
 
-              <Link className="post-action-btn" style={{ textDecoration: 'none' }} to={`/posts/${post.id}`} aria-label={`Responder, ${repliesCount} respostas`} title="Responder">
+              <Link className="post-action-btn" style={{ textDecoration: 'none' }} to={`/posts/${post.id}`} aria-label={`Responder, ${repliesCount} respostas`} title={t("Responder")}>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5H4l-3 3V11.5a10 10 0 0 1 20 0Z" /></svg>
                 <span>{repliesCount}</span>
               </Link>
@@ -874,9 +878,9 @@ export function PostCard({ post, repliesCount = 0, likesCount, remontsCount, lik
 
                 disabled={toggleRemont.isPending}
 
-                title={localRemonted ? 'Desfazer republicação' : 'Republicar'}
+                title={localRemonted ? t("Desfazer republicação") : t("Republicar")}
 
-                aria-label={localRemonted ? 'Desfazer republicação' : 'Republicar'}
+                aria-label={localRemonted ? t("Desfazer republicação") : t("Republicar")}
 
               >
 

@@ -1,0 +1,93 @@
+.profile-secondary-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  margin-top: 8px;
+}
+.profile-inline-action {
+  min-width: 0;
+}
+.profile-inline-action small {
+  display: block;
+  color: var(--danger);
+  overflow-wrap: anywhere;
+}
+.profile-quiet-button {
+  padding: 8px 0;
+  min-height: 36px;
+  border: 0;
+  background: transparent;
+  color: var(--text-muted);
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+.profile-quiet-button:hover:not(:disabled) {
+  color: var(--text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.profile-quiet-button:focus-visible {
+  outline: 2px solid var(--amethyst);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+.profile-quiet-button:disabled {
+  opacity: 0.65;
+  cursor: default;
+}
+@media (pointer: coarse) {
+  .profile-quiet-button {
+    min-height: 44px;
+  }
+}
+.settings-preference-group {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.settings-preference-group + .settings-preference-group {
+  border-top: 1px solid var(--border);
+  margin-top: 24px;
+  padding-top: 16px;
+}
+.settings-preference-group h3 {
+  font-size: 16px;
+  margin: 0 0 12px;
+}
+.settings-preference-group p {
+  color: var(--text-muted);
+  font-size: 14px;
+  line-height: 1.6;
+}
+.settings-preference-group button {
+  padding: 8px 12px;
+  min-height: 40px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+.settings-preference-group button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+.settings-preference-group .station-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin: 12px 0;
+}
+.settings-preference-group input {
+  box-sizing: border-box;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 16px;
+  margin: 8px 0;
+}

@@ -5,6 +5,7 @@ export type MeResponse = {
   data: {
     user: {
       id: string;
+      language?: string;
       canModerate?: boolean;
       name: string;
       username: string;
@@ -17,5 +18,5 @@ export type MeResponse = {
 };
 
 export function getMe() {
-  return api<MeResponse>('/auth/me');
+  return api<MeResponse>('/auth/me', { signal: AbortSignal.timeout(10000) });
 }

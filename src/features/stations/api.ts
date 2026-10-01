@@ -18,6 +18,7 @@ export const categories = [
   "Outros",
 ];
 export type Station = {
+  theme?: string;
   id: string;
   name: string;
   description: string;
@@ -33,6 +34,7 @@ export type Station = {
   _count?: { members: number };
 };
 export type Entry = {
+  removed?: boolean;
   id: string;
   topicId: string;
   content: string;
@@ -50,6 +52,7 @@ export type Entry = {
   requiresPlatform?: boolean;
 };
 export type Topic = {
+  creator?: string;
   id: string;
   title: string;
   lastActivity: string;
@@ -62,6 +65,7 @@ export type Conversation = {
     title: string;
     stationId: string;
     stationName: string;
+    stationTheme?: string;
     canManage: boolean;
     canPost: boolean;
     root: Entry | null;
@@ -75,9 +79,9 @@ export type EntryInput = {
   imageUrl?: string;
   title?: string;
 };
-export const stations = (tab: string, page = 1, category = "") =>
+export const stations = (tab: string, page = 1, category = "", search = "") =>
   api<Page<Station>>(
-    `/stations?${new URLSearchParams({ tab, page: String(page), ...(category ? { category } : {}) })}`,
+    `/stations?${new URLSearchParams({ tab, page: String(page), ...(category ? { category } : {}), ...(search ? { search } : {}) })}`,
   );
 export const station = (id: string) =>
   api<{ data: Station }>(`/stations/${encodeURIComponent(id)}`);

@@ -1,3 +1,5 @@
+import { getLanguage } from '@/i18n';
+import { t, useLanguage } from '@/i18n';
 import { useEffect, useMemo, useRef } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useMe } from '@/features/auth/hooks/use-me';
@@ -5,9 +7,11 @@ import { useFollowUser, useProfile, useTogglePin, useUserPosts } from '../hooks/
 import type { ProfilePost } from '../api/profile';
 import { PostCard } from '@/features/feed/components/post-card';
 import { PositiveMarks } from '@/features/stations/positive-marks';
+import { ProfileBlock } from '../components/profile-block';
+import { ContentPreference } from '../components/content-preference';
 
 function formatCount(value: number) {
-  return new Intl.NumberFormat('pt-BR', {
+  return new Intl.NumberFormat(getLanguage(), {
     notation: value >= 1000 ? 'compact' : 'standard',
     maximumFractionDigits: 1,
   }).format(value);
@@ -27,7 +31,7 @@ function getInitials(name?: string) {
 }
 
 function formatDate(iso: string) {
-  return new Intl.DateTimeFormat('pt-BR', {
+  return new Intl.DateTimeFormat(getLanguage(), {
     month: 'long',
     year: 'numeric',
   }).format(new Date(iso));
@@ -36,6 +40,7 @@ function formatDate(iso: string) {
 
 
 export function ProfilePage() {
+  useLanguage();
   const { username } = useParams<{ username: string }>();
   const { data: meData, isLoading: meLoading } = useMe();
   const me = meData?.data?.user;
@@ -99,7 +104,7 @@ export function ProfilePage() {
           position: relative;
           max-width: 660px;
           margin: 0 auto;
-          font-family: 'Inter', sans-serif;
+          font-family: var(--font-ui);
           animation: fadeIn 240ms ease both;
         }
 
@@ -113,7 +118,7 @@ export function ProfilePage() {
           height: 720px;
           border-radius: 999px;
           transform: translateX(-50%);
-          background: radial-gradient(circle, rgba(124, 58, 237, 0.11), transparent 70%);
+          background: radial-gradient(circle, rgba(var(--accent-rgb, 124, 58, 237), 0.11), transparent 70%);
           filter: blur(42px);
           pointer-events: none;
           z-index: -1;
@@ -132,7 +137,7 @@ export function ProfilePage() {
           padding: 30px;
           border: 1px solid var(--glass-border);
           background:
-            radial-gradient(circle at top right, rgba(167, 139, 250, 0.18), transparent 34%),
+            radial-gradient(circle at top right, rgba(var(--accent-soft-rgb, 167, 139, 250), 0.18), transparent 34%),
             linear-gradient(135deg, var(--surface-glass), var(--surface-elevated));
           box-shadow: var(--shadow-md);
           backdrop-filter: blur(24px);
@@ -205,7 +210,7 @@ export function ProfilePage() {
         .profile-name {
           margin: 0;
           color: var(--text);
-          font-family: 'Instrument Serif', serif;
+          font-family: var(--font-ui);
           font-size: 36px;
           font-weight: 400;
           line-height: 1.08;
@@ -247,7 +252,7 @@ export function ProfilePage() {
           align-items: center;
           justify-content: center;
           border: 1px solid transparent;
-          font-family: 'Inter', sans-serif;
+          font-family: var(--font-ui);
           font-size: 14px;
           font-weight: 900;
           text-decoration: none;
@@ -354,7 +359,7 @@ export function ProfilePage() {
         .profile-section-title h2 {
           margin: 0;
           color: var(--text);
-          font-family: 'Instrument Serif', serif;
+          font-family: var(--font-ui);
           font-size: 30px;
           font-weight: 400;
           line-height: 1.12;
@@ -389,7 +394,7 @@ export function ProfilePage() {
           padding: 20px;
           border-radius: 26px;
           border: 1px solid var(--glass-border);
-          background: var(--surface-glass);
+          background: var(--panel-background, var(--surface-glass));
           box-shadow: var(--shadow-sm);
           backdrop-filter: blur(20px);
           -webkit-backdrop-filter: blur(20px);
@@ -501,7 +506,7 @@ export function ProfilePage() {
           text-align: center;
           border-radius: 28px;
           border: 1px solid var(--border-soft);
-          background: var(--surface-glass);
+          background: var(--panel-background, var(--surface-glass));
           box-shadow: var(--shadow-sm);
           backdrop-filter: blur(20px);
           -webkit-backdrop-filter: blur(20px);
@@ -530,7 +535,7 @@ export function ProfilePage() {
         .profile-state-title {
           margin: 0;
           color: var(--text);
-          font-family: 'Instrument Serif', serif;
+          font-family: var(--font-ui);
           font-size: 30px;
           font-weight: 400;
           line-height: 1.14;
@@ -640,17 +645,16 @@ export function ProfilePage() {
         {isInitialLoading && (
           <div className="profile-state compact">
             <div className="profile-spinner" />
-            <p className="profile-state-text">Carregando perfil...</p>
+            <p className="profile-state-text">{t("Carregando perfil...")}</p>
           </div>
         )}
 
         {profileError && !isInitialLoading && (
           <div className="profile-state profile-error">
             <span className="profile-state-icon">✦</span>
-            <h1 className="profile-state-title">Usuário não encontrado</h1>
+            <h1 className="profile-state-title">{t("Usuário não encontrado")}</h1>
             <p className="profile-state-text">
-              O perfil <strong>@{targetUsername}</strong> não existe ou foi removido.
-            </p>
+              {t(" O perfil ")}<strong>@{targetUsername}</strong> {t(" não existe ou foi removido. ")}</p>
           </div>
         )}
 
@@ -668,15 +672,16 @@ export function ProfilePage() {
                   </div>
 
                   <div className="profile-names">
-                    <p className="profile-kicker">Perfil</p>
+                    <p className="profile-kicker">{t("Perfil")}</p>
                     <h1 className="profile-name">{profile.name}</h1>
                     <p className="profile-username">@{profile.username}</p>
+                    {profile.emailConfirmedAt && <small title="Confirma apenas o acesso ao e-mail; não verifica identidade.">{t("E-mail confirmado")}</small>}
                     <p className="profile-since">
                       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <rect x="3" y="4" width="18" height="18" rx="2" />
                         <path d="M16 2v4M8 2v4M3 10h18" />
                       </svg>
-                      Desde {formatDate(profile.createdAt)}
+                      {t(" Desde ")}{formatDate(profile.createdAt)}
                     </p>
                   </div>
                 </div>
@@ -684,8 +689,7 @@ export function ProfilePage() {
                 <div className="profile-action-row">
                   {isOwnProfile ? (
                     <Link to="/settings" className="profile-button secondary">
-                      Editar perfil
-                    </Link>
+                      {t(" Editar perfil ")}</Link>
                   ) : (
                     <button
                       type="button"
@@ -699,42 +703,46 @@ export function ProfilePage() {
                       className={`profile-button ${profile.isFollowing ? 'secondary danger-hover' : 'primary'}`}
                     >
                       {followMutation.isPending
-                        ? 'Aguarde...'
+                        ? t("Aguarde...")
                         : profile.isFollowing
-                          ? 'Seguindo'
-                          : 'Seguir'}
+                          ? t("Seguindo")
+                          : t("Seguir")}
                     </button>
                   )}
                 </div>
               </div>
 
+              {!isOwnProfile && <div className="profile-secondary-actions" aria-label={t("Ações do perfil")}>
+                <ProfileBlock userId={profile.id} name={profile.name} />
+                <ContentPreference targetType="USER" targetId={profile.id} />
+              </div>}
               <PositiveMarks userId={profile.id} own={isOwnProfile} />
               <div className="profile-meta-row">
-                <div className="profile-counters" aria-label="Estatísticas do perfil">
+                <div className="profile-counters" aria-label={t("Estatísticas do perfil")}>
                   <div className="profile-counter">
                     <strong>{formatCount(profile._count.posts)}</strong>
-                    <span>momentos</span>
+                    <span>{t("momentos")}</span>
                   </div>
 
                   <div className="profile-counter">
                     <strong>{formatCount(profile._count.followers)}</strong>
-                    <span>seguidores</span>
+                    <span>{t("seguidores")}</span>
                   </div>
 
                   <div className="profile-counter">
                     <strong>{formatCount(profile._count.follows)}</strong>
-                    <span>seguindo</span>
+                    <span>{t("seguindo")}</span>
                   </div>
                 </div>
 
                 {!isOwnProfile && profile.isFollowedBy && (
-                  <span className="profile-mutual">Segue você</span>
+                  <span className="profile-mutual">{t("Segue você")}</span>
                 )}
               </div>
             </header>
 
-            <section className="profile-section-title" aria-label="Momentos do perfil">
-              <h2>Momentos</h2>
+            <section className="profile-section-title" aria-label={t("Momentos do perfil")}>
+              <h2>{t("Momentos")}</h2>
               <span>{formatCount(profile._count.posts)}</span>
             </section>
 
@@ -746,19 +754,19 @@ export function ProfilePage() {
 
             {postsError && !postsLoading && (
               <div className="profile-state profile-error compact">
-                <h2 className="profile-state-title">Não foi possível carregar os momentos</h2>
-                <p className="profile-state-text">Tente atualizar a página em alguns segundos.</p>
+                <h2 className="profile-state-title">{t("Não foi possível carregar os momentos")}</h2>
+                <p className="profile-state-text">{t("Tente atualizar a página em alguns segundos.")}</p>
               </div>
             )}
 
             {!postsLoading && !postsError && posts.length === 0 && (
               <div className="profile-state">
                 <span className="profile-state-icon">✦</span>
-                <h2 className="profile-state-title">Ainda silencioso por aqui.</h2>
+                <h2 className="profile-state-title">{t("Ainda silencioso por aqui.")}</h2>
                 <p className="profile-state-text">
                   {isOwnProfile
-                    ? 'Quando você compartilhar seu primeiro momento, ele vai aparecer neste espaço.'
-                    : `${profile.name} ainda não publicou nenhum momento.`}
+                    ? t("Quando você compartilhar seu primeiro momento, ele vai aparecer neste espaço.")
+                    : t('{name} ainda não publicou nenhum momento.', { name: profile.name })}
                 </p>
               </div>
             )}
@@ -769,13 +777,13 @@ export function ProfilePage() {
                   <div key={post.id}>
                     {isOwnProfile && post.remonted && post.user.id !== profile.id && (
                       <div className="profile-repost-notice">
-                        Você republicou este momento
-                      </div>
+                        {t(" Você republicou este momento ")}</div>
                     )}
                     <PostCard
                       post={{
                           id: post.id,
                           content: post.content,
+                          commentsEnabled: post.commentsEnabled,
                           imageUrl: post.imageUrl,
                           createdAt: post.createdAt,
                           editedAt: post.editedAt,
@@ -803,7 +811,7 @@ export function ProfilePage() {
               )}
 
               {!hasNextPage && posts.length > 0 && (
-                <p className="profile-end-text">✦ Todos os momentos ✦</p>
+                <p className="profile-end-text">{t("✦ Todos os momentos ✦")}</p>
               )}
             </div>
           </div>

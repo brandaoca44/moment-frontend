@@ -1,3 +1,4 @@
+import { t, useLanguage } from '@/i18n';
 import { useEffect, useRef, useState } from 'react';
 import { useFeed } from '../hooks/use-feed';
 import { PostCard } from '../components/post-card';
@@ -6,6 +7,7 @@ import { CreatePost } from '../components/create-post';
 type FeedType = 'global' | 'following';
 
 export function FeedPage() {
+  useLanguage();
   const [feedType, setFeedType] = useState<FeedType>('global');
   const {
     data,
@@ -46,7 +48,7 @@ export function FeedPage() {
           position: relative;
           max-width: 640px;
           margin: 0 auto;
-          font-family: 'Inter', sans-serif;
+          font-family: var(--font-ui);
           animation: feedFadeIn 260ms var(--ease-premium) both;
         }
 
@@ -59,7 +61,7 @@ export function FeedPage() {
           max-width: 100vw;
           height: 720px;
           border-radius: 999px;
-          background: radial-gradient(circle, rgba(124, 58, 237, 0.11), transparent 68%);
+          background: radial-gradient(circle, rgba(var(--accent-rgb, 124, 58, 237), 0.11), transparent 68%);
           transform: translateX(-50%);
           pointer-events: none;
           z-index: -1;
@@ -83,7 +85,7 @@ export function FeedPage() {
         .feed-title {
           margin: 0;
           color: var(--text);
-          font-family: 'Instrument Serif', serif;
+          font-family: var(--font-ui);
           font-size: clamp(30px, 5vw, 40px);
           font-weight: 400;
           letter-spacing: -0.012em;
@@ -107,7 +109,7 @@ export function FeedPage() {
           margin-bottom: 22px;
           padding: 6px;
           border-radius: 22px;
-          background: var(--surface-glass);
+          background: var(--panel-background, var(--surface-glass));
           border: 1px solid var(--border-soft);
           box-shadow: var(--shadow-sm);
           backdrop-filter: blur(22px);
@@ -126,7 +128,7 @@ export function FeedPage() {
           font-size: 14.5px;
           font-weight: 850;
           cursor: pointer;
-          font-family: 'Inter', sans-serif;
+          font-family: var(--font-ui);
           color: var(--text-muted);
           transition:
             transform 180ms var(--ease-premium),
@@ -171,7 +173,7 @@ export function FeedPage() {
           border-top: 3px solid var(--amethyst);
           border-radius: 50%;
           animation: spin 0.82s linear infinite;
-          box-shadow: 0 0 22px rgba(124, 58, 237, 0.14);
+          box-shadow: 0 0 22px rgba(var(--accent-rgb, 124, 58, 237), 0.14);
         }
 
         .feed-loading-text {
@@ -219,7 +221,7 @@ export function FeedPage() {
           gap: 10px;
           border: 1px solid var(--border-soft);
           border-radius: 28px;
-          background: var(--surface-glass);
+          background: var(--panel-background, var(--surface-glass));
           box-shadow: var(--shadow-sm);
           backdrop-filter: blur(18px);
         }
@@ -231,7 +233,7 @@ export function FeedPage() {
           width: 260px;
           height: 260px;
           border-radius: 999px;
-          background: radial-gradient(circle, rgba(167, 139, 250, 0.18), transparent 68%);
+          background: radial-gradient(circle, rgba(var(--accent-soft-rgb, 167, 139, 250), 0.18), transparent 68%);
           pointer-events: none;
         }
 
@@ -254,7 +256,7 @@ export function FeedPage() {
           font-size: 18px;
           font-weight: 400;
           color: var(--text);
-          font-family: 'Instrument Serif', serif;
+          font-family: var(--font-ui);
           letter-spacing: -0.01em;
           text-align: center;
         }
@@ -298,7 +300,7 @@ export function FeedPage() {
           padding: 14px 18px;
           border: 1px solid var(--border-soft);
           border-radius: 999px;
-          background: var(--surface-glass);
+          background: var(--panel-background, var(--surface-glass));
           box-shadow: var(--shadow-xs);
           color: var(--amethyst);
           text-align: center;
@@ -342,29 +344,27 @@ export function FeedPage() {
       <div className="feed-page">
         <header className="feed-header">
           <p className="feed-kicker">Moment</p>
-          <h1 className="feed-title">O que está fazendo no momento?</h1>
+          <h1 className="feed-title">{t("O que está fazendo no momento?")}</h1>
           <p className="feed-subtitle">
 
           </p>
         </header>
 
-        <div className="feed-tabs" role="tablist" aria-label="Tipo de feed">
+        <div className="feed-tabs" role="tablist" aria-label={t("Tipo de feed")}>
           <button
             type="button"
             className={`feed-tab${feedType === 'global' ? ' active' : ''}`}
             onClick={() => setFeedType('global')}
             aria-selected={feedType === 'global'}
           >
-            Para você
-          </button>
+            {t(" Para você ")}</button>
           <button
             type="button"
             className={`feed-tab${feedType === 'following' ? ' active' : ''}`}
             onClick={() => setFeedType('following')}
             aria-selected={feedType === 'following'}
           >
-            Seguindo
-          </button>
+            {t(" Seguindo ")}</button>
         </div>
 
         <div className="feed-composer-wrap">
@@ -374,13 +374,13 @@ export function FeedPage() {
         {isLoading && (
           <div className="feed-center">
             <div className="feed-spinner" />
-            <p className="feed-loading-text">Carregando momentos...</p>
+            <p className="feed-loading-text">{t("Carregando momentos...")}</p>
           </div>
         )}
 
         {isError && (
           <div className="feed-error-box">
-            <p className="feed-error-text">Não foi possível carregar o feed. Tente novamente.</p>
+            <p className="feed-error-text">{t("Não foi possível carregar o feed. Tente novamente.")}</p>
           </div>
         )}
 
@@ -389,13 +389,13 @@ export function FeedPage() {
             <span className="feed-empty-icon">✦</span>
             <p className="feed-empty-title">
               {feedType === 'following'
-                ? 'Nenhum momento por aqui ainda.'
-                : 'O feed está quieto por agora.'}
+                ? t("Nenhum momento por aqui ainda.")
+                : t("O feed está quieto por agora.")}
             </p>
             <p className="feed-empty-sub">
               {feedType === 'following'
-                ? 'Siga pessoas para ver os momentos delas aqui, em um espaço mais leve.'
-                : 'Seja o primeiro a compartilhar um pequeno momento do seu dia.'}
+                ? t("Siga pessoas para ver os momentos delas aqui, em um espaço mais leve.")
+                : t("Seja o primeiro a compartilhar um pequeno momento do seu dia.")}
             </p>
           </div>
         )}
@@ -421,7 +421,7 @@ export function FeedPage() {
             </div>
           )}
           {!hasNextPage && posts.length > 0 && (
-            <p className="feed-end-text">Você viu todos os momentos</p>
+            <p className="feed-end-text">{t("Você viu todos os momentos")}</p>
           )}
         </div>
       </div>

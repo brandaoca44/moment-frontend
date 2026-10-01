@@ -1,5 +1,8 @@
+import { getLanguage } from '@/i18n';
+import { t as translate, useLanguage } from '@/i18n';
+import { EmojiText } from '@/components/ui/emoji-text';
 import { useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useSearchParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useMe } from "@/features/auth/hooks/use-me";
 import { uploadPostImage } from "@/features/feed/api/feed";
@@ -18,6 +21,7 @@ import {
   type Station,
 } from "./api";
 import "./stations.css";
+import { StationDialog } from "./station-dialog";
 
 function useRefresh() {
   const client = useQueryClient();
@@ -32,29 +36,30 @@ function Pages({
   pages: number;
   change: (p: number) => void;
 }) {
+  useLanguage();
   return (
-    <nav className="station-controls" aria-label="Páginas">
+    <nav className="station-controls" aria-label={translate("Páginas")}>
       <button disabled={page <= 1} onClick={() => change(page - 1)}>
-        Anterior
-      </button>
+        {translate(" Anterior ")}</button>
       <span>
-        Página {page} de {pages}
+        {translate(" Página ")}{page} {translate(" de ")}{pages}
       </span>
       <button disabled={page >= pages} onClick={() => change(page + 1)}>
-        Próxima
-      </button>
+        {translate(" Próxima ")}</button>
     </nav>
   );
 }
 function StationForm({ current }: { current?: Station }) {
+  useLanguage();
   const refresh = useRefresh();
   const [name, setName] = useState(current?.name ?? "");
   const [description, setDescription] = useState(current?.description ?? "");
   const [rules, setRules] = useState(
     current?.rules ??
-      "Respeite as pessoas, converse com gentileza e siga as regras do Moment.",
+      translate("Respeite as pessoas, converse com gentileza e siga as regras do Moment."),
   );
   const [category, setCategory] = useState(current?.category ?? categories[0]);
+  const [theme, setTheme] = useState(current?.theme ?? "amethyst");
   const [file, setFile] = useState<File | null>(null);
   const send = useMutation({
     mutationFn: async () => {
@@ -66,6 +71,7 @@ function StationForm({ current }: { current?: Station }) {
           description,
           rules,
           category,
+          theme,
           ...(coverUrl ? { coverUrl } : {}),
         },
         current ? "PATCH" : "POST",
@@ -74,8 +80,10 @@ function StationForm({ current }: { current?: Station }) {
     onSuccess: refresh,
   });
   return (
-    <details className="station-panel">
-      <summary>{current ? "Editar estação" : "Criar uma estação"}</summary>
+    <StationDialog
+      label={current ? translate("Editar estação") : translate("Criar estação")}
+      busy={send.isPending}
+    >
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -83,8 +91,7 @@ function StationForm({ current }: { current?: Station }) {
         }}
       >
         <label>
-          Nome
-          <input
+          {translate(" Nome ")}<input
             value={name}
             onChange={(e) => setName(e.target.value)}
             minLength={3}
@@ -93,19 +100,28 @@ function StationForm({ current }: { current?: Station }) {
           />
         </label>
         <label>
-          Categoria
-          <select
+          {translate(" Categoria ")}<select
             value={category}
             onChange={(e) => setCategory(e.target.value)}
           >
             {categories.map((c) => (
-              <option key={c}>{c}</option>
+              <option key={c} value={c}>{translate(c)}</option>
             ))}
           </select>
         </label>
         <label>
-          Descrição
-          <textarea
+          {translate(" Cor da estação ")}<select value={theme} onChange={(e) => setTheme(e.target.value)}>
+            <option value="amethyst">{translate("Ametista")}</option>
+            <option value="ocean">{translate("Oceano")}</option>
+            <option value="forest">{translate("Floresta")}</option>
+            <option value="sunset">{translate("Pôr do sol")}</option>
+            <option value="rose">{translate("Rosa")}</option>
+          </select>
+        </label>
+        <div className="station-theme-preview" data-station-theme={theme}>
+          {translate(" Prévia da cor da estação ")}</div>
+        <label>
+          {translate(" Descrição ")}<textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             minLength={10}
@@ -114,8 +130,7 @@ function StationForm({ current }: { current?: Station }) {
           />
         </label>
         <label>
-          Regras
-          <textarea
+          {translate(" Regras ")}<textarea
             value={rules}
             onChange={(e) => setRules(e.target.value)}
             minLength={10}
@@ -124,28 +139,27 @@ function StationForm({ current }: { current?: Station }) {
           />
         </label>
         <label>
-          Capa opcional — até 5 MB
-          <input
+          {translate(" Capa opcional — até 5 MB ")}<input
             type="file"
             accept="image/jpeg,image/png,image/webp,image/gif"
             onChange={(e) => setFile(e.target.files?.[0] ?? null)}
           />
         </label>
         <p className="station-muted">
-          Criações e alterações passam pela aprovação da equipe do Moment.
-        </p>
+          {translate(" Nome, descrição, regras e capa passam pela aprovação da equipe. A troca de cor é imediata. ")}</p>
         <button
           disabled={send.isPending || (file?.size ?? 0) > 5 * 1024 * 1024}
         >
-          {send.isPending ? "Enviando..." : "Enviar para aprovação"}
+          {send.isPending ? translate("Enviando...") : translate("Enviar para aprovação")}
         </button>
-        {send.isError && <p role="alert">{send.error.message}</p>}
-        {send.isSuccess && <p role="status">{send.data.message}</p>}
+        {send.isError && <p role="alert">{translate(send.error.message)}</p>}
+        {send.isSuccess && <p role="status">{translate(send.data.message)}</p>}
       </form>
-    </details>
+    </StationDialog>
   );
 }
 function Decision({ path }: { path: string }) {
+  useLanguage();
   const [note, setNote] = useState("");
   const refresh = useRefresh();
   const mutation = useMutation({
@@ -155,8 +169,7 @@ function Decision({ path }: { path: string }) {
   return (
     <div>
       <label>
-        Justificativa
-        <textarea
+        {translate(" Justificativa ")}<textarea
           maxLength={1000}
           value={note}
           onChange={(e) => setNote(e.target.value)}
@@ -167,45 +180,52 @@ function Decision({ path }: { path: string }) {
           disabled={!note.trim() || mutation.isPending}
           onClick={() => mutation.mutate("APPROVE")}
         >
-          Aprovar
-        </button>
+          {translate(" Aprovar ")}</button>
         <button
           disabled={!note.trim() || mutation.isPending}
           onClick={() => mutation.mutate("HIDE")}
         >
-          Retirar / rejeitar
-        </button>
+          {translate(" Retirar / rejeitar ")}</button>
       </div>
-      {mutation.isError && <p role="alert">{mutation.error.message}</p>}
+      {mutation.isError && <p role="alert">{translate(mutation.error.message)}</p>}
     </div>
   );
 }
 export function StationsPage() {
-  const [tab, setTab] = useState("discover");
+  useLanguage();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const requestedTab = searchParams.get('tab');
+  const tab = requestedTab === 'mine' || requestedTab === 'pending' ? requestedTab : 'discover';
   const [category, setCategory] = useState("");
   const [page, setPage] = useState(1);
+  const [searchInput, setSearchInput] = useState("");
+  const [search, setSearch] = useState("");
   const me = useMe().data?.data.user;
   const list = useQuery({
-    queryKey: ["stations", "list", tab, page, category],
-    queryFn: () => stations(tab, page, category),
+    queryKey: ["stations", "list", tab, page, category, search],
+    queryFn: () => stations(tab, page, category, search),
   });
   return (
     <section className="stations-page">
-      <h1>Estações</h1>
-      <p>
-        Encontre sua estação. Compartilhe interesses, ideias e boas conversas.
-      </p>
+      <header className="station-directory-header">
+        <div>
+          <h1>{translate("Estações")}</h1>
+          <p className="station-muted">
+            {translate(" Encontre pessoas que compartilham seus interesses. ")}</p>
+        </div>
+        <StationForm />
+      </header>
       <div className="station-controls">
         {[
-          ["discover", "Descobrir"],
-          ["mine", "Minhas estações"],
-          ...(me?.canModerate ? [["pending", "Aprovar estações"]] : []),
+          ["discover", translate("Descobrir")],
+          ["mine", translate("Minhas estações")],
+          ...(me?.canModerate ? [["pending", translate("Aprovar estações")]] : []),
         ].map(([key, label]) => (
           <button
             key={key}
             aria-pressed={tab === key}
             onClick={() => {
-              setTab(key);
+              setSearchParams(previous => { const next = new URLSearchParams(previous); next.set('tab', key); return next; });
               setPage(1);
             }}
           >
@@ -213,44 +233,102 @@ export function StationsPage() {
           </button>
         ))}
       </div>
-      <StationForm />
-      {me?.canModerate && <ReviewQueue id="" />}
-      <label>
-        Interesse
-        <select
-          value={category}
+      <form
+        className="station-search"
+        role="search"
+        onSubmit={(e) => {
+          e.preventDefault();
+          setSearch(searchInput.trim());
+          setPage(1);
+        }}
+      >
+        <input
+          aria-label={translate("Buscar estação pelo nome")}
+          placeholder={translate("Buscar uma estação…")}
+          type="search"
+          maxLength={80}
+          value={searchInput}
           onChange={(e) => {
-            setCategory(e.target.value);
-            setPage(1);
+            setSearchInput(e.target.value);
+            if (!e.target.value) {
+              setSearch("");
+              setPage(1);
+            }
           }}
+        />
+        <button type="submit">{translate("Buscar")}</button>
+      </form>
+      <div className="station-toolbar">
+        <StationDialog
+          label={translate(category) || translate("Todos os interesses")}
+          title={translate("Filtrar por interesse")}
         >
-          <option value="">Todos os interesses</option>
-          {categories.map((c) => (
-            <option key={c}>{c}</option>
-          ))}
-        </select>
-      </label>
-      {list.isPending && <p role="status">Carregando estações...</p>}
-      {list.isError && <p role="alert">{list.error.message}</p>}
-      {list.data?.data.map((s) => (
-        <article key={s.id} className="station-panel">
-          {s.coverUrl && (
-            <img className="station-cover" src={s.coverUrl} alt="" />
-          )}
-          <small>
-            {s.category} · {s._count?.members} membros
-          </small>
-          <h2>
-            <Link to={`/communities/${s.id}`}>{s.name}</Link>
-          </h2>
-          <p>{s.description}</p>
-          {s.status !== "APPROVED" && (
-            <p>Aguardando aprovação ou indisponível.</p>
-          )}
-          {tab === "pending" && <Decision path={`${s.id}/review`} />}
-        </article>
-      ))}
-      {list.data?.data.length === 0 && <p>Nenhuma estação por aqui ainda.</p>}
+          <div className="station-category-options">
+            {["", ...categories].map((c) => (
+              <button
+                type="button"
+                key={c}
+                aria-pressed={category === c}
+                onClick={() => {
+                  setCategory(c);
+                  setPage(1);
+                }}
+              >
+                {c || "Todos"}
+              </button>
+            ))}
+          </div>
+        </StationDialog>
+        {category && (
+          <button
+            type="button"
+            onClick={() => {
+              setCategory("");
+              setPage(1);
+            }}
+          >
+            {translate(" Limpar filtro ")}</button>
+        )}
+        {me?.canModerate && <ReviewQueue id="" />}
+      </div>
+      {list.isPending && <p role="status">{translate("Carregando estações...")}</p>}
+      {list.isError && <p role="alert">{translate(list.error.message)}</p>}
+      <div className="station-gallery">
+        {list.data?.data.map((s) => (
+          <article
+            className="station-tile"
+            key={s.id}
+            data-station-theme={s.theme}
+          >
+            <Link to={`/communities/${s.id}`} className="station-tile-link">
+              <div className="station-tile-image">
+                {s.coverUrl ? (
+                  <img src={s.coverUrl} alt="" loading="lazy" />
+                ) : (
+                  <span aria-hidden="true">
+                    {s.name.slice(0, 2).toUpperCase()}
+                  </span>
+                )}
+              </div>
+              <h2>{s.name}</h2>
+              <p>
+                {translate(s.category)} · {s._count?.members ?? 0} {translate(" membros ")}</p>
+              {s.status !== "APPROVED" && (
+                <small>{translate("Pendente ou indisponível")}</small>
+              )}
+            </Link>
+            {tab === "pending" && (
+              <StationDialog label={translate("Analisar estação")} title={s.name}>
+                <p>{s.description}</p>
+                <h3>{translate("Regras propostas")}</h3>
+                <p>{s.rules}</p>
+                <Decision path={`${s.id}/review`} />
+              </StationDialog>
+            )}
+          </article>
+        ))}
+      </div>
+      {list.data?.data.length === 0 && <p>{translate("Nenhuma estação por aqui ainda.")}</p>}
       {list.data && (
         <Pages page={page} pages={list.data.meta.pages} change={setPage} />
       )}
@@ -258,6 +336,7 @@ export function StationsPage() {
   );
 }
 function Composer({ path, topic = false }: { path: string; topic?: boolean }) {
+  useLanguage();
   const [content, setContent] = useState("");
   const [title, setTitle] = useState("");
   const [nomad, setNomad] = useState(false);
@@ -293,11 +372,10 @@ function Composer({ path, topic = false }: { path: string; topic?: boolean }) {
           send.mutate();
       }}
     >
-      <h2>{topic ? "Abrir um tópico" : "Responder"}</h2>
+      <h2>{topic ? translate("Abrir um tópico") : translate("Responder")}</h2>
       {topic && (
         <label>
-          Título
-          <input
+          {translate(" Título ")}<input
             required
             minLength={3}
             maxLength={100}
@@ -308,8 +386,7 @@ function Composer({ path, topic = false }: { path: string; topic?: boolean }) {
         </label>
       )}
       <label>
-        Participar como
-        <select
+        {translate(" Participar como ")}<select
           value={nomad ? "nomad" : "profile"}
           disabled={send.isPending}
           onChange={(e) => {
@@ -318,20 +395,16 @@ function Composer({ path, topic = false }: { path: string; topic?: boolean }) {
             setFileKey((k) => k + 1);
           }}
         >
-          <option value="profile">Meu perfil</option>
-          <option value="nomad">Nômade Oculto</option>
+          <option value="profile">{translate("Meu perfil")}</option>
+          <option value="nomad">{translate("Nômade Oculto")}</option>
         </select>
       </label>
       {nomad && (
         <p className="station-muted">
-          Seu perfil não será exibido. A equipe do Moment mantém sua
-          identificação para aplicar as regras. Apenas texto; publicação após
-          aprovação.
-        </p>
+          {translate(" Seu perfil não será exibido. A equipe do Moment mantém sua identificação para aplicar as regras. Apenas texto; publicação após aprovação. ")}</p>
       )}
       <label>
-        Mensagem
-        <textarea
+        {translate(" Mensagem ")}<textarea
           required
           maxLength={limit}
           value={content}
@@ -344,8 +417,7 @@ function Composer({ path, topic = false }: { path: string; topic?: boolean }) {
       </small>
       {!nomad && (
         <label>
-          Imagem ou GIF — até 5 MB
-          <input
+          {translate(" Imagem ou GIF — até 5 MB ")}<input
             key={fileKey}
             type="file"
             accept="image/jpeg,image/png,image/webp,image/gif"
@@ -355,7 +427,7 @@ function Composer({ path, topic = false }: { path: string; topic?: boolean }) {
         </label>
       )}
       {(file?.size ?? 0) > 5 * 1024 * 1024 && (
-        <p role="alert">A imagem deve ter até 5 MB.</p>
+        <p role="alert">{translate("A imagem deve ter até 5 MB.")}</p>
       )}
       <div className="station-controls">
         <button
@@ -367,59 +439,71 @@ function Composer({ path, topic = false }: { path: string; topic?: boolean }) {
           }
         >
           {send.isPending
-            ? "Enviando..."
+            ? translate("Enviando...")
             : nomad
-              ? "Enviar para aprovação"
+              ? translate("Enviar para aprovação")
               : "Publicar"}
         </button>
       </div>
-      {send.isError && <p role="alert">{send.error.message}</p>}
-      {send.isSuccess && <p role="status">{send.data.message}</p>}
+      {send.isError && <p role="alert">{translate(send.error.message)}</p>}
+      {send.isSuccess && <p role="status">{translate(send.data.message)}</p>}
     </form>
   );
 }
 function ReviewQueue({ id }: { id: string }) {
+  useLanguage();
+  return (
+    <StationDialog label={translate("Revisar publicações")}>
+      <ReviewQueueContent id={id} />
+    </StationDialog>
+  );
+}
+function ReviewQueueContent({ id }: { id: string }) {
+  useLanguage();
   const [page, setPage] = useState(1);
   const list = useQuery({
     queryKey: ["stations", id, "queue", page],
     queryFn: () => queue(id, page),
   });
   return (
-    <details className="station-panel">
-      <summary>Revisar publicações pendentes</summary>
-      {list.isPending && <p>Carregando...</p>}
-      {list.isError && <p role="alert">{list.error.message}</p>}
+    <div>
+      {list.isPending && <p>{translate("Carregando...")}</p>}
+      {list.isError && <p role="alert">{translate(list.error.message)}</p>}
       {list.data?.data.map((e) => (
-        <details className="station-panel" key={e.id}>
-          <summary>
+        <article className="station-review-row" key={e.id}>
+          <p>
             {e.title} · {e.nomad ? e.alias : e.author?.name}
-          </summary>
-          <p>{e.content}</p>
-          {e.imageUrl && (
-            <ExpandableImage
-              src={e.imageUrl}
-              alt="Imagem aguardando aprovação"
-            />
-          )}
-          {e.requiresPlatform && (
-            <p>
-              Retido pela moderação do Moment. Somente a equipe da plataforma
-              pode liberar.
-            </p>
-          )}
-          <Decision path={`entries/${e.id}/review`} />
-        </details>
+          </p>
+          <StationDialog
+            label={translate("Analisar publicação")}
+            title={e.title ?? translate("Publicação pendente")}
+          >
+            <p>{e.content}</p>
+            {e.imageUrl && (
+              <ExpandableImage
+                src={e.imageUrl}
+                alt="Imagem aguardando aprovação"
+              />
+            )}
+            {e.requiresPlatform && (
+              <p>
+                {translate(" Retido pela moderação do Moment. Somente a equipe da plataforma pode liberar. ")}</p>
+            )}
+            <Decision path={`entries/${e.id}/review`} />
+          </StationDialog>
+        </article>
       ))}
       {list.data?.data.length === 0 && (
-        <p>Nenhuma publicação aguardando análise.</p>
+        <p>{translate("Nenhuma publicação aguardando análise.")}</p>
       )}
       {list.data && (
         <Pages page={page} pages={list.data.meta.pages} change={setPage} />
       )}
-    </details>
+    </div>
   );
 }
 export function StationPage() {
+  useLanguage();
   const { id = "" } = useParams();
   const [sort, setSort] = useState("recent");
   const [page, setPage] = useState(1);
@@ -440,10 +524,10 @@ export function StationPage() {
     onSuccess: refresh,
   });
   return (
-    <section className="stations-page">
-      <Link to="/communities">Todas as estações</Link>
-      {detail.isPending && <p>Carregando...</p>}
-      {detail.isError && <p role="alert">{detail.error.message}</p>}
+    <section className="stations-page" data-station-theme={s?.theme}>
+      <Link to="/communities">{translate("Todas as estações")}</Link>
+      {detail.isPending && <p>{translate("Carregando...")}</p>}
+      {detail.isError && <p role="alert">{translate(detail.error.message)}</p>}
       {s && (
         <>
           {s.coverUrl && (
@@ -452,70 +536,92 @@ export function StationPage() {
           <h1>{s.name}</h1>
           <p>{s.description}</p>
           <p>
-            {s.category} · {s.membersCount} membros
-          </p>
-          <details className="station-panel">
-            <summary>Regras da estação</summary>
-            <p>{s.rules}</p>
-          </details>
-          {s.status !== "APPROVED" ? (
-            <p role="status">
-              Esta estação ainda não está disponível para publicação.
-            </p>
-          ) : (
-            <button
-              disabled={membership.isPending || s.banned}
-              onClick={() => membership.mutate()}
-            >
-              {s.banned
-                ? "Participação removida"
-                : s.joined
-                  ? "Sair da estação"
-                  : "Entrar na estação"}
-            </button>
-          )}
-          {membership.isError && <p role="alert">{membership.error.message}</p>}
-          {s.canManage && (
-            <>
-              <StationForm current={s} />
-              <ReviewQueue id={id} />
-            </>
-          )}
+            {translate(s.category)} · {s.membersCount} {translate(" membros ")}</p>
+          <div className="station-toolbar">
+            <StationDialog label={translate("Regras")} title={translate("Regras da estação")}>
+              <p>{s.rules}</p>
+            </StationDialog>
+            {s.canManage && (
+              <>
+                <StationForm current={s} />
+                <ReviewQueue id={id} />
+              </>
+            )}
+            {s.status !== "APPROVED" ? (
+              <p role="status">
+                {translate(" Esta estação ainda não está disponível para publicação. ")}</p>
+            ) : (
+              <button
+                className={s.joined ? "station-leave" : "station-join"}
+                disabled={membership.isPending || s.banned}
+                onClick={() => {
+                  if (!s.joined || confirm(translate("Sair desta estação?")))
+                    membership.mutate();
+                }}
+              >
+                {s.banned
+                  ? translate("Participação removida")
+                  : s.joined
+                    ? translate("Sair da estação")
+                    : translate("Entrar na estação")}
+              </button>
+            )}
+            {membership.isError && (
+              <p role="alert">{translate(membership.error.message)}</p>
+            )}
+          </div>
           {s.status === "APPROVED" && (
             <>
               <div className="station-controls">
-                <label>
-                  Ordenar tópicos
-                  <select
-                    value={sort}
-                    onChange={(e) => {
-                      setSort(e.target.value);
+                <h2 className="station-topics-heading">{translate("Tópicos")}</h2>
+                {s.joined && (
+                  <StationDialog label={translate("Novo tópico")}>
+                    <Composer path={`${id}/topics`} topic />
+                  </StationDialog>
+                )}
+              </div>
+              <div className="station-sort" aria-label={translate("Ordenar tópicos")}>
+                {[
+                  ["recent", "Recentes"],
+                  ["activity", translate("Última atividade")],
+                  ["unanswered", translate("Sem respostas")],
+                ].map(([value, label]) => (
+                  <button
+                    type="button"
+                    key={value}
+                    aria-pressed={sort === value}
+                    onClick={() => {
+                      setSort(value);
                       setPage(1);
                     }}
                   >
-                    <option value="recent">Recentes</option>
-                    <option value="activity">Última atividade</option>
-                    <option value="unanswered">Sem respostas</option>
-                  </select>
-                </label>
+                    {label}
+                  </button>
+                ))}
               </div>
-              {list.isPending && <p>Carregando tópicos...</p>}
-              {list.isError && <p role="alert">{list.error.message}</p>}
+              {list.isPending && <p>{translate("Carregando tópicos...")}</p>}
+              {list.isError && <p role="alert">{translate(list.error.message)}</p>}
               {list.data?.data.map((t) => (
                 <Link
                   className="station-topic"
                   key={t.id}
                   to={`/communities/topics/${t.id}`}
                 >
+                  <span className="station-topic-label">
+                    {translate(" Tópico · Abrir conversa → ")}</span>
                   <strong>{t.title}</strong>
+                  <span className="station-muted">
+                    {translate(" Criado por ")}{t.creator ?? "Membro"}
+                  </span>
+                  <br />
                   <small>
-                    {t._count.entries} respostas · Última atividade:{" "}
-                    {new Date(t.lastActivity).toLocaleString("pt-BR")}
+                    {t._count.entries} {translate(" respostas · Última atividade:")}{" "}
+                    {new Date(t.lastActivity).toLocaleString(getLanguage())}
                   </small>
                 </Link>
               ))}
               {list.data?.data.length === 0 && (
-                <p>A conversa começa com o primeiro tópico.</p>
+                <p>{translate("A conversa começa com o primeiro tópico.")}</p>
               )}
               {list.data && (
                 <Pages
@@ -524,7 +630,6 @@ export function StationPage() {
                   change={setPage}
                 />
               )}
-              {s.joined && <Composer path={`${id}/topics`} topic />}
             </>
           )}
         </>
@@ -543,6 +648,7 @@ function EntryCard({
   canPost: boolean;
   stationId: string;
 }) {
+  useLanguage();
   const refresh = useRefresh();
   const mutation = useMutation({
     mutationFn: (action: string) =>
@@ -557,8 +663,19 @@ function EntryCard({
           : write(`${stationId}/ban/${entry.id}`),
     onSuccess: refresh,
   });
+  if (entry.removed)
+    return (
+      <article className="station-panel">
+        <p><EmojiText text={entry.content} /></p>
+      </article>
+    );
   return (
-    <article className="station-panel station-entry">
+    <article
+      className={`station-panel station-entry${entry.root ? " station-entry-root" : ""}`}
+    >
+      {entry.root && (
+        <span className="station-topic-label">{translate("Publicação inicial")}</span>
+      )}
       <header>
         {entry.nomad ? (
           <strong>{entry.alias}</strong>
@@ -570,10 +687,10 @@ function EntryCard({
           </Link>
         )}
         <time dateTime={entry.createdAt}>
-          {new Date(entry.createdAt).toLocaleString("pt-BR")}
+          {new Date(entry.createdAt).toLocaleString(getLanguage())}
         </time>
       </header>
-      <p>{entry.content}</p>
+      <p><EmojiText text={entry.content} /></p>
       {entry.imageUrl && (
         <ExpandableImage src={entry.imageUrl} alt="Imagem da conversa" />
       )}
@@ -585,19 +702,18 @@ function EntryCard({
           onClick={() => mutation.mutate("like")}
         >
           {entry.liked ? "♥" : "♡"} {entry.likesCount} ·{" "}
-          {entry.liked ? "Descurtir" : "Curtir"}
+          {entry.liked ? translate("Descurtir") : translate("Curtir")}
         </button>
-        {!entry.mine && <ReportButton targetType="FORUM" targetId={entry.id} />}
+        {!entry.mine && <ReportButton targetType="FORUM" targetId={entry.id} authorId={entry.author?.id} />}
         {(entry.mine || canManage) && (
           <button
             disabled={mutation.isPending}
             onClick={() => {
-              if (confirm("Retirar este conteúdo da conversa?"))
+              if (confirm(translate("Retirar este conteúdo da conversa?")))
                 mutation.mutate("remove");
             }}
           >
-            Retirar
-          </button>
+            {translate(" Retirar ")}</button>
         )}
         {canManage && !entry.mine && (
           <button
@@ -605,21 +721,21 @@ function EntryCard({
             onClick={() => {
               if (
                 confirm(
-                  "Impedir novas participações deste membro nesta estação?",
+                  translate("Impedir novas participações deste membro nesta estação?"),
                 )
               )
                 mutation.mutate("ban");
             }}
           >
-            Remover membro
-          </button>
+            {translate(" Remover membro ")}</button>
         )}
       </div>
-      {mutation.isError && <p role="alert">{mutation.error.message}</p>}
+      {mutation.isError && <p role="alert">{translate(mutation.error.message)}</p>}
     </article>
   );
 }
 export function TopicPage() {
+  useLanguage();
   const { topicId = "" } = useParams();
   const [page, setPage] = useState(1);
   const [sort, setSort] = useState("oldest");
@@ -629,17 +745,18 @@ export function TopicPage() {
   });
   const t = query.isError ? undefined : query.data?.data;
   return (
-    <section className="stations-page">
-      {query.isPending && <p>Carregando conversa...</p>}
+    <section className="stations-page" data-station-theme={t?.stationTheme}>
+      {query.isPending && <p>{translate("Carregando conversa...")}</p>}
       {query.isError && (
         <p role="alert">
-          {query.error.message}{" "}
-          <Link to="/communities">Voltar às estações</Link>
+          {translate(query.error.message)}{" "}
+          <Link to="/communities">{translate("Voltar às estações")}</Link>
         </p>
       )}
       {t && (
         <>
           <Link to={`/communities/${t.stationId}`}>{t.stationName}</Link>
+          <span className="station-topic-label">{translate("Tópico")}</span>
           <h1>{t.title}</h1>
           {t.root && (
             <EntryCard
@@ -649,7 +766,7 @@ export function TopicPage() {
               stationId={t.stationId}
             />
           )}
-          <h2>Respostas</h2>
+          <h2>{translate("Respostas")}</h2>
           <div className="station-controls">
             <button
               onClick={() => {
@@ -657,16 +774,14 @@ export function TopicPage() {
                 setPage(1);
               }}
             >
-              Primeira resposta
-            </button>
+              {translate(" Primeira resposta ")}</button>
             <button
               onClick={() => {
                 setSort("oldest");
                 setPage(query.data!.meta.pages);
               }}
             >
-              Última resposta
-            </button>
+              {translate(" Última resposta ")}</button>
             <button
               aria-pressed={sort === "liked"}
               onClick={() => {
@@ -674,8 +789,7 @@ export function TopicPage() {
                 setPage(1);
               }}
             >
-              Mais curtidas
-            </button>
+              {translate(" Mais curtidas ")}</button>
           </div>
           {t.entries.map((e) => (
             <EntryCard
@@ -686,7 +800,7 @@ export function TopicPage() {
               stationId={t.stationId}
             />
           ))}
-          {t.entries.length === 0 && <p>Ainda não há respostas.</p>}
+          {t.entries.length === 0 && <p>{translate("Ainda não há respostas.")}</p>}
           <Pages
             page={query.data!.meta.page}
             pages={query.data!.meta.pages}
@@ -695,7 +809,7 @@ export function TopicPage() {
           {t.canPost ? (
             <Composer path={`topics/${topicId}/replies`} />
           ) : (
-            <p>Entre na estação para participar.</p>
+            !t.root?.removed && <p>{translate("Entre na estação para participar.")}</p>
           )}
         </>
       )}

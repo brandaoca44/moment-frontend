@@ -1,13 +1,15 @@
+import { t } from '@/i18n';
 const API_URL = (import.meta.env.VITE_API_URL ?? '').replace(/\/$/, '');
 
-let isRefreshing = false;
-let pendingRequests: Array<() => void> = [];
+let refreshing: Promise<boolean> | null = null;
 
 async function refreshToken(): Promise<boolean> {
   try {
     const res = await fetch(`${API_URL}/auth/refresh`, {
       method: 'POST',
       credentials: 'include',
+      headers: { 'X-Moment-Client': 'web' },
+      signal: AbortSignal.timeout(10000),
     });
 
     return res.ok;
@@ -19,24 +21,24 @@ async function refreshToken(): Promise<boolean> {
 function resolveHeaders(options?: RequestInit) {
   const isFormData = options?.body instanceof FormData;
 
-  return {
-    ...(!isFormData && { 'Content-Type': 'application/json' }),
-    ...options?.headers,
-  };
+  const headers = new Headers(options?.headers);
+  if (!isFormData && !headers.has('Content-Type')) headers.set('Content-Type', 'application/json');
+  headers.set('X-Moment-Client', 'web');
+  return headers;
 }
 
 async function parseResponseError(res: Response) {
   const contentType = res.headers.get('content-type');
 
   if (!contentType?.includes('application/json')) {
-    return 'Erro na requisição';
+    return t("Erro na requisição");
   }
 
   try {
     const data = await res.json();
-    return data?.message || 'Erro na requisição';
+    return data?.message || t("Erro na requisição");
   } catch {
-    return 'Erro na requisição';
+    return t("Erro na requisição");
   }
 }
 
@@ -52,31 +54,13 @@ export async function api<T = unknown>(
   });
 
   if (res.status === 401 && _retry) {
-    if (!isRefreshing) {
-      isRefreshing = true;
-      const success = await refreshToken();
-      isRefreshing = false;
-
-      if (!success) {
-        pendingRequests = [];
-        throw new Error('SESSION_EXPIRED');
-      }
-
-      pendingRequests.forEach((callback) => callback());
-      pendingRequests = [];
-
-      return api<T>(url, options, false);
-    }
-
-    return new Promise((resolve, reject) => {
-      pendingRequests.push(() => {
-        api<T>(url, options, false).then(resolve).catch(reject);
-      });
-    });
+    if (!refreshing) refreshing = refreshToken().finally(() => { refreshing = null; });
+    if (!await refreshing) throw new Error(t('Sua sessão expirou. Entre novamente.'));
+    return api<T>(url, options, false);
   }
 
   if (res.status === 401 && !_retry) {
-    throw new Error('SESSION_EXPIRED');
+    throw new Error(t('Sua sessão expirou. Entre novamente.'));
   }
 
   if (res.status === 204) {
@@ -90,13 +74,13 @@ export async function api<T = unknown>(
       throw new Error(await parseResponseError(res));
     }
 
-    throw new Error('Resposta inválida do servidor');
+    throw new Error(t("Resposta inválida do servidor"));
   }
 
   const data = await res.json();
 
   if (!res.ok) {
-    throw new Error(data?.message || 'Erro na requisição');
+    throw new Error(t(typeof data?.message === 'string' ? data.message : t("Erro na requisição")));
   }
 
   return data;

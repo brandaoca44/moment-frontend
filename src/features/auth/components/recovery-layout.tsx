@@ -1,3 +1,4 @@
+import { t, useLanguage } from '@/i18n';
 import type { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import momentIcon from '@/assets/moment-icon.svg';
@@ -8,6 +9,7 @@ export function RecoveryLayout({ title, description, children }: {
   description: string;
   children: ReactNode;
 }) {
+  useLanguage();
   return (
     <main className="recovery-page">
       <section className="recovery-card" aria-labelledby="recovery-title">
@@ -15,7 +17,7 @@ export function RecoveryLayout({ title, description, children }: {
         <h1 id="recovery-title">{title}</h1>
         <p className="recovery-description">{description}</p>
         {children}
-        <Link className="recovery-back" to="/login">Voltar para entrar</Link>
+        <Link className="recovery-back" to="/login">{t("Voltar para entrar")}</Link>
       </section>
     </main>
   );

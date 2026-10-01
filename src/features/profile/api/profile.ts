@@ -1,6 +1,7 @@
 import { api } from '@/lib/api';
 
 export type ProfileUser = {
+  emailConfirmedAt?: string | null;
   id: string;
   name: string;
   username: string;
@@ -17,6 +18,8 @@ export type ProfileUser = {
 };
 
 export type ProfilePost = {
+  commentsEnabled: boolean;
+  source?: string | null;
   editedAt?: string | null;
   id: string;
   content: string;

@@ -1,12 +1,15 @@
-import { useEffect, useState, useRef } from 'react';
+import { t, useLanguage } from '@/i18n';
+import { lazy, Suspense, useEffect, useState, useRef } from 'react';
 import { uploadPostImage } from '../api/feed';
 import { useMe } from '@/features/auth/hooks/use-me';
 import { useCreatePost } from '../hooks/use-create-post';
+import { ReportButton } from '@/features/reports/report-button';
 
 const MAX_CHARS = 220;
-const EMOJIS = ['😀', '😂', '😍', '🥹', '😎', '🤔', '🎉', '✨', '❤️', '👍', '🙌', '🔥'];
+const EmojiPickerDialog = lazy(() => import('@/components/ui/emoji-picker-dialog'));
 
 function Avatar({ name, avatar }: { name: string; avatar: string | null }) {
+  useLanguage();
   const initials = name.split(' ').slice(0, 2).map((n) => n[0]).join('').toUpperCase();
   return (
     <div style={{
@@ -31,9 +34,11 @@ function Avatar({ name, avatar }: { name: string; avatar: string | null }) {
 }
 
 export function CreatePost() {
+  useLanguage();
   const { data: meData } = useMe();
   const createPost = useCreatePost();
   const [content, setContent] = useState('');
+  const [commentsEnabled, setCommentsEnabled] = useState(true);
   const [focused, setFocused] = useState(false);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -46,27 +51,8 @@ export function CreatePost() {
   const [sending, setSending] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState('');
+  const [notice, setNotice] = useState('');
 
-  useEffect(() => {
-    if (!showEmojiPicker) return;
-    const dismiss = (event: PointerEvent) => {
-      if (event.target instanceof Node && !emojiRef.current?.contains(event.target)) {
-        setShowEmojiPicker(false);
-      }
-    };
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        setShowEmojiPicker(false);
-        emojiRef.current?.querySelector('button')?.focus();
-      }
-    };
-    document.addEventListener('pointerdown', dismiss);
-    document.addEventListener('keydown', onKeyDown);
-    return () => {
-      document.removeEventListener('pointerdown', dismiss);
-      document.removeEventListener('keydown', onKeyDown);
-    };
-  }, [showEmojiPicker]);
 
   useEffect(() => {
     if (!image) { setPreview(''); return; }
@@ -78,11 +64,11 @@ export function CreatePost() {
   function selectImage(file?: File) {
     if (!file || sendingRef.current) return;
     if (!['image/jpeg', 'image/png', 'image/webp', 'image/gif'].includes(file.type)) {
-      setError('Escolha uma imagem JPG, PNG, WebP ou GIF.');
+      setError(t("Escolha uma imagem JPG, PNG, WebP ou GIF."));
       return;
     }
     if (file.size > 5 * 1024 * 1024 || file.size === 0) {
-      setError('Escolha uma imagem válida de até 5 MB.');
+      setError(t("Escolha uma imagem válida de até 5 MB."));
       return;
     }
     setImage(file);
@@ -93,7 +79,7 @@ export function CreatePost() {
   const user = meData?.data?.user;
   const remaining = MAX_CHARS - content.length;
   const isOverLimit = remaining < 0;
-  const isEmpty = content.trim().length === 0;
+  const isEmpty = content.trim().length === 0 && !image;
 
   function autoResize() {
     const el = textareaRef.current;
@@ -108,6 +94,8 @@ export function CreatePost() {
     const start = textarea.selectionStart ?? content.length;
     const end = textarea.selectionEnd ?? content.length;
     const nextContent = `${content.slice(0, start)}${emoji}${content.slice(end)}`;
+    if (nextContent.length > MAX_CHARS) { setShowEmojiPicker(false); setError(t("Este emoji ultrapassa o limite de 220 caracteres.")); requestAnimationFrame(() => textarea.focus()); return; }
+    setError('');
     setContent(nextContent);
     setShowEmojiPicker(false);
     requestAnimationFrame(() => {
@@ -124,6 +112,7 @@ export function CreatePost() {
     sendingRef.current = true;
     setSending(true);
     setError('');
+    setNotice('');
     try {
       let imageUrl = uploadedUrl;
       if (image && !imageUrl) {
@@ -132,14 +121,16 @@ export function CreatePost() {
         setUploadedUrl(imageUrl);
         setUploading(false);
       }
-      await createPost.mutateAsync({ content: content.trim(), ...(imageUrl ? { imageUrl } : {}) });
+      const result = await createPost.mutateAsync({ content: content.trim(), commentsEnabled, ...(imageUrl ? { imageUrl } : {}) });
+      if (result.data?.moderationStatus === 'PENDING_REVIEW') setNotice(t("Seu momento foi enviado e está aguardando moderação."));
       setContent('');
+      setCommentsEnabled(true);
       setImage(null);
       setUploadedUrl(undefined);
       setShowEmojiPicker(false);
       if (textareaRef.current) textareaRef.current.style.height = 'auto';
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Não foi possível publicar. Tente novamente.');
+      setError(err instanceof Error ? err.message : t("Não foi possível publicar. Tente novamente."));
     } finally {
       sendingRef.current = false;
       setSending(false);
@@ -159,32 +150,36 @@ export function CreatePost() {
           background: var(--surface);
           border: 1px solid var(--border);
           border-radius: 20px;
-          padding: 18px 20px;
+          padding: 20px 20px 10px;
           margin-bottom: 20px;
           transition: box-shadow 0.2s ease, background 0.2s ease, border-color 0.2s ease;
         }
 
         .create-post-box.focused {
-          box-shadow: 0 0 0 2px var(--amethyst-border);
+          border-color: var(--amethyst-border);
+          box-shadow: 0 0 0 1px var(--amethyst-border);
         }
 
         .create-post-row { display: flex; gap: 14px; align-items: flex-start; }
 
-        .create-post-textarea {
+        .create-post-box .create-post-textarea {
           flex: 1;
           min-width: 0;
           border: none;
           outline: none;
           resize: none;
-          font-size: 15px;
+          font-size: 16px;
           line-height: 1.6;
           color: var(--text-soft);
           background: transparent;
-          font-family: 'Inter', sans-serif;
-          padding-top: 8px;
+          font-family: var(--font-ui);
+          padding: 8px 0 12px;
+          border-radius: 0;
+          box-shadow: none;
           overflow-y: hidden;
-          min-height: 42px;
+          min-height: 112px;
         }
+        .create-post-box .create-post-textarea:focus { outline: none; border: none; box-shadow: none; }
 
         .create-post-textarea::placeholder { color: var(--text-muted); }
 
@@ -194,99 +189,93 @@ export function CreatePost() {
           flex-wrap: wrap;
           align-items: center;
           justify-content: flex-end;
-          gap: 14px;
-          margin-top: 14px;
-          padding-top: 14px;
-          border-top: 1px solid var(--border);
+          gap: 6px;
+          margin-top: 4px;
+          padding-top: 4px;
         }
 
         .create-post-counter-wrap { display: flex; align-items: baseline; gap: 2px; }
 
         .create-post-counter {
-          font-size: 14px;
-          font-weight: 700;
-          font-family: 'Inter', sans-serif;
+          font-size: 12px;
+          font-weight: 400;
+          font-family: var(--font-ui);
           transition: color 0.2s;
         }
 
         .create-post-counter-total {
           font-size: 12px;
           color: var(--text-muted);
-          font-family: 'Inter', sans-serif;
+          font-family: var(--font-ui);
         }
 
         .create-post-error {
           font-size: 13px;
           color: var(--danger);
-          font-family: 'Inter', sans-serif;
+          font-family: var(--font-ui);
         }
 
         .create-post-submit {
-          height: 38px;
-          padding: 0 20px;
+          min-height: 36px;
+          padding: 8px 16px;
           border-radius: 100px;
           border: none;
           background: linear-gradient(135deg, var(--amethyst), var(--amethyst-light));
           color: #ffffff;
-          font-size: 14px;
-          font-weight: 700;
+          font-size: 13px;
+          font-weight: 600;
           cursor: pointer;
-          font-family: 'Inter', sans-serif;
-          box-shadow: 0 4px 14px rgba(124,58,237,0.28);
+          font-family: var(--font-ui);
+          box-shadow: none;
           transition: opacity 0.2s, transform 0.15s;
         }
 
         .create-post-submit:disabled {
-          opacity: 0.55;
+          background: var(--surface-soft);
+          color: var(--text-muted);
+          opacity: 0.65;
           cursor: not-allowed;
           transform: none;
         }
 
         .create-post-emoji-wrap { margin-right: auto; }
-        .create-post-emoji-button {
-          height: 34px;
-          padding: 0 10px;
-          border: 1px solid var(--border);
-          border-radius: 10px;
-          background: var(--surface-soft);
-          color: var(--text-soft);
+        .create-post-box .create-post-emoji-button,
+        .create-post-box .content-menu-trigger {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 36px;
+          height: 36px;
+          padding: 0;
+          border: none;
+          border-radius: 50%;
+          background: transparent;
+          color: var(--text-muted);
           cursor: pointer;
           font-size: 18px;
+          box-shadow: none;
+          flex-shrink: 0;
         }
-        .create-post-emoji-picker {
-          position: absolute;
-          bottom: calc(100% + 8px);
-          left: 0;
-          z-index: 4;
-          display: grid;
-          grid-template-columns: repeat(6, 1fr);
-          gap: 4px;
-          width: 220px;
-          max-width: 100%;
-          padding: 8px;
-          border: 1px solid var(--border);
-          border-radius: 14px;
-          background: var(--surface);
-          box-shadow: var(--shadow-card);
-        }
-        .create-post-emoji-picker button {
-          border: 0;
-          border-radius: 8px;
-          background: transparent;
-          cursor: pointer;
-          font-size: 20px;
-          line-height: 1.5;
-        }
-        .create-post-emoji-picker button:hover { background: var(--amethyst-bg); }
-        .create-post-preview { margin-top: 12px; }
+        .create-post-box .create-post-emoji-button:hover { background: var(--surface-soft); }
+        .create-post-box button:focus-visible { outline: 2px solid var(--amethyst); outline-offset: 2px; }
+        .create-post-box button:hover { transform: none; }
+        .create-post-counter-wrap { margin-right: 6px; }
+        .create-post-preview { position: relative; width: fit-content; max-width: 100%; margin-top: 12px; }
         .create-post-preview img { display: block; max-width: 100%; max-height: 300px; border-radius: 12px; object-fit: contain; }
+        .create-post-remove-image { position: absolute; top: 8px; right: 8px; display: grid; place-items: center; width: 36px; height: 36px; padding: 0; border: 1px solid #ffffff40; border-radius: 50%; background: #151515b3; color: white; backdrop-filter: blur(8px); cursor: pointer; box-shadow: 0 2px 8px #0002; }
+        .create-post-remove-image:hover { background: #151515df; }
         .create-post-image-help { font-size: 12px; color: var(--text-muted); }
         .create-post-error { overflow-wrap: anywhere; }
         @media (max-width: 520px) {
-          .create-post-box { padding: 16px 12px; border-radius: 16px; }
+          .create-post-box { padding: 16px 12px 8px; border-radius: 18px; }
           .create-post-row { gap: 10px; }
-          .create-post-footer { gap: 8px; }
-          .create-post-submit { max-width: 100%; height: auto; min-height: 38px; padding: 8px 14px; }
+          .create-post-footer { gap: 2px; }
+          .create-post-submit { max-width: 100%; padding: 8px 14px; }
+        }
+        @media (pointer: coarse) {
+          .create-post-remove-image { width: 44px; height: 44px; }
+          .create-post-box .create-post-emoji-button, .create-post-box .content-menu-trigger { width: 44px; height: 44px; }
+          .create-post-submit { min-height: 44px; }
         }
       `}</style>
 
@@ -301,24 +290,27 @@ export function CreatePost() {
               onChange={(e) => { setContent(e.target.value); autoResize(); }}
               onFocus={() => setFocused(true)}
               onBlur={() => setFocused(false)}
-              placeholder="Compartilhe um momento..."
+              placeholder={t("Compartilhe um momento...")}
+              aria-label={t("Compartilhe um momento")}
               className="create-post-textarea"
-              rows={1}
+              rows={3}
             />
           </div>
 
           {preview && (
             <div className="create-post-preview">
-              <img src={preview} alt="Prévia da imagem selecionada" />
-              <button type="button" disabled={sending} onClick={() => { setImage(null); setUploadedUrl(undefined); setError(''); }}>Remover imagem</button>
+              <img src={preview} alt={t("Prévia da imagem selecionada")} />
+              <button type="button" className="create-post-remove-image" aria-label={t("Remover imagem")} title={t("Remover imagem")} disabled={sending} onClick={() => { setImage(null); setUploadedUrl(undefined); setError(''); }}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" /></svg></button>
             </div>
           )}
-          <p className="create-post-image-help">Imagem ou GIF • até 5 MB</p>
+          {!commentsEnabled && <p className="create-post-image-help" role="status">{t("Comentários desativados para este momento.")}</p>}
           {error && <p className="create-post-error" role="alert">{error}</p>}
+          {notice && <p className="create-post-image-help" role="status">{notice}</p>}
           <input ref={fileRef} type="file" accept="image/jpeg,image/png,image/webp,image/gif" hidden disabled={sending} onChange={(event) => { selectImage(event.target.files?.[0]); event.target.value = ''; }} />
           {(
             <div className="create-post-footer">
-              <button type="button" className="create-post-emoji-button" disabled={sending} onClick={() => fileRef.current?.click()} aria-label={image ? 'Trocar imagem' : 'Adicionar imagem'} title={image ? 'Trocar imagem' : 'Adicionar imagem'}>
+              <ReportButton targetType="POST" targetId="" canReport={false} menuActions={[{ label: t("Permitir comentários"), checked: commentsEnabled, disabled: sending, onSelect: () => setCommentsEnabled(value => !value) }]} />
+              <button type="button" className="create-post-emoji-button" disabled={sending} onClick={() => fileRef.current?.click()} aria-label={image ? t("Trocar imagem ou GIF, até 5 MB") : t("Adicionar imagem ou GIF, até 5 MB")} title={t("Imagem ou GIF • até 5 MB")}>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3" /><circle cx="8" cy="8" r="1" /><path d="m3 17 5-5 4 4 4-6 5 7" /></svg>
               </button>
               <div ref={emojiRef} className="create-post-emoji-wrap">
@@ -328,20 +320,12 @@ export function CreatePost() {
                   disabled={sending}
                   onMouseDown={(event) => event.preventDefault()}
                   onClick={() => setShowEmojiPicker((open) => !open)}
-                  aria-label="Adicionar emoji"
+                  aria-label={t("Adicionar emoji")}
                   aria-expanded={showEmojiPicker}
                 >
-                  🙂
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M8 14s1 3 4 3 4-3 4-3" /><path d="M8 9h.01M16 9h.01" strokeWidth="3" /></svg>
                 </button>
-                {showEmojiPicker && (
-                  <div className="create-post-emoji-picker" role="group" aria-label="Emojis">
-                    {EMOJIS.map((emoji) => (
-                      <button key={emoji} type="button" onMouseDown={(event) => event.preventDefault()} onClick={() => insertEmoji(emoji)}>
-                        {emoji}
-                      </button>
-                    ))}
-                  </div>
-                )}
+                {showEmojiPicker && <Suspense fallback={<span role="status">{t("Carregando emojis…")}</span>}><EmojiPickerDialog onSelect={insertEmoji} onClose={() => { setShowEmojiPicker(false); requestAnimationFrame(() => emojiRef.current?.querySelector('button')?.focus()); }} /></Suspense>}
               </div>
               <div className="create-post-counter-wrap">
                 <span
@@ -360,7 +344,7 @@ export function CreatePost() {
                 disabled={isEmpty || isOverLimit || sending}
                 className="create-post-submit"
               >
-                {uploading ? 'Enviando imagem...' : sending ? 'Postando...' : 'Postar'}
+                {uploading ? t("Enviando imagem...") : sending ? t("Postando...") : t("Postar")}
               </button>
             </div>
           )}

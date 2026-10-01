@@ -23,6 +23,8 @@ export type NotificationPost = {
 export type MomentNotification = {
   id: string;
   type: string;
+  message?: string | null;
+  href?: string | null;
   read: boolean;
   createdAt: string;
   postId: string | null;

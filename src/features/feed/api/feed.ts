@@ -1,3 +1,4 @@
+import { t } from '@/i18n';
 import { api } from '@/lib/api';
 
 export type PostUser = {
@@ -8,6 +9,8 @@ export type PostUser = {
 };
 
 export type Post = {
+  commentsEnabled: boolean;
+  source?: string | null;
   id: string;
   content: string;
   imageUrl: string | null;
@@ -36,8 +39,9 @@ export type Reply = {
 };
 
 export function getPost(id: string) {
-  return api<{ data: Post }>(`/posts/${encodeURIComponent(id)}`);
+  return api<{ data: Post | RemovedContent }>(`/posts/${encodeURIComponent(id)}`);
 }
+export type RemovedContent = { id: string; createdAt: string; removed: true; message: string };
 
 export function setReplyLike(postId: string, replyId: string, liked: boolean) {
   return api<{ data: { liked: boolean; likesCount: number } }>(
@@ -49,7 +53,7 @@ export function setReplyLike(postId: string, replyId: string, liked: boolean) {
 export function getReplies(id: string, cursor?: string) {
   const query = new URLSearchParams({ limit: '20' });
   if (cursor) query.set('cursor', cursor);
-  return api<{ data: Reply[]; meta: { hasMore: boolean; nextCursor: string | null } }>(`/posts/${encodeURIComponent(id)}/replies?${query}`);
+  return api<{ data: (Reply | RemovedContent)[]; meta: { hasMore: boolean; nextCursor: string | null } }>(`/posts/${encodeURIComponent(id)}/replies?${query}`);
 }
 
 export function createReply(id: string, content: string) {
@@ -71,6 +75,7 @@ export type FeedResponse = {
 };
 
 export type CreatePostInput = {
+  commentsEnabled?: boolean;
   content: string;
   imageUrl?: string;
 };
@@ -98,7 +103,7 @@ export async function uploadPostImage(file: File) {
   const response = await api<{ data: { url: string } }>('/upload/post-image', {
     method: 'POST', body,
   });
-  if (!response.data?.url) throw new Error('O servidor não retornou a imagem enviada.');
+  if (!response.data?.url) throw new Error(t("O servidor não retornou a imagem enviada."));
   return response.data.url;
 }
 
@@ -131,4 +136,10 @@ export function togglePin(postId: string) {
 
 export function updatePost(postId: string, content: string) {
   return api<{ data: Post }>(`/posts/${postId}`, { method: 'PATCH', body: JSON.stringify({ content }) });
+}
+
+export function setPostComments(postId: string, commentsEnabled: boolean) {
+  return api<{ data: { id: string; commentsEnabled: boolean } }>(`/posts/${encodeURIComponent(postId)}/comments`, {
+    method: 'PATCH', body: JSON.stringify({ commentsEnabled }),
+  });
 }

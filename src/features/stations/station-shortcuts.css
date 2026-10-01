@@ -1,0 +1,16 @@
+.station-shortcuts .station-shortcuts-toggle { display: flex; align-items: center; gap: 10px; width: 100%; padding: 12px; border: 0; border-radius: 14px; background: transparent; color: var(--text-soft); text-align: left; cursor: pointer; }
+.station-shortcuts-toggle > span { flex: 1; min-width: 0; }
+.station-shortcuts-toggle strong { display: block; font-size: 13px; font-weight: 600; }
+.station-shortcuts-toggle small { display: block; margin-top: 3px; font-size: 11px; color: var(--text-muted); }
+.station-shortcuts-toggle > svg { flex-shrink: 0; color: var(--text-muted); }
+.station-shortcuts-toggle .expanded { transform: rotate(180deg); }
+.station-shortcuts .station-shortcuts-toggle:hover, .station-shortcuts .station-shortcut-link:hover { background: var(--surface-soft); transform: none; }
+.station-shortcuts-list { padding: 4px 8px 8px; }
+.station-shortcuts-list p { padding: 0 4px; font-size: 12px; color: var(--text-muted); }
+.station-shortcuts .station-shortcut-link { display: flex; align-items: center; gap: 9px; padding: 8px 4px; border-radius: 10px; color: var(--text-soft); text-decoration: none; }
+.station-shortcut-link img, .station-shortcut-placeholder { width: 28px; height: 28px; flex-shrink: 0; border-radius: 8px; object-fit: cover; }
+.station-shortcut-placeholder { display: grid; place-items: center; background: var(--amethyst-bg); color: var(--amethyst); font-size: 12px; }
+.station-shortcut-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.station-shortcuts .station-shortcuts-all { display: block; padding: 10px 4px 0; font-size: 11px; color: var(--text-muted); text-decoration: none; }
+.station-shortcuts-all:hover { text-decoration: underline; }
+.station-shortcuts :focus-visible { outline: 2px solid var(--amethyst); outline-offset: 2px; }

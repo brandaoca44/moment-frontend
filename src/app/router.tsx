@@ -3,6 +3,7 @@ import { LegalPage } from '@/features/legal/legal-pages';
 import { StationsPage, StationPage, TopicPage } from '@/features/stations/stations-pages';
 import { AppLayout } from '@/components/layout/app-layout';
 import { ProtectedRoute } from '@/components/layout/protected-route';
+import { GuestRoute } from '@/components/layout/guest-route';
 import { FeedPage } from '@/features/feed/pages/feed-page';
 import { PostPage } from '@/features/feed/pages/post-page';
 import { ReportsPage } from '@/features/reports/reports-page';
@@ -44,11 +45,10 @@ export const router = createBrowserRouter([
     ],
   },
   {
-    path: '/login',
-    element: <LoginPage />,
-  },
-  {
-    path: '/register',
-    element: <RegisterPage />,
+    element: <GuestRoute />,
+    children: [
+      { path: '/login', element: <LoginPage /> },
+      { path: '/register', element: <RegisterPage /> },
+    ],
   },
 ]);

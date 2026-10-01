@@ -6,7 +6,7 @@
   box-sizing: border-box;
   color: #1f2937;
   background: radial-gradient(circle at top left, #ede9fe, transparent 45%), #faf7ff;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-ui);
 }
 .recovery-card {
   width: 100%;
@@ -18,7 +18,7 @@
   background: #fff;
   box-shadow: 0 24px 64px #4c1d9514;
 }
-.recovery-card h1 { font-family: 'Lora', serif; font-size: 28px; margin: 24px 0 12px; }
+.recovery-card h1 { font-family: var(--font-ui); font-size: 28px; margin: 24px 0 12px; }
 .recovery-description, .recovery-hint { color: #625a70; line-height: 1.6; }
 .recovery-description { margin-bottom: 24px; }
 .recovery-form { display: grid; gap: 12px; }
