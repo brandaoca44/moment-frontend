@@ -21,6 +21,29 @@ function language() {
   });
   return { ...module, storage, document, catalog };
 }
+test('anonymous session does not restart loading when the login language picker mounts', async () => {
+  const { QueryClient, QueryObserver } = require('@tanstack/react-query');
+  let calls = 0;
+  const { useMe } = load('src/features/auth/hooks/use-me.ts', {
+    '@tanstack/react-query': { useQuery: options => options },
+    '../api/me': { getMe: async () => { calls++; throw new Error('Unauthorized'); } },
+  });
+  const client = new QueryClient({ defaultOptions: { queries: { gcTime: Infinity } } });
+  const options = useMe();
+  const route = new QueryObserver(client, options);
+  const stopRoute = route.subscribe(() => {});
+  await new Promise(resolve => setImmediate(resolve));
+  assert.equal(route.getCurrentResult().status, 'error');
+  const picker = new QueryObserver(client, options);
+  const stopPicker = picker.subscribe(() => {});
+  await new Promise(resolve => setImmediate(resolve));
+  assert.equal(calls, 1);
+  assert.equal(route.getCurrentResult().isLoading, false);
+  assert.equal(picker.getCurrentResult().isLoading, false);
+  client.setQueryData(['auth', 'me'], { data: { user: { id: 'signed-in' } } });
+  assert.equal(route.getCurrentResult().data.data.user.id, 'signed-in');
+  stopPicker(); stopRoute(); client.clear();
+});
 test('all catalog entries have both translations', () => {
   const { catalog } = language();
   for (const [key, translations] of Object.entries(catalog.messages)) {
