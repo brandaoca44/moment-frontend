@@ -1,10 +1,10 @@
 import { getLanguage } from '@/i18n';
 import { t, useLanguage } from '@/i18n';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { ReportButton } from '@/features/reports/report-button';
 import { useMe } from '@/features/auth/hooks/use-me';
 import { ExpandableImage } from '@/components/ui/expandable-image';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { getExplorePosts, getSuggestions, type SuggestedUser } from '../api/explore';
 import { searchMoment } from '../api/search';
@@ -47,7 +47,9 @@ function PostCard({ post }: { post: Post }) {
 
 export function ExplorePage() {
   useLanguage();
-  const [term, setTerm] = useState('');
+  const [params, setParams] = useSearchParams();
+  const term = params.get('q') ?? '';
+  const setTerm = (value: string) => setParams(value ? { q: value } : {}, { replace: true });
   const suggestions = useQuery({ queryKey: ['explore', 'suggestions'], queryFn: () => getSuggestions(20) });
   const posts = useQuery({ queryKey: ['explore', 'posts'], queryFn: getExplorePosts });
   const normalized = term.trim().toLowerCase();

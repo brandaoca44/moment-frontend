@@ -1,34 +1,4 @@
+import momentIcon from '@/assets/moment-icon.svg';
 export function Logo({ size = 48 }: { size?: number }) {
-  return (
-    <div
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: 8,
-        fontWeight: 800,
-        fontSize: size / 2,
-        color: '#7c3aed',
-      }}
-    >
-      <div
-        style={{
-          width: size,
-          height: size,
-          borderRadius: 16,
-          background: 'linear-gradient(135deg, #7c3aed, #a78bfa)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          color: '#fff',
-          fontSize: size / 2,
-          fontWeight: 900,
-          boxShadow: '0 8px 20px rgba(var(--accent-rgb, 124, 58, 237), 0.3)',
-        }}
-      >
-        M
-      </div>
-
-      <span>Moment</span>
-    </div>
-  )
+  return <span style={{ display: 'inline-flex', alignItems: 'center', gap: 10, color: '#8057cb', fontWeight: 600, fontSize: size / 2, letterSpacing: '-.03em' }}><img src={momentIcon} alt="" width={size} height={size} /><span>Moment</span></span>;
 }

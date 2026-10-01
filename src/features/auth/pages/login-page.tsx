@@ -1,363 +1,58 @@
 import { t, useLanguage } from '@/i18n';
-import '../components/auth-layout.css';
 import { LanguagePicker } from '@/i18n/language-picker';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { ArrowLeft, Eye, EyeOff, Heart, Leaf, LockKeyhole, Mail, Users } from 'lucide-react';
 import { useLogin } from '../hooks/use-login';
-import momentLogo from '@/assets/moment-logo.svg';
 import momentIcon from '@/assets/moment-icon.svg';
-
-const AMETHYST = '#7c3aed';
-const AMETHYST_LIGHT = '#a78bfa';
+import '../components/login.css';
 
 export function LoginPage() {
   useLanguage();
   const navigate = useNavigate();
   const location = useLocation();
   const login = useLogin();
-
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
-  const nextPath =
-    (location.state as { from?: { pathname?: string } } | null)?.from
-      ?.pathname || '/';
-
+  const [visible, setVisible] = useState(false);
+  const [formOpen, setFormOpen] = useState(false);
+  const heading = useRef<HTMLHeadingElement>(null);
+  const from = (location.state as { from?: { pathname?: string } } | null)?.from?.pathname;
+  const nextPath = from?.startsWith('/') && !from.startsWith('//') ? from : '/';
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    try {
-      await login.mutateAsync({ email, password });
-      navigate(nextPath, { replace: true });
-    } catch {
-      
-    }
+    try { await login.mutateAsync({ email, password }); navigate(nextPath, { replace: true }); } catch { /* Display mutation error below. */ }
   }
-
-  return (
-    <main className="auth-page" style={pageStyle}>
+  function openForm() { setFormOpen(true); requestAnimationFrame(() => heading.current?.focus()); }
+  return <main className={`moment-login${formOpen ? ' is-signing-in' : ''}`}>
+    <header className="login-topbar">
+      <Link to="/login" className="login-wordmark" aria-label="Moment"><img src={momentIcon} alt="" /></Link>
+      <div className="login-top-actions"><span>{t('Ainda não tem uma conta?')}</span><Link className="login-create-small" to="/register">{t('Criar conta')}</Link></div>
       <LanguagePicker compact />
-      <section className="auth-card" style={cardStyle}>
-        
-        {/* Painel esquerdo — brand */}
-        <aside className="auth-brand" style={brandPanelStyle}>
-          <div style={brandContentStyle}>
-            <img
-              src={momentLogo}
-              alt="Moment"
-              style={{ width: 240, height: 'auto' }}
-            />
-
-            <div>
-              <h1 style={brandTitleStyle}>
-                {t(" Compartilhe momentos. ")}<br />
-                {t(" Crie conexões. ")}</h1>
-              <p style={brandTextStyle}>
-                {t(" O Moment é o seu espaço para compartilhar o que importa, acompanhar o que acontece e viver uma rede social mais leve. ")}</p>
-            </div>
-          </div>
-
-          <div style={decorativeCardStyle}>
-            <img src={momentIcon} alt="" style={{ width: 52, height: 52 }} />
-            <span style={decorativeTextStyle}>Moment</span>
-          </div>
-        </aside>
-
-        {/* Painel direito — formulário */}
-        <section className="auth-form-panel" style={formPanelStyle}>
-          <div style={formBoxStyle}>
-            <img
-              src={momentIcon}
-              alt="Moment"
-              style={{ width: 72, height: 72 }}
-            />
-
-            <div style={{ marginTop: 24, marginBottom: 28 }}>
-              <h2 style={titleStyle}>{t("Bem-vindo de volta!")}</h2>
-              <p style={subtitleStyle}>{t("Faça login para continuar")}</p>
-            </div>
-
-            <form onSubmit={handleSubmit} style={formStyle}>
-              <div style={fieldStyle}>
-                <label htmlFor="email" style={labelStyle}>
-                  {t(" E-mail ")}</label>
-                <input
-                  id="email"
-                  type="email"
-                  placeholder="seu@email.com"
-                  autoComplete="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  style={inputStyle}
-                  required
-                />
-              </div>
-
-              <div style={fieldStyle}>
-                <label htmlFor="password" style={labelStyle}>
-                  {t(" Senha ")}</label>
-                <input
-                  id="password"
-                  type="password"
-                  placeholder="••••••••"
-                  autoComplete="current-password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  style={inputStyle}
-                  required
-                />
-              </div>
-
-              <Link to="/forgot-password" style={{ ...linkStyle, textAlign: 'right', fontSize: 14 }}>
-                {t(" Esqueci minha senha ")}</Link>
-
-              {login.isError ? (
-                <div style={errorStyle}>
-                  {login.error instanceof Error
-                    ? login.error.message
-                    : t("Não foi possível entrar. Tente novamente.")}
-                </div>
-              ) : null}
-
-              <button
-                type="submit"
-                disabled={login.isPending}
-                style={buttonStyle}
-              >
-                {login.isPending ? t("Entrando...") : t("Entrar")}
-              </button>
-            </form>
-
-            <p style={footerTextStyle}>
-              {t(" Ainda não tem uma conta?")}{' '}
-              <Link to="/register" style={linkStyle}>
-                {t(" Criar conta ")}</Link>
-            </p>
-          </div>
-        </section>
-      </section>
-
-      <footer style={footerStyle}>
-          <p style={footerCopyStyle}>
-            © {new Date().getFullYear()} {t(" Moment. Todos os direitos reservados. ")}</p>
-          <div style={footerLinksStyle}>
-            <Link to="/terms" style={footerLinkStyle}>{t("Termos de uso")}</Link>
-            <span style={{ color: '#c4b5fd' }}>·</span>
-            <Link to="/privacy" style={footerLinkStyle}>{t("Privacidade")}</Link>
-            <span style={{ color: '#c4b5fd' }}>·</span>
-            <Link to="/support" style={footerLinkStyle}>{t("Suporte")}</Link>
-          </div>
-        </footer>
-    </main>
-  );
+    </header>
+    <section className="login-scene" aria-label={t('Conheça o Moment')}>
+      <div className="login-introduction">
+        <img className="login-mobile-mark" src={momentIcon} alt="" />
+        <h1>Moment</h1><p>{t('Um lugar para compartilhar a vida, sem tanto ruído.')}</p>
+        <ul className="login-values"><li><Leaf aria-hidden="true" />{t('Momentos reais')}</li><li><Heart aria-hidden="true" />{t('Mais gentileza')}</li><li><Users aria-hidden="true" />{t('Conexões de verdade')}</li></ul>
+      </div>
+      <div className="login-welcome-actions"><Link className="login-primary" to="/register">{t('Criar conta')}</Link><button className="login-outline" onClick={openForm}>{t('Entrar')}</button></div>
+    </section>
+    <section className="login-form-side" aria-labelledby="login-title">
+      <button className="login-back" onClick={() => setFormOpen(false)}><ArrowLeft size={18} />{t('Voltar')}</button>
+      <div className="login-panel">
+        <img className="login-panel-mark" src={momentIcon} alt="" /><span className="login-mobile-brand">Moment</span>
+        <h2 id="login-title" ref={heading} tabIndex={-1}>{t('Bem-vindo de volta!')}</h2><p className="login-subtitle">{t('Entre para continuar seus momentos.')}</p>
+        <form onSubmit={handleSubmit}>
+          <label className="login-field"><span className="login-sr-only">{t('E-mail')}</span><Mail size={21} aria-hidden="true" /><input type="email" placeholder={t('Endereço de e-mail')} autoComplete="email" value={email} onChange={e => setEmail(e.target.value)} required disabled={login.isPending} /></label>
+          <label className="login-field"><span className="login-sr-only">{t('Senha')}</span><LockKeyhole size={21} aria-hidden="true" /><input type={visible ? 'text' : 'password'} placeholder={t('Senha')} autoComplete="current-password" value={password} onChange={e => setPassword(e.target.value)} required disabled={login.isPending} /><button type="button" aria-label={t(visible ? 'Ocultar senha' : 'Mostrar senha')} aria-pressed={visible} onClick={() => setVisible(v => !v)}>{visible ? <Eye size={20} /> : <EyeOff size={20} />}</button></label>
+          <Link className="login-forgot" to="/forgot-password">{t('Esqueci minha senha')}</Link>
+          {login.isError && <p className="login-error" role="alert">{login.error instanceof Error ? login.error.message : t('Não foi possível entrar. Tente novamente.')}</p>}
+          <button className="login-primary" type="submit" disabled={login.isPending}>{t(login.isPending ? 'Entrando...' : 'Entrar')}</button>
+        </form>
+        <p className="login-signup">{t('Ainda não tem uma conta?')} <Link to="/register">{t('Criar conta')}</Link></p>
+      </div>
+      <footer className="login-legal"><Link to="/terms">{t('Termos de uso')}</Link><Link to="/privacy">{t('Privacidade')}</Link><Link to="/support">{t('Suporte')}</Link><small>© {new Date().getFullYear()} Moment</small></footer>
+    </section>
+  </main>;
 }
-
-const pageStyle: React.CSSProperties = {
-  minHeight: '100vh',
-  padding: 'var(--auth-page-padding)',
-  display: 'grid',
-  placeItems: 'center',
-  background:
-    'radial-gradient(circle at top left, #ede9fe 0, transparent 32%), linear-gradient(135deg, #faf7ff, #ffffff)',
-  color: '#111827',
-  boxSizing: 'border-box',
-};
-
-const cardStyle: React.CSSProperties = {
-  width: '100%',
-  maxWidth: 1080,
-  minHeight: 'var(--auth-card-height)',
-  display: 'grid',
-  gridTemplateColumns: 'var(--auth-columns)',
-  borderRadius: 28,
-  overflow: 'hidden',
-  background: '#ffffff',
-  boxShadow: '0 28px 80px rgba(76, 29, 149, 0.16)',
-  border: '1px solid rgba(124, 58, 237, 0.12)',
-};
-
-const brandPanelStyle: React.CSSProperties = {
-  position: 'relative',
-  padding: 'var(--auth-panel-padding)',
-  background:
-    'linear-gradient(160deg, rgba(237, 233, 254, 0.95), rgba(196, 181, 253, 0.75))',
-  display: 'var(--auth-brand-display)',
-  flexDirection: 'column',
-  justifyContent: 'space-between',
-  overflow: 'hidden',
-};
-
-const brandContentStyle: React.CSSProperties = {
-  position: 'relative',
-  zIndex: 2,
-  display: 'grid',
-  gap: 52,
-};
-
-const brandTitleStyle: React.CSSProperties = {
-  margin: 0,
-  fontSize: 36,
-  lineHeight: 1.18,
-  fontWeight: 800,
-  letterSpacing: -0.8,
-  color: '#312e81',
-  fontFamily: "var(--font-ui)",
-};
-
-const brandTextStyle: React.CSSProperties = {
-  marginTop: 18,
-  maxWidth: 380,
-  color: '#5b5570',
-  fontSize: 17,
-  lineHeight: 1.65,
-  fontFamily: "var(--font-ui)",
-};
-
-const decorativeCardStyle: React.CSSProperties = {
-  position: 'relative',
-  zIndex: 2,
-  width: 220,
-  height: 130,
-  borderRadius: 24,
-  background: 'rgba(255,255,255,0.72)',
-  backdropFilter: 'blur(18px)',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  gap: 14,
-  alignSelf: 'center',
-  boxShadow: '0 24px 55px rgba(124, 58, 237, 0.22)',
-  transform: 'rotate(-5deg)',
-};
-
-const decorativeTextStyle: React.CSSProperties = {
-  fontSize: 22,
-  fontWeight: 800,
-  color: AMETHYST,
-  fontFamily: "var(--font-ui)",
-};
-
-const formPanelStyle: React.CSSProperties = {
-  display: 'grid',
-  placeItems: 'center',
-  padding: 'var(--auth-panel-padding)',
-  background: '#ffffff',
-};
-
-const formBoxStyle: React.CSSProperties = {
-  width: '100%',
-  maxWidth: 430,
-};
-
-const titleStyle: React.CSSProperties = {
-  margin: 0,
-  fontSize: 30,
-  lineHeight: 1.2,
-  fontWeight: 600,
-  letterSpacing: -0.6,
-  color: '#1f2937',
-  fontFamily: "var(--font-ui)",
-};
-
-const subtitleStyle: React.CSSProperties = {
-  marginTop: 8,
-  color: '#8a8498',
-  fontSize: 16,
-  fontFamily: "var(--font-ui)",
-};
-
-const formStyle: React.CSSProperties = {
-  display: 'grid',
-  gap: 18,
-};
-
-const fieldStyle: React.CSSProperties = {
-  display: 'grid',
-  gap: 8,
-};
-
-const labelStyle: React.CSSProperties = {
-  fontSize: 14,
-  fontWeight: 600,
-  color: '#374151',
-  fontFamily: "var(--font-ui)",
-};
-
-const inputStyle: React.CSSProperties = {
-  width: '100%',
-  height: 52,
-  borderRadius: 14,
-  border: '1px solid #e5e7eb',
-  background: '#fafafa',
-  padding: '0 16px',
-  fontSize: 15,
-  color: '#111827',
-  outline: 'none',
-  boxSizing: 'border-box',
-  fontFamily: "var(--font-ui)",
-};
-
-const buttonStyle: React.CSSProperties = {
-  height: 52,
-  borderRadius: 14,
-  border: 'none',
-  background: `linear-gradient(135deg, ${AMETHYST}, ${AMETHYST_LIGHT})`,
-  color: '#ffffff',
-  fontSize: 16,
-  fontWeight: 700,
-  cursor: 'pointer',
-  boxShadow: '0 16px 32px rgba(124, 58, 237, 0.28)',
-  fontFamily: "var(--font-ui)",
-};
-
-const errorStyle: React.CSSProperties = {
-  background: '#fef2f2',
-  color: '#b91c1c',
-  border: '1px solid #fecaca',
-  borderRadius: 14,
-  padding: 13,
-  fontSize: 14,
-  fontFamily: "var(--font-ui)",
-};
-
-const footerTextStyle: React.CSSProperties = {
-  marginTop: 28,
-  textAlign: 'center',
-  color: '#7b738c',
-  fontSize: 15,
-  fontFamily: "var(--font-ui)",
-};
-
-const linkStyle: React.CSSProperties = {
-  color: AMETHYST,
-  fontWeight: 700,
-  textDecoration: 'none',
-};
-
-const footerStyle: React.CSSProperties = {
-  marginTop: 24,
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  gap: 8,
-};
-
-const footerCopyStyle: React.CSSProperties = {
-  margin: 0,
-  fontSize: 13,
-  color: '#a78bfa',
-  fontFamily: "var(--font-ui)",
-};
-
-const footerLinksStyle: React.CSSProperties = {
-  display: 'flex',
-  alignItems: 'center',
-  gap: 10,
-};
-
-const footerLinkStyle: React.CSSProperties = {
-  fontSize: 13,
-  color: '#7c3aed',
-  textDecoration: 'none',
-  fontFamily: "var(--font-ui)",
-  fontWeight: 500,
-};

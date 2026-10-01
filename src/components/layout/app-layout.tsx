@@ -1,3 +1,4 @@
+import { DiscoverySidebar } from './discovery-sidebar';
 import { t, useLanguage } from '@/i18n';
 import {
   Link,
@@ -893,13 +894,7 @@ export function AppLayout() {
         </main>
 
         <aside className="app-right-column">
-          <div className="app-right-card">
-            <p className="app-right-card-title">
-              {t(" Em breve ")}</p>
-
-            <p className="app-right-card-text">
-              {t(" Sugestões de pessoas e momentos populares aparecerão aqui de forma leve e cuidadosa. ")}</p>
-          </div>
+          <DiscoverySidebar />
         </aside>
       </div>
     </>

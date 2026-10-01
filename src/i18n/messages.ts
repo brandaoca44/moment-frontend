@@ -598,5 +598,28 @@ Não foi possível preparar a confirmação. Tente novamente.|Could not prepare 
 Expressa personalidade através do seu estilo.|Expresses personality through their style.|Expresa su personalidad a través de su estilo.
 Compartilha ideias e experiências que inspiram.|Shares inspiring ideas and experiences.|Comparte ideas y experiencias que inspiran.
 Traz humor e leveza às conversas.|Brings humor and warmth to conversations.|Aporta humor y alegría a las conversaciones.
+Conheça o Moment|Discover Moment|Descubre Moment
+Um lugar para compartilhar a vida, sem tanto ruído.|A place to share your life, without the noise.|Un lugar para compartir tu vida, sin tanto ruido.
+Momentos reais|Real moments|Momentos reales
+Mais gentileza|A kinder place|Más amabilidad
+Conexões de verdade|Genuine connections|Conexiones de verdad
+Entre para continuar seus momentos.|Sign in to continue your moments.|Entra para continuar tus momentos.
+Endereço de e-mail|Email address|Dirección de correo electrónico
+Mostrar senha|Show password|Mostrar contraseña
+Ocultar senha|Hide password|Ocultar contraseña
+Estações para descobrir|Stations to discover|Estaciones por descubrir
+Encontre pessoas com os mesmos interesses.|Find people who share your interests.|Encuentra personas con tus mismos intereses.
+Sugestões para você|Suggestions for you|Sugerencias para ti
+Buscar momentos e pessoas|Search moments and people|Buscar momentos y personas
+Ver todas|See all|Ver todas
+Ver todos|See all|Ver todos
+Nenhuma estação por aqui ainda.|No stations here yet.|Todavía no hay estaciones por aquí.
+Novas conexões aparecerão aqui.|New connections will appear here.|Aquí aparecerán nuevas conexiones.
+Não foi possível carregar as sugestões.|Could not load suggestions.|No se han podido cargar las sugerencias.
+Explorar estações|Explore stations|Explorar estaciones
+{count} membros|{count} members|{count} miembros
+1 membro|1 member|1 miembro
+Seguir {name}|Follow {name}|Seguir a {name}
+Voltar|Back|Volver
 `;
 export const messages: Record<string, readonly [string, string]> = Object.fromEntries(rows.trim().split('\n').map(row => { const [key, en, es] = row.split('|'); return [key, [en, es] as const]; }));
