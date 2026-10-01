@@ -510,6 +510,7 @@ export function AppLayout() {
         }
 
         .app-user-info {
+          font-family: var(--font-ui);
           display: flex;
           flex-direction: column;
           min-width: 0;
@@ -519,7 +520,8 @@ export function AppLayout() {
           overflow: hidden;
           color: var(--text);
           font-size: 14px;
-          font-weight: 850;
+          font-weight: 750;
+          line-height: 1.35;
           text-overflow: ellipsis;
           white-space: nowrap;
         }
@@ -528,7 +530,8 @@ export function AppLayout() {
           overflow: hidden;
           color: var(--text-muted);
           font-size: 12px;
-          font-weight: 650;
+          font-weight: 400;
+          line-height: 1.4;
           text-overflow: ellipsis;
           white-space: nowrap;
         }
