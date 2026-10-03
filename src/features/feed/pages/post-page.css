@@ -41,3 +41,22 @@
 @media (pointer: coarse) { .reply-submit, .reply-card .reply-like { min-height: 44px; } }
 @media (prefers-reduced-motion: reduce) { .reply-controls { animation: none; } }
 .comments-disabled { margin: 16px 0; padding: 12px 0; color: var(--text-muted); font-size: 13px; }
+.conversation .reply-respond, .conversation .reply-thread-toggle {
+  display: inline-flex; align-items: center; gap: 6px; min-height: 38px;
+  padding: 6px 8px; border: 0; border-radius: 10px; background: transparent;
+  color: var(--text-muted); font: 500 12px var(--font-ui); cursor: pointer;
+}
+.conversation .reply-thread-toggle { color: var(--amethyst); margin-top: 4px; }
+.conversation .reply-respond:hover, .conversation .reply-thread-toggle:hover { background: var(--amethyst-bg); color: var(--amethyst); }
+.reply-thread { border-left: 1px solid var(--border-soft); padding-left: 12px; margin-top: 8px; min-width: 0; }
+.reply-thread .reply-card { gap: 9px; padding: 14px 0; }
+.reply-thread .conversation-avatar { width: 28px; height: 28px; font-size: 10px; }
+.reply-thread .reply-text { font-size: 14px; }
+.reply-context { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 6px 0; color: var(--text-muted); font-size: 12px; }
+.reply-context button { display: grid; place-items: center; background: transparent; color: inherit; padding: 8px; border: 0; border-radius: 50%; cursor: pointer; }
+.reply-inline-composer { margin-top: 12px; padding: 12px; border: 1px solid var(--border-soft); border-radius: 16px; background: var(--surface-soft); }
+.reply-inline-composer textarea { box-sizing: border-box; width: 100%; min-height: 60px; resize: vertical; max-height: 200px; border: 0; background: transparent; color: var(--text); font: 400 16px/1.5 var(--font-ui); padding: 6px 0; }
+.reply-inline-composer textarea:focus-visible { outline: 1px solid var(--amethyst); outline-offset: 3px; border-radius: 6px; }
+.reply-thread > p { color: var(--text-muted); font-size: 13px; }
+@media (max-width: 480px) { .reply-thread { padding-left: 6px; margin-left: -16px; } .reply-inline-composer { padding: 10px; } }
+@media (pointer: coarse) { .conversation .reply-respond, .conversation .reply-thread-toggle { min-height: 44px; } }

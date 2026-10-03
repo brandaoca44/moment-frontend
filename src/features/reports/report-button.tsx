@@ -23,7 +23,7 @@ function ReportDialog({ targetType, targetId, close }: { targetType: TargetType;
     return () => { element?.close(); document.body.style.overflow = previous; };
   }, []);
   return createPortal(<dialog className="report-dialog" ref={dialog} aria-labelledby="report-title" onCancel={event => { event.preventDefault(); if (!pending) close(); }}>
-    <h2 id="report-title">{t("Denunciar ")}{targetType === 'POST' ? 'momento' : 'resposta'}</h2>
+    <h2 id="report-title">{targetType === 'STATION' ? t('Denunciar estação') : `${t("Denunciar ")}${targetType === 'POST' ? t('Momento') : t('Resposta')}`}</h2>
     {sent ? <><p role="status">{t("Denúncia recebida. A moderação vai analisar. Sua identidade não será exibida ao autor.")}</p><button onClick={close}>{t("Fechar")}</button></> : <form onSubmit={async event => {
       event.preventDefault(); if (!reason || submitting.current) return;
       submitting.current = true; setPending(true); setError('');
@@ -99,10 +99,10 @@ export function ReportButton({ targetType, targetId, authorId, canReport = true,
       }
     }}>
       {menuActions.map(item => <button key={item.label} role={item.checked === undefined ? 'menuitem' : 'menuitemcheckbox'} aria-checked={item.checked} disabled={item.disabled} onClick={() => { closeMenu(); item.onSelect(); }}>{item.checked !== undefined && <span aria-hidden="true">{item.checked ? '✓ ' : ''}</span>}{item.label}</button>)}
-      {canReport && <><button role="menuitem" onClick={() => choose('MUTE')}>{t("Silenciar perfil")}</button>
+      {canReport && <>{targetType !== 'STATION' && <><button role="menuitem" onClick={() => choose('MUTE')}>{t("Silenciar perfil")}</button>
       <button role="menuitem" onClick={() => choose('HIDE')}>{t("Ocultar esta postagem")}</button>
-      {authorId && <button role="menuitem" className="content-menu-danger" onClick={() => choose('BLOCK')}>{t("Bloquear perfil")}</button>}
-      <button role="menuitem" className="content-menu-danger" onClick={() => { closeMenu(); setOpen(true); }}>{t("Denunciar")}</button></>}
+      {authorId && <button role="menuitem" className="content-menu-danger" onClick={() => choose('BLOCK')}>{t("Bloquear perfil")}</button>}</>}
+      <button role="menuitem" className="content-menu-danger" onClick={() => { closeMenu(); setOpen(true); }}>{t(targetType === 'STATION' ? 'Denunciar estação' : 'Denunciar')}</button></>}
       {onDelete && <button role="menuitem" className="content-menu-danger" disabled={deletePending} onClick={() => { closeMenu(); onDelete(); }}>{deletePending ? t("Excluindo...") : t("Excluir resposta")}</button>}
     </div>, document.body)}
     {(action.isError || action.isSuccess) && createPortal(<div className="content-action-feedback" role={action.isError ? 'alert' : 'status'}>{action.isError ? action.error.message : action.data?.message}<button type="button" onClick={() => action.reset()} aria-label={t("Fechar aviso")}>×</button></div>, document.body)}

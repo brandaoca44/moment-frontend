@@ -2,6 +2,7 @@ import { getLanguage, t } from './index';
 
 // Only server-authored notifications use these legacy templates. User posts are never translated.
 const templates: [RegExp, string, string][] = [
+  [/^(.*) respondeu à sua resposta em (.*)\.$/s, '$1 replied to your reply in $2.', '$1 ha respondido a tu respuesta en $2.'],
   [/^(.*) ingressou na sua estação (.*)\.$/s, '$1 joined your station $2.', '$1 se ha unido a tu estación $2.'],
   [/^(\d+) pessoas ingressaram na sua estação (.*) hoje\.$/s, '$1 people joined your station $2 today.', '$1 personas se han unido a tu estación $2 hoy.'],
   [/^(.*) abriu um tópico na sua estação (.*)\.$/s, '$1 started a topic in your station $2.', '$1 ha abierto un tema en tu estación $2.'],

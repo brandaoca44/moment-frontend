@@ -2,6 +2,7 @@ import { relativeTime } from '@/i18n';
 import { getLanguage } from '@/i18n';
 import { t, useLanguage } from '@/i18n';
 import { Link } from 'react-router-dom';
+import { api } from '@/lib/api';
 import { EmojiText } from '@/components/ui/emoji-text';
 import { ReportButton } from '@/features/reports/report-button';
 import { useState } from 'react';
@@ -98,6 +99,7 @@ function renderContent(content: string) {
 
 
 type Props = {
+  recommended?: boolean;
 
   post: Pick<Post, 'id' | 'content' | 'imageUrl' | 'createdAt' | 'editedAt' | 'user' | 'source' | 'commentsEnabled'>;
 
@@ -120,7 +122,7 @@ type Props = {
 
 
 
-export function PostCard({ post, repliesCount = 0, likesCount, remontsCount, liked, remonted, pinned = false, onTogglePin, pinPending = false }: Props) {
+export function PostCard({ post, repliesCount = 0, likesCount, remontsCount, liked, remonted, pinned = false, onTogglePin, pinPending = false, recommended = false }: Props) {
   useLanguage();
 
   const { data: meData } = useMe();
@@ -146,6 +148,7 @@ export function PostCard({ post, repliesCount = 0, likesCount, remontsCount, lik
 
 
   const queryClient = useQueryClient();
+  const dismiss = useMutation({ mutationFn: () => api(`/recommendations/dismiss/${encodeURIComponent(post.id)}`, { method: 'POST' }), onSuccess: () => queryClient.invalidateQueries({ queryKey: ['feed', 'global'] }) });
   const comments = useMutation({
     mutationFn: () => setPostComments(post.id, !post.commentsEnabled),
     onSuccess: async response => {
@@ -699,7 +702,8 @@ export function PostCard({ post, repliesCount = 0, likesCount, remontsCount, lik
               </div>
 
               <div className="post-header-actions">
-                {!isOwn && <ReportButton targetType="POST" targetId={post.id} authorId={post.user.id} />}
+                {!isOwn && <ReportButton targetType="POST" targetId={post.id} authorId={post.user.id} menuActions={recommended ? [{ label: t('Não tenho interesse'), disabled: dismiss.isPending, onSelect: () => dismiss.mutate() }] : []} />}
+                {dismiss.isError && <small role="alert">{t('Não foi possível salvar. Tente novamente.')}</small>}
                 {isOwn && <ReportButton targetType="POST" targetId={post.id} canReport={false} menuActions={[{ label: comments.isPending ? t("Salvando…") : post.commentsEnabled ? t("Desativar comentários") : t("Ativar comentários"), disabled: comments.isPending, onSelect: () => comments.mutate() }]} />}
 
                 {isOwn && <span className="post-own-badge">{t("seu post")}</span>}

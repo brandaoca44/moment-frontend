@@ -30,6 +30,8 @@ export type Post = {
 };
 
 export type Reply = {
+  repliesCount?: number;
+  replyToName?: string | null;
   liked: boolean;
   likesCount: number;
   id: string;
@@ -50,14 +52,15 @@ export function setReplyLike(postId: string, replyId: string, liked: boolean) {
   );
 }
 
-export function getReplies(id: string, cursor?: string) {
+export function getReplies(id: string, cursor?: string, parentId?: string) {
   const query = new URLSearchParams({ limit: '20' });
   if (cursor) query.set('cursor', cursor);
+  if (parentId) query.set('parentId', parentId);
   return api<{ data: (Reply | RemovedContent)[]; meta: { hasMore: boolean; nextCursor: string | null } }>(`/posts/${encodeURIComponent(id)}/replies?${query}`);
 }
 
-export function createReply(id: string, content: string) {
-  return api<{ data: Reply; message: string }>(`/posts/${encodeURIComponent(id)}/replies`, { method: 'POST', body: JSON.stringify({ content }) });
+export function createReply(id: string, content: string, replyToId?: string) {
+  return api<{ data: Reply; message: string }>(`/posts/${encodeURIComponent(id)}/replies`, { method: 'POST', body: JSON.stringify({ content, ...(replyToId ? { replyToId } : {}) }) });
 }
 
 export function deleteReply(postId: string, replyId: string) {
@@ -82,7 +85,7 @@ export type CreatePostInput = {
 
 export function getFeed(cursor?: string) {
   const params = cursor ? `?cursor=${cursor}&limit=10` : '?limit=10';
-  return api<FeedResponse>(`/posts${params}`);
+  return api<FeedResponse>(`/recommendations/feed${params}`);
 }
 
 export function getFollowingFeed(cursor?: string) {

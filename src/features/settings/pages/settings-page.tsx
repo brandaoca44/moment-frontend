@@ -12,6 +12,7 @@ import { EmailConfirmation } from '@/features/profile/components/email-confirmat
 import { PositiveMarks } from '@/features/stations/positive-marks';
 import { LanguagePicker } from '@/i18n/language-picker';
 import { Globe } from 'lucide-react';
+import { RecommendationPreferencesPanel } from '@/features/feed/components/recommendation-preferences';
 
 type Section = 'profile' | 'appearance' | 'password' | 'privacy' | 'danger' | 'language';
 
@@ -800,6 +801,7 @@ export function SettingsPage() {
               <div className="settings-section-header"><h2 className="settings-section-title">{t("Privacidade e conteúdo")}</h2><p className="settings-section-subtitle">{t("Gerencie quem pode interagir com você e o que aparece nas suas listas.")}</p></div>
               <ProfileBlock />
               <ContentPreferences />
+              <RecommendationPreferencesPanel />
             </section>}
             {activeSection === 'danger' && (
               <DangerSection

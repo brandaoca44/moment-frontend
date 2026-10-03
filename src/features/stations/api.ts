@@ -34,6 +34,9 @@ export type Station = {
   _count?: { members: number };
 };
 export type Entry = {
+  repliesCount?: number;
+  replyToName?: string | null;
+  canBan?: boolean;
   removed?: boolean;
   id: string;
   topicId: string;
@@ -58,7 +61,7 @@ export type Topic = {
   lastActivity: string;
   _count: { entries: number };
 };
-export type Page<T> = { data: T[]; meta: { pages: number; total?: number } };
+export type Page<T> = { data: T[]; meta: { pages: number; total?: number; nomads?: number } };
 export type Conversation = {
   data: {
     id: string;
@@ -74,6 +77,7 @@ export type Conversation = {
   meta: { pages: number; total: number; page: number };
 };
 export type EntryInput = {
+  replyToId?: string;
   content: string;
   nomad: boolean;
   imageUrl?: string;
@@ -89,9 +93,9 @@ export const topics = (id: string, sort: string, page: number) =>
   api<Page<Topic>>(
     `/stations/${encodeURIComponent(id)}/topics?${new URLSearchParams({ sort, page: String(page) })}`,
   );
-export const conversation = (id: string, sort: string, page: number) =>
+export const conversation = (id: string, sort: string, page: number, parentId?: string, focusId?: string) =>
   api<Conversation>(
-    `/stations/topics/${encodeURIComponent(id)}?${new URLSearchParams({ sort, page: String(page) })}`,
+    `/stations/topics/${encodeURIComponent(id)}?${new URLSearchParams({ sort, page: String(page), ...(parentId ? { parentId } : {}), ...(focusId ? { focusId } : {}) })}`,
   );
 export const queue = (id: string, page: number) =>
   api<Page<Entry>>(

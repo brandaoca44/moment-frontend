@@ -54,3 +54,8 @@
 @media(prefers-reduced-motion:reduce) { .moment-login * { transition:none!important; } }
 
 @media(min-width:761px) { .login-wordmark { color:#7851ca; text-shadow:none; } }
+.moment-login { color-scheme:light; }
+.moment-login .login-field input,
+.moment-login .login-field input:focus { background:transparent!important; color:#211c46!important; caret-color:#211c46; box-shadow:none; }
+.moment-login .login-field input:autofill { box-shadow:0 0 0 1000px #fbfaff inset; color:#211c46!important; }
+.moment-login .login-field input:-webkit-autofill { -webkit-box-shadow:0 0 0 1000px #fbfaff inset; -webkit-text-fill-color:#211c46; caret-color:#211c46; }

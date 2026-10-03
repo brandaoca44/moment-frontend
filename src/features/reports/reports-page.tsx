@@ -2,12 +2,14 @@ import { getLanguage } from '@/i18n';
 import { t, useLanguage } from '@/i18n';
 import { useState } from 'react';
 import { Navigate } from 'react-router-dom';
-import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useInfiniteQuery, useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
+import { api } from '@/lib/api';
 import { useMe } from '@/features/auth/hooks/use-me';
 import { ExpandableImage } from '@/components/ui/expandable-image';
 import { getReports, reasons, reviewReport, type Report } from './api';
 import './reports.css';
 import { PendingContent } from './pending-content';
+import { StationReviewInbox } from '@/features/stations/stations-pages';
 
 function ReviewCard({ report }: { report: Report }) {
   useLanguage();
@@ -19,7 +21,7 @@ function ReviewCard({ report }: { report: Report }) {
   } });
   return <details className="report-card" onToggle={event => setOpen(event.currentTarget.open)}>
     <summary className="report-summary">
-      <span className="report-summary-title">{report.targetType === 'FORUM' ? t("Estação") : report.targetType === 'POST' ? 'Momento' : 'Resposta'} · {reasons[report.reason]}</span>
+      <span className="report-summary-title">{report.targetType === 'STATION' ? t('Estação') : report.targetType === 'FORUM' ? t("Tópico") : report.targetType === 'POST' ? 'Momento' : 'Resposta'} · {reasons[report.reason]}</span>
       <small>{new Date(report.createdAt).toLocaleString(getLanguage())} · {open ? t("Recolher") : t("Ver denúncia")}</small>
     </summary>
     {open && <div className="report-expanded">
@@ -37,6 +39,17 @@ function ReviewCard({ report }: { report: Report }) {
   </details>;
 }
 
+function RecommendationMetrics() {
+  const [open, setOpen] = useState(false);
+  const query = useQuery({ queryKey: ['recommendation-metrics'], enabled: open, queryFn: () => api<{ data: { counts: Record<string, number> } }>('/recommendations/metrics') });
+  return <details className="report-card" onToggle={e => setOpen(e.currentTarget.open)}><summary>{t('Métricas do Para você · 30 dias')}</summary>
+    <p>{t('Somente participantes que permitiram métricas. Cada ação é contada uma vez por pessoa, publicação e dia; não representa todo o público.')}</p>
+    {query.isPending && open && <p>{t('Carregando...')}</p>}
+    {query.isError && <p role="alert">{t('Não foi possível carregar.')} <button onClick={() => query.refetch()}>{t('Tentar novamente')}</button></p>}
+    {query.data && <dl><dt>{t('Exibições')}</dt><dd>{query.data.data.counts.IMPRESSION ?? 0}</dd><dt>{t('Aberturas')}</dt><dd>{query.data.data.counts.OPEN ?? 0}</dd></dl>}
+  </details>;
+}
+
 export function ReportsPage() {
   useLanguage();
   const me = useMe();
@@ -48,6 +61,8 @@ export function ReportsPage() {
   if (!allowed) return <Navigate to="/" replace />;
   return <section className="reports-page"><h1>{t("Moderação de denúncias")}</h1>
     <PendingContent />
+    <StationReviewInbox moderator />
+    <RecommendationMetrics />
     <label>{t("Mostrar")}<select value={status} onChange={event => setStatus(event.target.value)}><option value="PENDING">{t("Pendentes")}</option><option value="DISMISSED">{t("Encerradas sem retirada")}</option><option value="HIDDEN">{t("Conteúdo retirado")}</option></select></label>
     <label>{t("Categoria")}<select value={reason} onChange={event => setReason(event.target.value)}><option value="">{t("Todas as categorias")}</option>{Object.entries(reasons).map(([key, label]) => <option key={key} value={key}>{label}</option>)}</select></label>
     {reports.isPending && <p role="status">{t("Carregando denúncias...")}</p>}

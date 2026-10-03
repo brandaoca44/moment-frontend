@@ -242,12 +242,22 @@ function NotificationItem({
   useLanguage();
   if (notification.type === 'SYSTEM') return (
     <article className={notification.read ? 'notification-item' : 'notification-item notification-item-unread'}>
+      {!notification.read && <span className="notification-unread-dot" aria-label={t("Não lida")} />}
+      <div className="notification-system-icon" aria-hidden="true"><BellIcon /></div>
       <div className="notification-content">
-        <strong>Moment</strong>
-        <p>{systemMessage(notification.message ?? '')}</p>
-        <small>{new Date(notification.createdAt).toLocaleString(getLanguage())}</small>
-        {notification.href?.startsWith('/') && !notification.href.startsWith('//') && <p><Link to={notification.href} onClick={() => onMarkAsRead(notification.id)}>{t("Ver detalhes")}</Link></p>}
-        {!notification.read && <button disabled={isMarkingRead} onClick={() => onMarkAsRead(notification.id)}>{t("Marcar como lida")}</button>}
+        <div className="notification-copy">
+          <strong className="notification-system-title">Moment</strong>
+          <time className="notification-time" dateTime={notification.createdAt} title={new Date(notification.createdAt).toLocaleString(getLanguage())}>
+            {formatNotificationDate(notification.createdAt)}
+          </time>
+        </div>
+        <p className="notification-system-message">{systemMessage(notification.message ?? '')}</p>
+        <div className="notification-system-actions">
+          {notification.href?.startsWith('/') && !notification.href.startsWith('//') && (
+            <Link className="notification-detail-link" to={notification.href} onClick={() => { if (!notification.read && !isMarkingRead) onMarkAsRead(notification.id); }}>{t("Ver detalhes")}<span aria-hidden="true">›</span></Link>
+          )}
+          {!notification.read && <button type="button" className="notification-read-button" disabled={isMarkingRead} onClick={() => onMarkAsRead(notification.id)}><CheckIcon />{t("Marcar como lida")}</button>}
+        </div>
       </div>
     </article>
   );
@@ -315,7 +325,7 @@ function NotificationItem({
             >
               {notification.actor.name}
             </Link>{' '}
-            <span>{presentation.label}</span>
+            <span>{notification.type === 'REPLY' && notification.message === 'respondeu ao seu comentário' ? t('respondeu ao seu comentário') : presentation.label}</span>
           </p>
 
           <span className="notification-time">
@@ -640,6 +650,62 @@ export function NotificationsPage() {
         .notification-content {
           min-width: 0;
           padding-right: 16px;
+        }
+
+        .notification-system-icon {
+          width: 44px;
+          height: 44px;
+          display: grid;
+          place-items: center;
+          border: 1px solid var(--border-soft);
+          border-radius: 16px;
+          background: var(--amethyst-bg);
+          color: var(--amethyst);
+        }
+
+        .notification-system-title {
+          color: var(--text);
+          font-size: 14px;
+          font-weight: 650;
+        }
+
+        .notification-system-message {
+          margin: 6px 0 0;
+          color: var(--text-soft);
+          font-size: 14px;
+          line-height: 1.55;
+          overflow-wrap: anywhere;
+        }
+
+        .notification-system-actions {
+          display: flex;
+          align-items: center;
+          flex-wrap: wrap;
+          gap: 4px 18px;
+          margin-top: 8px;
+        }
+
+        .notification-system-actions .notification-read-button,
+        .notification-detail-link {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          min-height: 36px;
+          margin: 0;
+          font-size: 12px;
+          font-weight: 600;
+          color: var(--amethyst);
+          text-decoration: none;
+        }
+
+        .notification-detail-link:hover {
+          text-decoration: underline;
+        }
+
+        .notification-system-actions :focus-visible {
+          outline: 2px solid var(--amethyst);
+          outline-offset: 4px;
+          border-radius: 6px;
         }
 
         .notification-copy {

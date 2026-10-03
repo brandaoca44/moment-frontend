@@ -116,6 +116,7 @@ function Privacy() {
   useLanguage();
   return (
     <>
+      <section><h2>{t('Recomendações e métricas opcionais')}</h2><p>{t('Personalizar o Para você usa interesses escolhidos, estações e perfis seguidos. Métricas opcionais, desativadas por padrão e restritas a adultos, registram exibições e aberturas e permitem considerar curtidas e republicações recentes. Não coletamos texto digitado, mensagens privadas ou navegação externa para isso.')}</p><p>{t('Eventos são deduplicados por dia, ficam disponíveis por até 30 dias e são eliminados pela rotina horária de limpeza. A ordem do feed é guardada por 30 minutos para paginar. Interesses e escolhas de não interesse permanecem até serem redefinidos. Em Configurações, Privacidade, você pode desligar a personalização, apagar eventos ao desativar métricas e redefinir recomendações.')}</p></section>
       <section>
         <h2>{t("Dados usados pelo Moment")}</h2>
         <p>

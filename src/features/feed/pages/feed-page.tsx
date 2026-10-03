@@ -3,12 +3,19 @@ import { useEffect, useRef, useState } from 'react';
 import { useFeed } from '../hooks/use-feed';
 import { PostCard } from '../components/post-card';
 import { CreatePost } from '../components/create-post';
+import { RecommendationPreferencesPanel, useRecommendationPreferences } from '../components/recommendation-preferences';
+import { useFeedMetrics } from '../hooks/use-feed-metrics';
+import { useQueryClient } from '@tanstack/react-query';
+import { CloudOff, RotateCw } from 'lucide-react';
 
 type FeedType = 'global' | 'following';
 
 export function FeedPage() {
   useLanguage();
+  const queryClient = useQueryClient();
   const [feedType, setFeedType] = useState<FeedType>('global');
+  const preferences = useRecommendationPreferences();
+  const metricsRef = useFeedMetrics(feedType === 'global' && preferences.data?.data.metrics === true);
   const {
     data,
     fetchNextPage,
@@ -76,10 +83,10 @@ export function FeedPage() {
         .feed-kicker {
           margin: 0 0 6px;
           color: var(--amethyst);
-          font-size: 12px;
-          font-weight: 900;
-          letter-spacing: 0.08em;
-          text-transform: uppercase;
+          font-weight: 600;
+          letter-spacing: -0.035em;
+          font-size: 21px;
+          text-transform: none;
         }
 
         .feed-title {
@@ -105,13 +112,13 @@ export function FeedPage() {
           top: 22px;
           z-index: 5;
           display: flex;
-          gap: 6px;
+          gap: 4px;
           margin-bottom: 22px;
-          padding: 6px;
-          border-radius: 22px;
+          padding: 4px;
+          border-radius: 16px;
           background: var(--panel-background, var(--surface-glass));
           border: 1px solid var(--border-soft);
-          box-shadow: var(--shadow-sm);
+          box-shadow: none;
           backdrop-filter: blur(22px);
           -webkit-backdrop-filter: blur(22px);
         }
@@ -120,13 +127,13 @@ export function FeedPage() {
           min-width: 0;
           overflow-wrap: anywhere;
           flex: 1;
-          min-height: 44px;
+          min-height: 38px;
           padding: 0 14px;
           background: transparent;
           border: 1px solid transparent;
-          border-radius: 16px;
-          font-size: 14.5px;
-          font-weight: 850;
+          border-radius: 12px;
+          font-size: 13px;
+          font-weight: 600;
           cursor: pointer;
           font-family: var(--font-ui);
           color: var(--text-muted);
@@ -145,11 +152,10 @@ export function FeedPage() {
         }
 
         .feed-tab.active {
-          color: #fff;
-          background: linear-gradient(135deg, var(--amethyst), var(--amethyst-light));
-          border-color: transparent;
-          box-shadow: var(--shadow-amethyst);
-          transform: translateY(-1px);
+          color: var(--amethyst);
+          background: var(--surface);
+          border-color: var(--border-soft);
+          box-shadow: 0 2px 5px rgba(0,0,0,0.04);
         }
 
         .feed-composer-wrap {
@@ -186,12 +192,16 @@ export function FeedPage() {
         .feed-error-box {
           position: relative;
           overflow: hidden;
-          background: var(--danger-bg);
-          border: 1px solid var(--danger-border);
+          display: flex;
+          align-items: center;
+          flex-wrap: wrap;
+          gap: 12px;
+          background: var(--surface);
+          border: 1px solid var(--border-soft);
           border-radius: 20px;
           padding: 18px 20px;
           margin-bottom: 18px;
-          box-shadow: var(--shadow-danger);
+          box-shadow: none;
         }
 
         .feed-error-box::before {
@@ -206,10 +216,21 @@ export function FeedPage() {
           position: relative;
           margin: 0;
           font-size: 14px;
-          font-weight: 750;
-          color: var(--danger);
-          text-align: center;
+          flex: 1 1 200px;
+          font-weight: 400;
+          line-height: 1.5;
+          color: var(--text-muted);
+          text-align: left;
         }
+        .feed-error-icon { color: var(--text-muted); flex-shrink: 0; }
+        .feed-error-retry {
+          display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+          min-height: 40px; padding: 9px 13px; border: 1px solid var(--border-soft);
+          border-radius: 12px; background: var(--surface-soft); color: var(--text);
+          font-family: var(--font-ui); font-size: 12px; font-weight: 600; cursor: pointer;
+        }
+        .feed-error-retry:hover { color: var(--amethyst); background: var(--amethyst-bg); }
+        .feed-error-retry:focus-visible { outline: 2px solid var(--amethyst); outline-offset: 3px; }
 
         .feed-empty {
           position: relative;
@@ -332,11 +353,11 @@ export function FeedPage() {
 
           .feed-tabs {
             top: 12px;
-            border-radius: 20px;
+            border-radius: 16px;
           }
 
           .feed-tab {
-            min-height: 42px;
+            min-height: 38px;
           }
         }
       `}</style>
@@ -370,6 +391,7 @@ export function FeedPage() {
         <div className="feed-composer-wrap">
           <CreatePost />
         </div>
+        {feedType === 'global' && <details className="feed-preferences"><summary>{t('Ajustar meus interesses')}</summary><RecommendationPreferencesPanel /></details>}
 
         {isLoading && (
           <div className="feed-center">
@@ -379,8 +401,10 @@ export function FeedPage() {
         )}
 
         {isError && (
-          <div className="feed-error-box">
+          <div className="feed-error-box" role="alert">
+            <CloudOff className="feed-error-icon" size={22} aria-hidden="true" />
             <p className="feed-error-text">{t("Não foi possível carregar o feed. Tente novamente.")}</p>
+            <button className="feed-error-retry" type="button" onClick={() => queryClient.resetQueries({ queryKey: ['feed', feedType] })}><RotateCw size={15} aria-hidden="true" />{t('Tentar novamente')}</button>
           </div>
         )}
 
@@ -400,17 +424,17 @@ export function FeedPage() {
           </div>
         )}
 
-        <div className="feed-posts-list">
+        <div className="feed-posts-list" ref={metricsRef}>
           {posts.map((post) => (
-            <PostCard
-              key={post.id}
+            <div key={post.id} data-feed-post={post.id}><PostCard
+              recommended={feedType === 'global'}
               post={post}
               repliesCount={post._count.replies}
               likesCount={post._count.likes}
               remontsCount={post._count.remonts}
               liked={post.liked ?? false}
               remonted={post.remonted ?? false}
-            />
+            /></div>
           ))}
         </div>
 
@@ -421,7 +445,7 @@ export function FeedPage() {
             </div>
           )}
           {!hasNextPage && posts.length > 0 && (
-            <p className="feed-end-text">{t("Você viu todos os momentos")}</p>
+            <p className="feed-end-text">{t("Você chegou ao fim desta seleção.")}</p>
           )}
         </div>
       </div>

@@ -323,6 +323,7 @@ export function AppLayout() {
         .app-mobile-menu-toggle {
           display: none;
         }
+        .app-mobile-logout { display: none; }
 
         .app-logo-text {
           color: var(--amethyst);
@@ -703,6 +704,8 @@ export function AppLayout() {
             gap: 5px;
             padding: 8px 0 2px;
           }
+          .app-nav .app-mobile-logout { display:flex; background:transparent; text-align:left; color:var(--danger); cursor:pointer; }
+          .app-nav.mobile-open { max-height:calc(100dvh - 90px); overflow-y:auto; }
 
           .app-nav-link {
             width: 100%;
@@ -846,6 +849,7 @@ export function AppLayout() {
             ))}
             {user?.canModerate && <NavLink to="/moderation" className="app-nav-link" onClick={() => setIsMobileMenuOpen(false)}>{t("Moderação")}</NavLink>}
             <StationShortcuts close={() => setIsMobileMenuOpen(false)} />
+            <button type="button" className="app-nav-link app-mobile-logout" onClick={handleLogout} disabled={logout.isPending}><IconLogout /><span>{t('Sair')}</span></button>
             <LegalLinks />
           </nav>
 

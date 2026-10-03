@@ -7,14 +7,18 @@ export function StationDialog({
   title = label,
   children,
   busy = false,
+  defaultOpen = false,
+  icon,
 }: {
   label: string;
   title?: string;
-  children: ReactNode;
+  children: ReactNode | ((close: () => void) => ReactNode);
   busy?: boolean;
+  defaultOpen?: boolean;
+  icon?: ReactNode;
 }) {
   useLanguage();
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(defaultOpen);
   const trigger = useRef<HTMLButtonElement>(null);
   const dialog = useRef<HTMLDialogElement>(null);
   const titleId = useId();
@@ -38,7 +42,8 @@ export function StationDialog({
         aria-haspopup="dialog"
         onClick={() => setOpen(true)}
       >
-        {label}
+        {icon}
+        <span>{label}</span>
       </button>
       {open &&
         createPortal(
@@ -62,7 +67,7 @@ export function StationDialog({
                 >
                   {t(" Fechar ")}</button>
               </header>
-              {children}
+              {typeof children === 'function' ? children(() => setOpen(false)) : children}
             </div>
           </dialog>,
           document.body,

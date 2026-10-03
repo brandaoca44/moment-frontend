@@ -1,4 +1,9 @@
 const rows = `
+respondeu ao seu comentário|replied to your comment|respondió a tu comentario
+Ver {count} respostas|View {count} replies|Ver {count} respuestas
+Recolher respostas|Collapse replies|Ocultar respuestas
+Respondendo a {name}|Replying to {name}|Respondiendo a {name}
+Resposta indisponível.|Reply unavailable.|Respuesta no disponible.
 Sua sessão expirou. Entre novamente.|Your session expired. Log in again.|Tu sesión ha caducado. Inicia sesión de nuevo.
 Solicitação não autorizada. Atualize a página e tente novamente.|Unauthorized request. Refresh the page and try again.|Solicitud no autorizada. Actualiza la página e inténtalo de nuevo.
 Em breve|Coming soon|Próximamente
@@ -621,5 +626,46 @@ Explorar estações|Explore stations|Explorar estaciones
 1 membro|1 member|1 miembro
 Seguir {name}|Follow {name}|Seguir a {name}
 Voltar|Back|Volver
+Escreva sua mensagem…|Write your message…|Escribe tu mensaje…
+Nômades: {count}|Nomads: {count}|Nómadas: {count}
+Um Nômade enviou uma publicação para aprovação na estação. Abra a fila para analisar.|A Nomad submitted a station post for approval. Open the queue to review it.|Un Nómada envió una publicación en la estación para aprobación. Abre la cola para revisarla.
+Uma publicação na estação aguarda análise. Abra a fila para revisar.|A station post is awaiting review. Open the review queue.|Una publicación en la estación espera revisión. Abre la cola para revisarla.
+Racismo, discurso de ódio ou discriminação|Racism, hate speech or discrimination|Racismo, discurso de odio o discriminación
+Denunciar estação|Report station|Denunciar estación
+Estações são publicadas após a checagem de conteúdo. Casos sinalizados aguardam a equipe do Moment.|Stations are published after content checks. Flagged cases await the Moment team.|Las estaciones se publican tras la comprobación del contenido. Los casos señalados esperan al equipo de Moment.
+Salvar estação|Save station|Guardar estación
+Estação criada.|Station created.|Estación creada.
+Estação atualizada.|Station updated.|Estación actualizada.
+Sua estação foi retirada por violar as regras do Moment.|Your station was removed for violating Moment rules.|Tu estación fue retirada por infringir las normas de Moment.
+Analisamos sua denúncia e não identificamos uma violação das regras do Moment nesta estação.|We reviewed your report and found no violation of Moment rules in this station.|Revisamos tu denuncia y no encontramos una infracción de las normas de Moment en esta estación.
+Publicações das Estações para analisar|Station posts to review|Publicaciones de Estaciones por revisar
+Aprovações nas suas Estações|Approvals in your Stations|Aprobaciones en tus Estaciones
+Publicações aguardando decisão. O contador atualiza automaticamente a cada 30 segundos.|Posts awaiting a decision. The count refreshes automatically every 30 seconds.|Publicaciones pendientes de decisión. El contador se actualiza automáticamente cada 30 segundos.
+Publicações de Nômades: {count}|Nomad posts: {count}|Publicaciones de Nómadas: {count}
+Um Nômade enviou uma publicação para aprovação.|A Nomad submitted a post for approval.|Un Nómada envió una publicación para su aprobación.
+Uma publicação aguarda aprovação.|A post is awaiting approval.|Una publicación espera aprobación.
+Aguardando a equipe do Moment.|Awaiting the Moment team.|Pendiente del equipo de Moment.
+Justificativa (opcional para aprovar)|Reason (optional for approval)|Justificación (opcional para aprobar)
+Métricas do Para você · 30 dias|For you metrics · 30 days|Métricas de Para ti · 30 días
+Somente participantes que permitiram métricas. Cada ação é contada uma vez por pessoa, publicação e dia; não representa todo o público.|Only participants who allowed metrics. Each action is counted once per person, post and day; it does not represent the whole audience.|Solo participantes que permitieron métricas. Cada acción se cuenta una vez por persona, publicación y día; no representa a todo el público.
+Exibições|Views|Visualizaciones
+Aberturas|Opens|Aperturas
+Seu Para você|Your For you feed|Tu Para ti
+Interesses|Interests|Intereses
+Escolha até 10 assuntos. Suas estações e perfis seguidos também ajudam nas recomendações.|Choose up to 10 topics. Your stations and followed profiles also help with recommendations.|Elige hasta 10 temas. Tus estaciones y perfiles seguidos también ayudan con las recomendaciones.
+Personalizar o Para você|Personalize For you|Personalizar Para ti
+Desativado: momentos recentes em ordem cronológica. Seguindo permanece cronológico.|When off: recent moments in chronological order. Following stays chronological.|Desactivado: momentos recientes en orden cronológico. Siguiendo permanece cronológico.
+Permitir métricas opcionais|Allow optional metrics|Permitir métricas opcionales
+Registra exibições e aberturas por até 30 dias e permite usar curtidas e republicações recentes para personalizar. Desativar apaga esses eventos.|Records views and opens for up to 30 days and allows recent likes and reposts to personalize your feed. Turning it off deletes these events.|Registra visualizaciones y aperturas durante un máximo de 30 días y permite usar los Me gusta y republicaciones recientes para personalizar. Desactivarlo elimina estos eventos.
+Redefinir interesses, métricas e publicações sem interesse?|Reset interests, metrics and dismissed posts?|¿Restablecer intereses, métricas y publicaciones descartadas?
+Redefinir recomendações|Reset recommendations|Restablecer recomendaciones
+Não foi possível salvar. Tente novamente.|Could not save. Try again.|No se pudo guardar. Inténtalo de nuevo.
+Não foi possível carregar.|Could not load.|No se pudo cargar.
+Ajustar meus interesses|Adjust my interests|Ajustar mis intereses
+Não tenho interesse|Not interested|No me interesa
+Você chegou ao fim desta seleção.|You reached the end of this selection.|Llegaste al final de esta selección.
+Recomendações e métricas opcionais|Recommendations and optional metrics|Recomendaciones y métricas opcionales
+Personalizar o Para você usa interesses escolhidos, estações e perfis seguidos. Métricas opcionais, desativadas por padrão e restritas a adultos, registram exibições e aberturas e permitem considerar curtidas e republicações recentes. Não coletamos texto digitado, mensagens privadas ou navegação externa para isso.|Personalizing For you uses chosen interests, stations and followed profiles. Optional metrics, off by default and restricted to adults, record views and opens and allow recent likes and reposts to be considered. We do not collect typed text, private messages or outside browsing for this.|Personalizar Para ti utiliza intereses elegidos, estaciones y perfiles seguidos. Las métricas opcionales, desactivadas por defecto y restringidas a adultos, registran visualizaciones y aperturas y permiten considerar Me gusta y republicaciones recientes. No recopilamos texto escrito, mensajes privados ni navegación externa para ello.
+Eventos são deduplicados por dia, ficam disponíveis por até 30 dias e são eliminados pela rotina horária de limpeza. A ordem do feed é guardada por 30 minutos para paginar. Interesses e escolhas de não interesse permanecem até serem redefinidos. Em Configurações, Privacidade, você pode desligar a personalização, apagar eventos ao desativar métricas e redefinir recomendações.|Events are deduplicated daily, available for up to 30 days and deleted by hourly cleanup. Feed ordering is stored for 30 minutes for pagination. Interests and dismissals remain until reset. In Settings, Privacy, you can turn off personalization, delete events by disabling metrics and reset recommendations.|Los eventos se deduplican por día, están disponibles hasta 30 días y se eliminan mediante una limpieza cada hora. El orden del feed se guarda 30 minutos para paginar. Los intereses y descartes permanecen hasta restablecerlos. En Configuración, Privacidad, puedes desactivar la personalización, eliminar eventos al desactivar métricas y restablecer recomendaciones.
 `;
 export const messages: Record<string, readonly [string, string]> = Object.fromEntries(rows.trim().split('\n').map(row => { const [key, en, es] = row.split('|'); return [key, [en, es] as const]; }));
