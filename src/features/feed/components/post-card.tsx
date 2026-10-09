@@ -342,7 +342,7 @@ export function PostCard({ post, repliesCount = 0, likesCount, remontsCount, lik
 
           border-radius: 20px;
 
-          padding: 20px 22px;
+          padding: 16px 18px;
 
           transition: box-shadow 0.2s ease, background 0.2s ease, border-color 0.2s ease;
 

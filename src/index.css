@@ -51,6 +51,7 @@
 }
 
 html {
+  scrollbar-gutter: stable;
   min-height: 100%;
   background: var(--bg);
   overflow-x: hidden;

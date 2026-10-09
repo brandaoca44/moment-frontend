@@ -1,4 +1,5 @@
 import { DiscoverySidebar } from './discovery-sidebar';
+import { ShoppingBag } from 'lucide-react';
 import { t, useLanguage } from '@/i18n';
 import {
   Link,
@@ -162,6 +163,11 @@ const navItems = [
     icon: <IconUser />,
   },
   {
+    to: '/vitrine',
+    get label() { return t("Vitrine Moment"); },
+    icon: <ShoppingBag size={20} />,
+  },
+  {
     to: '/notifications',
     get label() { return t("Notificações"); },
     icon: <IconBell />,
@@ -241,7 +247,8 @@ export function AppLayout() {
           max-width: 100%;
           min-height: 100vh;
           display: grid;
-          grid-template-columns: 260px minmax(0, 1fr) 306px;
+          grid-template-columns: 260px minmax(0, 748px) 306px;
+          justify-content: center;
           background:
             radial-gradient(
               circle at top left,
@@ -574,21 +581,25 @@ export function AppLayout() {
         }
 
         .app-main {
+          box-sizing: border-box;
           width: 100%;
           min-width: 0;
-          max-width: 760px;
+          max-width: none;
           min-height: 100vh;
-          margin: 0 auto;
-          padding: 36px 28px;
+          margin: 0;
+          padding: 0;
           border-right: 1px solid var(--border-soft);
           overflow-x: hidden;
         }
 
         .app-right-column {
+          /* Shared page spacing keeps every route on the same horizontal grid. */
+          box-sizing: border-box;
+          min-width: 0;
           position: sticky;
           top: 0;
           height: 100vh;
-          padding: 36px 22px;
+          padding: 28px 16px;
         }
 
         .app-right-card {
@@ -727,7 +738,7 @@ export function AppLayout() {
 
           .app-main {
             max-width: 100%;
-            padding: 24px 16px;
+            padding: 0;
             border-right: none;
           }
         }
@@ -774,9 +785,25 @@ export function AppLayout() {
           }
 
           .app-main {
-            padding: 16px 10px 24px;
+            padding: 0;
           }
         }
+        .app-page {
+          box-sizing: border-box;
+          width: 100%;
+          min-width: 0;
+          padding: 28px 24px;
+        }
+        .app-page > :is(.feed-page, .profile-page, .notifications-page, .explore-page, .settings-page, .stations-page, .vitrine, .reports-page, .conversation) {
+          box-sizing: border-box;
+          width: 100%;
+          min-width: 0;
+          max-width: none;
+          margin: 0;
+          padding: 0;
+        }
+        @media(max-width:760px) { .app-page { padding:20px 16px; } }
+        @media(max-width:520px) { .app-page { padding:16px 10px 24px; } }
       `}</style>
 
       <div className="app-root">
@@ -894,7 +921,7 @@ export function AppLayout() {
         </aside>
 
         <main className="app-main">
-          <Outlet />
+          <div className="app-page"><Outlet /></div>
         </main>
 
         <aside className="app-right-column">

@@ -1,10 +1,10 @@
 .stations-page {
   box-sizing: border-box;
   width: 100%;
-  max-width: 760px;
+  max-width: none;
   min-width: 0;
   margin: 0 auto;
-  padding: 8px;
+  padding: 0;
   overflow-wrap: anywhere;
 }
 .station-directory-header,
@@ -32,6 +32,12 @@
   margin: 16px 0 24px;
 }
 .stations-page .station-toolbar > button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 40px;
+  line-height: 1.4;
   background: transparent;
   border-color: transparent;
   padding: 8px 10px;
@@ -47,9 +53,9 @@
 }
 .station-gallery {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 24px 18px;
-  margin: 24px 0;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 240px));
+  gap: 18px 14px;
+  margin: 18px 0;
 }
 .station-tile {
   min-width: 0;
@@ -62,7 +68,7 @@
 }
 .station-tile-image {
   position: relative;
-  aspect-ratio: 1;
+  aspect-ratio: 4 / 3;
   width: 100%;
   border-radius: 18px;
   overflow: hidden;

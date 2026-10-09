@@ -1,4 +1,103 @@
 const rows = `
+Entenda a Vitrine Moment|Discover how Moment Marketplace works|Descubre cómo funciona Vitrina Moment
+Sobre esta seção|About this section|Sobre esta sección
+Todas as categorias|All categories|Todas las categorías
+Escolha uma loja ou veja apenas as ofertas que você compartilhou neste país.|Choose a store or view only the offers you shared in this country.|Elige una tienda o consulta solo las ofertas que compartiste en este país.
+Use o link direto da loja selecionada. Links de lojas ainda não aprovadas não podem ser publicados.|Use a direct link from the selected store. Links from stores awaiting approval cannot be published.|Utiliza el enlace directo de la tienda seleccionada. No se pueden publicar enlaces de tiendas aún no aprobadas.
+Achados da comunidade, nas lojas que você conhece.|Community finds from stores you know.|Hallazgos de la comunidad en tiendas que conoces.
+Indicar uma loja|Suggest a store|Sugerir una tienda
+Sugerir uma loja para análise|Suggest a store for review|Sugerir una tienda para revisión
+Sua loja favorita ainda não está aqui? Indique para análise.|Is your favorite store missing? Suggest it for review.|¿Falta tu tienda favorita? Sugiérela para revisión.
+Encontre um bom achado|Find something worth sharing|Encuentra un buen hallazgo
+Explore produtos por loja e categoria, como um fone ou um presente.|Explore products by store and category, such as headphones or a gift.|Explora productos por tienda y categoría, como unos auriculares o un regalo.
+Aproveite um cupom|Make the most of a coupon|Aprovecha un cupón
+Confira o benefício e onde usar o desconto na loja indicada.|Check the benefit and where to use the discount at the listed store.|Consulta el beneficio y dónde utilizar el descuento en la tienda indicada.
+Compartilhe e converse|Share and discuss|Comparte y conversa
+Indique um produto, troque dicas e veja os detalhes antes de ir à loja.|Recommend a product, exchange tips and check the details before visiting the store.|Recomienda un producto, intercambia consejos y consulta los detalles antes de visitar la tienda.
+As indicações vêm da comunidade. A compra e o uso dos cupons acontecem nos sites ou aplicativos das lojas aprovadas.|Recommendations come from the community. Purchases and coupon use take place on approved stores' websites or apps.|Las recomendaciones vienen de la comunidad. Las compras y el uso de cupones se realizan en los sitios o aplicaciones de las tiendas aprobadas.
+Produtos de lojas|Store products|Productos de tiendas
+Cupons de desconto|Discount coupons|Cupones de descuento
+Links de produtos de lojas aprovadas, com foto, preço e dicas da comunidade.|Product links from approved stores, with photos, prices and community tips.|Enlaces de productos de tiendas aprobadas, con fotos, precios y consejos de la comunidad.
+Cupons compartilhados pela comunidade, com condições e indicação de onde usar.|Community-shared coupons with terms and details on where to use them.|Cupones compartidos por la comunidad, con condiciones e indicaciones de dónde utilizarlos.
+Os campos com * são obrigatórios.|Fields marked * are required.|Los campos con * son obligatorios.
+Preço do produto|Product price|Precio del producto
+Informe o preço do produto.|Enter the product price.|Introduce el precio del producto.
+Foto obrigatória — adicionar imagem|Required photo — add image|Foto obligatoria — añadir imagen
+Explique o benefício, as condições e onde usar o cupom: no site ou no aplicativo da loja.|Explain the benefit, terms and where to use the coupon: on the store's website or app.|Explica el beneficio, las condiciones y dónde usar el cupón: en el sitio o la aplicación de la tienda.
+Conte o que é o produto e por que vale compartilhar.|Describe the product and why it is worth sharing.|Describe el producto y por qué merece la pena compartirlo.
+Não encontrou uma loja? Envie o site oficial e explique o que ela oferece. A moderação analisará os domínios antes de liberar seus links.|Can't find a store? Submit its official website and describe what it offers. Moderators will review its domains before allowing its links.|¿No encuentras una tienda? Envía su sitio oficial y explica qué ofrece. La moderación revisará sus dominios antes de permitir sus enlaces.
+Opcional|Optional|Opcional
+Produtos|Products|Productos
+Cupons|Coupons|Cupones
+Cupom|Coupon|Cupón
+Loja|Store|Tienda
+Lojas|Stores|Tiendas
+Brasil|Brazil|Brasil
+Estados Unidos|United States|Estados Unidos
+Espanha|Spain|España
+Moda|Fashion|Moda
+Beleza|Beauty|Belleza
+Casa|Home|Hogar
+Pets|Pets|Mascotas
+Alimentação|Food|Alimentación
+Livros|Books|Libros
+Link de afiliado|Affiliate link|Enlace de afiliación
+Oferta encerrada|Offer ended|Oferta finalizada
+Retirado|Removed|Retirado
+Selecione uma imagem.|Select an image.|Selecciona una imagen.
+Cada envio aceito utiliza uma das quatro vagas da semana, mesmo se for excluído ou ficar em análise.|Each accepted submission uses one of the four weekly slots, even if deleted or awaiting review.|Cada envío aceptado utiliza uno de los cuatro espacios semanales, aunque se elimine o quede en revisión.
+Selecione uma loja|Select a store|Selecciona una tienda
+Ainda não há lojas aprovadas neste país. Sugira uma loja para análise.|There are no approved stores in this country yet. Suggest a store for review.|Todavía no hay tiendas aprobadas en este país. Sugiere una tienda para su revisión.
+Link direto da loja|Direct store link|Enlace directo de la tienda
+Este é um link de afiliado|This is an affiliate link|Este es un enlace de afiliación
+Preço (opcional)|Price (optional)|Precio (opcional)
+Código do cupom|Coupon code|Código del cupón
+Validade|Expiry|Validez
+Adicionar imagem|Add image|Añadir imagen
+Compartilhar oferta|Share an offer|Compartir oferta
+A equipe precisa analisar a loja antes de permitir seus links.|The team must review the store before allowing its links.|El equipo debe revisar la tienda antes de permitir sus enlaces.
+Nome da loja|Store name|Nombre de la tienda
+Site oficial|Official website|Sitio oficial
+Informações para análise|Information for review|Información para la revisión
+Enviar para análise|Submit for review|Enviar para revisión
+Descubra ofertas, compartilhe bons achados.|Discover offers and share great finds.|Descubre ofertas y comparte buenos hallazgos.
+Buscar ofertas|Search offers|Buscar ofertas
+{used} de 4 publicações nesta semana|{used} of 4 posts this week|{used} de 4 publicaciones esta semana
+Renova em|Renews on|Se renueva el
+Categorias|Categories|Categorías
+Filtros|Filters|Filtros
+Todas as lojas|All stores|Todas las tiendas
+Minhas ofertas|My offers|Mis ofertas
+Todos os autores|All authors|Todos los autores
+Sugerir loja|Suggest a store|Sugerir tienda
+Revisar vitrine|Review marketplace|Revisar vitrina
+Ainda não há ofertas por aqui|No offers here yet|Todavía no hay ofertas
+Escolha outra categoria ou compartilhe um achado de uma loja aprovada.|Choose another category or share a find from an approved store.|Elige otra categoría o comparte un hallazgo de una tienda aprobada.
+Você está saindo do Moment|You are leaving Moment|Estás saliendo de Moment
+Você está saindo do Moment. A compra será realizada em uma loja externa. Confira o vendedor, o preço e as condições de entrega e devolução. A aprovação do link não garante a oferta.|You are leaving Moment. The purchase takes place at an external store. Check the seller, price, shipping and return terms. Link approval does not guarantee the offer.|Estás saliendo de Moment. La compra se realizará en una tienda externa. Comprueba el vendedor, el precio y las condiciones de entrega y devolución. La aprobación del enlace no garantiza la oferta.
+Continuar para a loja|Continue to store|Continuar a la tienda
+Ir para a loja|Go to store|Ir a la tienda
+Link de afiliado: quem compartilhou pode receber uma comissão.|Affiliate link: the person who shared it may earn a commission.|Enlace de afiliación: quien lo compartió puede recibir una comisión.
+Ofertas de {name}|Offers by {name}|Ofertas de {name}
+Encerrar oferta|End offer|Finalizar oferta
+Excluir não devolve a cota. Continuar?|Deleting does not restore your quota. Continue?|Eliminar no devuelve la cuota. ¿Continuar?
+Editar loja|Edit store|Editar tienda
+Cadastrar loja|Add store|Registrar tienda
+Domínios autorizados|Allowed domains|Dominios autorizados
+Confira os domínios oficiais antes de ativar. Subdomínios e links de consultores precisam de análise própria.|Check official domains before activating. Subdomains and consultant links require separate review.|Comprueba los dominios oficiales antes de activar. Los subdominios y enlaces de consultores requieren una revisión propia.
+Domínios conferidos: permitir publicações|Domains checked: allow posts|Dominios comprobados: permitir publicaciones
+Voltar à vitrine|Back to marketplace|Volver a la vitrina
+Preparar catálogo candidato|Prepare candidate catalog|Preparar catálogo de candidatas
+As lojas candidatas começam desativadas. A lista não representa homologação concluída.|Candidate stores start inactive. The list does not mean approval is complete.|Las tiendas candidatas comienzan desactivadas. La lista no significa que la homologación esté completa.
+Ativa|Active|Activa
+Inativa|Inactive|Inactiva
+Ofertas pendentes|Pending offers|Ofertas pendientes
+Comentários pendentes|Pending comments|Comentarios pendientes
+Lojas sugeridas|Suggested stores|Tiendas sugeridas
+Arquivar|Dismiss|Archivar
+Marcar como analisada|Mark as reviewed|Marcar como revisada
+Após conferir, cadastre a loja e seus domínios na seção Lojas.|After checking, register the store and its domains in the Stores section.|Tras comprobarlo, registra la tienda y sus dominios en la sección Tiendas.
+Vitrine Moment|Moment Marketplace|Vitrina Moment
 respondeu ao seu comentário|replied to your comment|respondió a tu comentario
 Ver {count} respostas|View {count} replies|Ver {count} respuestas
 Recolher respostas|Collapse replies|Ocultar respuestas

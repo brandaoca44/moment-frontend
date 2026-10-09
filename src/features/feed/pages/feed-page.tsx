@@ -53,7 +53,7 @@ export function FeedPage() {
           width: 100%;
           min-width: 0;
           position: relative;
-          max-width: 640px;
+          max-width: 700px;
           margin: 0 auto;
           font-family: var(--font-ui);
           animation: feedFadeIn 260ms var(--ease-premium) both;

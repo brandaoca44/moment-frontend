@@ -1,0 +1,10 @@
+import { api } from '@/lib/api';
+export const categories = { technology:'Tecnologia',fashion:'Moda',beauty:'Beleza',home:'Casa',sports:'Esportes',pets:'Pets',food:'Alimentação',books:'Livros',other:'Outros' };
+export const countries = { BR:'Brasil',US:'Estados Unidos',ES:'Espanha' };
+export type Store = {id:string;name:string;country:string;domains?:string[];active?:boolean};
+export type User = {id:string;name:string;username:string;avatar?:string|null};
+export type Offer = {id:string;userId:string;storeId:string;country:string;kind:string;category:string;title:string;description:string;imageUrl:string;url:string;coupon?:string|null;affiliate:boolean;priceCents?:number|null;expiresAt?:string|null;endedAt?:string|null;moderationStatus:string;createdAt:string;user:User;store:Store};
+export type Comment = {id:string;content:string;userId:string;user:User;repliesCount:number;replyToName?:string|null;createdAt:string};
+export type Page<T>={data:T[];meta:{pages:number;total?:number}};
+export const read=<T,>(path:string)=>api<T>(`/vitrine${path}`);
+export const write=<T={message:string;data?:{id:string}},>(path:string,body?:unknown,method='POST')=>api<T>(`/vitrine${path}`,{method,...(body!==undefined?{body:JSON.stringify(body)}:{})});

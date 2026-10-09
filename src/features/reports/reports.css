@@ -20,7 +20,7 @@
 .report-dialog textarea, .report-card textarea { min-height: 90px; resize: vertical; }
 .report-controls { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
 .report-dialog button, .reports-page button { padding: 9px 12px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface-soft); color: var(--text); cursor: pointer; }
-.reports-page { min-width: 0; max-width: 680px; margin: auto; overflow-wrap: anywhere; }
+.reports-page { min-width: 0; max-width: none; margin: 0; overflow-wrap: anywhere; }
 .report-card { border: 1px solid var(--border); border-radius: 16px; background: var(--surface); margin: 16px 0; padding: 16px; }
 .report-card h3 { font-size: 14px; }
 .report-summary { cursor: pointer; overflow-wrap: anywhere; }

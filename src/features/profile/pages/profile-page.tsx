@@ -102,7 +102,7 @@ export function ProfilePage() {
       <style>{`
         .profile-page {
           position: relative;
-          max-width: 660px;
+          max-width: 700px;
           margin: 0 auto;
           font-family: var(--font-ui);
           animation: fadeIn 240ms ease both;
@@ -133,8 +133,8 @@ export function ProfilePage() {
         .profile-header {
           position: relative;
           overflow: hidden;
-          border-radius: 34px;
-          padding: 30px;
+          border-radius: 26px;
+          padding: 24px;
           border: 1px solid var(--glass-border);
           background:
             radial-gradient(circle at top right, rgba(var(--accent-soft-rgb, 167, 139, 250), 0.18), transparent 34%),
@@ -148,7 +148,7 @@ export function ProfilePage() {
           content: '';
           position: absolute;
           inset: 1px;
-          border-radius: 33px;
+          border-radius: 25px;
           border: 1px solid var(--glass-highlight);
           pointer-events: none;
         }

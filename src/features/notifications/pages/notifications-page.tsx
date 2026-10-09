@@ -405,7 +405,7 @@ export function NotificationsPage() {
         .notifications-page {
           position: relative;
           width: 100%;
-          max-width: 680px;
+          max-width: none;
           margin: 0 auto;
           font-family: var(--font-ui);
         }
@@ -956,6 +956,27 @@ export function NotificationsPage() {
             margin-top: 10px;
           }
         }
+.notifications-page { max-width:700px; }
+        .notifications-page .notifications-header { gap:12px; margin-bottom:16px; }
+        .notifications-page .notifications-title { font-size:32px; }
+        .notifications-page .notifications-subtitle { font-size:13px; font-weight:400; line-height:1.5; }
+        .notifications-page .notifications-read-all { min-height:36px; padding:0 11px; border-radius:11px; font-size:12px; font-weight:500; }
+        .notifications-page .notifications-list { border-radius:18px; box-shadow:none; }
+        .notifications-page .notification-item { grid-template-columns:42px minmax(0,1fr); gap:10px; padding:13px 14px; }
+        .notifications-page .notification-avatar-link { width:40px; height:40px; }
+        .notifications-page .notification-avatar { width:38px; height:38px; font-weight:600; }
+        .notifications-page .notification-system-icon { width:38px; height:38px; border-radius:12px; }
+        .notifications-page .notification-kind { width:20px; height:20px; border-width:2px; }
+        .notifications-page .notification-message,.notifications-page .notification-system-message { font-size:13px; font-weight:400; line-height:1.5; }
+        .notifications-page .notification-actor { font-weight:600; }
+        .notifications-page .notification-post-preview { margin-top:7px; padding:7px 9px; gap:8px; border-radius:10px; }
+        .notifications-page .notification-post-image { width:32px; height:32px; border-radius:8px; }
+        .notifications-page .notification-post-preview p { font-weight:400; }
+        .notifications-page .notification-content>a { display:inline-flex; font-size:12px; color:var(--amethyst); text-decoration:none; margin-top:4px; }
+        .notifications-page .notification-system-actions { margin-top:4px; }
+        .notifications-page .notification-detail-link { min-height:28px; }
+        .notifications-page .notification-unread-dot { top:17px; right:12px; width:6px; height:6px; }
+        @media(max-width:640px) { .notifications-page .notifications-title{font-size:28px}.notifications-page .notifications-read-all{width:auto}.notifications-page .notification-content{padding-right:0} }
       `}</style>
 
       <section className="notifications-page">

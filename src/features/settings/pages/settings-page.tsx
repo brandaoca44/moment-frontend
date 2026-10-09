@@ -117,7 +117,7 @@ export function SettingsPage() {
       <style>{`
         .settings-page {
           position: relative;
-          max-width: 820px;
+          max-width: none;
           margin: 0 auto;
           font-family: var(--font-ui);
           animation: settingsFadeIn 260ms var(--ease-premium) both;
@@ -746,6 +746,20 @@ export function SettingsPage() {
             justify-content: center;
           }
         }
+.settings-page { max-width:920px; }
+        .settings-page .settings-hero { padding:18px 20px; border-radius:20px; margin-bottom:18px; gap:14px; }
+        .settings-page .settings-title { font-size:28px; }
+        .settings-page .settings-avatar { width:54px; height:54px; border-width:2px; }
+        .settings-page .settings-subtitle { margin-top:6px; font-size:13px; line-height:1.5; font-weight:400; }
+        .settings-page .settings-section { padding:20px; border-radius:20px; }
+        .settings-page .settings-section-header { margin-bottom:16px; }
+        .settings-page .settings-section-title { font-size:21px; }
+        .settings-page .settings-section-subtitle { font-size:13px; font-weight:400; line-height:1.5; }
+        .settings-page .settings-avatar-panel { padding:12px; gap:12px; grid-template-columns:64px minmax(0,1fr); margin-bottom:16px; border-radius:16px; }
+        .settings-page .settings-avatar-preview { width:64px; height:64px; border-radius:18px; border-width:2px; }
+        .settings-page .settings-menu { padding:7px; border-radius:18px; }
+        @media(min-width:761px) { .settings-page .settings-layout{grid-template-columns:200px minmax(0,1fr);gap:18px;} }
+        @media(max-width:520px) { .settings-page .settings-title{font-size:24px}.settings-page .settings-section{padding:16px}.settings-page .settings-hero{padding:16px} }
       `}</style>
 
       <div className="settings-page">

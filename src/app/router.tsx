@@ -1,4 +1,6 @@
 import { createBrowserRouter } from 'react-router-dom';
+import { VitrinePage, VitrineDetail } from '@/features/vitrine/vitrine-page';
+import { VitrineAdmin } from '@/features/vitrine/vitrine-admin';
 import { LegalPage } from '@/features/legal/legal-pages';
 import { StationsPage, StationPage, TopicPage } from '@/features/stations/stations-pages';
 import { AppLayout } from '@/components/layout/app-layout';
@@ -31,6 +33,9 @@ export const router = createBrowserRouter([
         children: [
           { index: true, element: <FeedPage /> },
           { path: 'communities', element: <StationsPage /> },
+          { path: 'vitrine', element: <VitrinePage /> },
+          { path: 'vitrine/review', element: <VitrineAdmin /> },
+          { path: 'vitrine/:id', element: <VitrineDetail /> },
           { path: 'communities/topics/:topicId', element: <TopicPage /> },
           { path: 'communities/:id', element: <StationPage /> },
           { path: 'posts/:id', element: <PostPage /> },
