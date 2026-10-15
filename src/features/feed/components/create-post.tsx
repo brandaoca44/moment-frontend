@@ -5,7 +5,7 @@ import { useMe } from '@/features/auth/hooks/use-me';
 import { useCreatePost } from '../hooks/use-create-post';
 import { ReportButton } from '@/features/reports/report-button';
 
-const MAX_CHARS = 220;
+import { usePlan, PremiumNotice } from '@/features/plans/use-plan';
 const EmojiPickerDialog = lazy(() => import('@/components/ui/emoji-picker-dialog'));
 
 function Avatar({ name, avatar }: { name: string; avatar: string | null }) {
@@ -34,6 +34,8 @@ function Avatar({ name, avatar }: { name: string; avatar: string | null }) {
 }
 
 export function CreatePost() {
+  const plan = usePlan().data?.data;
+  const MAX_CHARS = plan?.limits.moments ?? 220;
   useLanguage();
   const { data: meData } = useMe();
   const createPost = useCreatePost();
@@ -94,7 +96,7 @@ export function CreatePost() {
     const start = textarea.selectionStart ?? content.length;
     const end = textarea.selectionEnd ?? content.length;
     const nextContent = `${content.slice(0, start)}${emoji}${content.slice(end)}`;
-    if (nextContent.length > MAX_CHARS) { setShowEmojiPicker(false); setError(t("Este emoji ultrapassa o limite de 220 caracteres.")); requestAnimationFrame(() => textarea.focus()); return; }
+    if (nextContent.length > MAX_CHARS) { setShowEmojiPicker(false); setError(t("Este emoji ultrapassa o limite de {count} caracteres.", { count: MAX_CHARS })); requestAnimationFrame(() => textarea.focus()); return; }
     setError('');
     setContent(nextContent);
     setShowEmojiPicker(false);
@@ -306,6 +308,7 @@ export function CreatePost() {
           {!commentsEnabled && <p className="create-post-image-help" role="status">{t("Comentários desativados para este momento.")}</p>}
           {error && <p className="create-post-error" role="alert">{error}</p>}
           {notice && <p className="create-post-image-help" role="status">{notice}</p>}
+          {plan?.trial && content.length > 220 && <PremiumNotice />}
           <input ref={fileRef} type="file" accept="image/jpeg,image/png,image/webp,image/gif" hidden disabled={sending} onChange={(event) => { selectImage(event.target.files?.[0]); event.target.value = ''; }} />
           {(
             <div className="create-post-footer">

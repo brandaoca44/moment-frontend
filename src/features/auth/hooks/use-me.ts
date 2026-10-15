@@ -9,6 +9,7 @@ export function useMe() {
     // GuestRoute mounts the login/language picker after an anonymous-session error.
     // Retrying on that mount would set loading again, unmount it, and loop forever.
     retryOnMount: false,
-    refetchOnWindowFocus: false,
+    refetchOnWindowFocus: true,
+    refetchInterval: query => query.state.data?.data?.user ? 60000 : false,
   });
 }

@@ -1,4 +1,5 @@
 import { useState, type ReactNode } from 'react';
+import { usePlan, PremiumNotice } from '@/features/plans/use-plan';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { ArrowLeft, ArrowUpRight, ChevronDown, ImagePlus, MessageCircle, Plus, Search, ShoppingBag, Ticket, SlidersHorizontal, X } from 'lucide-react';
@@ -15,11 +16,12 @@ function Pager({page,pages,change}:{page:number;pages:number;change:(n:number)=>
 function Country({value,change}:{value:string;change:(s:string)=>void}) {return <label className="vitrine-country"><span className="vitrine-sr">{t('País')}</span><select value={value} onChange={e=>change(e.target.value)}>{Object.entries(countries).map(([id,name])=><option key={id} value={id}>{t(name)}</option>)}</select></label>;}
 function OfferCard({offer}:{offer:Offer}) {return <Link className="vitrine-card" to={`/vitrine/${offer.id}`}><div className="vitrine-card-image"><img src={offer.imageUrl} alt="" loading="lazy" />{offer.kind==='COUPON'&&<span>{t('Cupom')}</span>}</div><div className="vitrine-card-copy"><small>{offer.store.name}</small><h3>{offer.title}</h3>{offer.priceCents!=null&&<strong>{new Intl.NumberFormat(getLanguage(),{style:'currency',currency:offer.country==='BR'?'BRL':offer.country==='US'?'USD':'EUR'}).format(offer.priceCents/100)}</strong>}{offer.affiliate&&<small>{t('Link de afiliado')}</small>}{offer.moderationStatus!=='APPROVED'&&<small>{t(offer.moderationStatus==='BLOCKED'?'Retirado':'Aguardando moderação')}</small>}{offer.endedAt&&<small>{t('Oferta encerrada')}</small>}</div></Link>;}
 function OfferForm({country,close}:{country:string;close:()=>void}) {
+  const access=usePlan().data?.data;
   const refresh=useRefresh();const [file,setFile]=useState<File|null>(null);const [kind,setKind]=useState('PRODUCT');
   const stores=useQuery({queryKey:['vitrine','stores',country],queryFn:()=>read<{data:Store[]}>(`/stores?country=${country}`)});
   const save=useMutation({mutationFn:async(data:FormData)=>{if(!file)throw new Error(t('Selecione uma imagem.'));if(file.size>5*1024*1024)throw new Error(t('A imagem deve ter até 5 MB.'));const price=String(data.get('price')??'').replace(',','.');if(kind==='PRODUCT'&&(!Number.isFinite(Number(price))||Number(price)<=0))throw new Error(t('Informe o preço do produto.'));const imageUrl=await uploadPostImage(file);return write('',{country,kind,storeId:data.get('storeId'),category:data.get('category'),title:data.get('title'),description:data.get('description'),url:data.get('url'),imageUrl,affiliate:data.get('affiliate')==='on',...(price?{priceCents:Math.round(Number(price)*100)}:{}),...(kind==='COUPON'?{coupon:data.get('coupon')}:{}),...(data.get('expiresAt')?{expiresAt:new Date(String(data.get('expiresAt'))).toISOString()}: {})});},onSuccess:async()=>{await refresh();close();}});
   return <form className="vitrine-form" onSubmit={e=>{e.preventDefault();if(!save.isPending)save.mutate(new FormData(e.currentTarget));}}>
-    <p className="vitrine-required-note">{t('Os campos com * são obrigatórios.')}</p><p>{t('Cada envio aceito utiliza uma das quatro vagas da semana, mesmo se for excluído ou ficar em análise.')}</p>
+    <p className="vitrine-required-note">{t('Os campos com * são obrigatórios.')}</p><p>{t('Cada envio aceito utiliza uma vaga do seu plano, mesmo se for excluído ou ficar em análise.')}</p>{access?.trial&&<PremiumNotice />}
     <div className="vitrine-tabs"><button type="button" aria-pressed={kind==='PRODUCT'} onClick={()=>setKind('PRODUCT')}>{t('Produtos de lojas')}</button><button type="button" aria-pressed={kind==='COUPON'} onClick={()=>setKind('COUPON')}>{t('Cupons de desconto')}</button></div>
     <label>{t('Loja')} *<select name="storeId" required><option value="">{t('Selecione uma loja')}</option>{stores.data?.data.map(store=><option key={store.id} value={store.id}>{store.name}</option>)}</select></label>
     {stores.isError&&<Message error={stores.error}/>}{stores.data?.data.length===0&&<p>{t('Ainda não há lojas aprovadas neste país. Sugira uma loja para análise.')}</p>}
@@ -40,7 +42,7 @@ export function VitrinePage() {
   function update(key:string,value:string){setParams(p=>{value?p.set(key,value):p.delete(key);return p;});setPage(1);setFiltersOpen(false);}
   const query=new URLSearchParams({country,kind,page:String(page)});for(const key of ['category','storeId','authorId','search','mine'])if(params.get(key))query.set(key,params.get(key)!);
   const offers=useQuery({queryKey:['vitrine','offers',query.toString()],queryFn:()=>read<Page<Offer>>(`?${query}`)});
-  const quota=useQuery({queryKey:['vitrine','quota'],queryFn:()=>read<{data:{used:number;limit:number;renewsAt:string;canManage:boolean}}>('/quota')});
+  const quota=useQuery({queryKey:['vitrine','quota'],queryFn:()=>read<{data:{used:number;limit:number;period:'week'|'month';trial:boolean;renewsAt:string;canManage:boolean}}>('/quota')});
   const stores=useQuery({queryKey:['vitrine','stores',country],queryFn:()=>read<{data:Store[]}>(`/stores?country=${country}`)});
   const grouped=!category&&!params.get('search')&&!params.get('authorId')&&!params.get('mine');
   return <section className="vitrine">
@@ -58,7 +60,7 @@ export function VitrinePage() {
       <p className="vitrine-intro-note">{t('As indicações vêm da comunidade. A compra e o uso dos cupons acontecem nos sites ou aplicativos das lojas aprovadas.')}</p>
     </div></details>
     <div className="vitrine-tools"><form className="vitrine-search" onSubmit={e=>{e.preventDefault();update('search',search);}}><input value={search} onChange={e=>setSearch(e.target.value)} placeholder={t('Buscar ofertas')} aria-label={t('Buscar ofertas')}/><button type="submit" aria-label={t('Buscar')} title={t('Buscar')}><Search size={17}/></button></form><StationDialog label={t('Compartilhar oferta')} icon={<Plus size={16}/>}>{close=><OfferForm country={country} close={close}/>}</StationDialog></div>
-    {quota.data&&<p className="vitrine-quota">{t('{used} de 4 publicações nesta semana',{used:quota.data.data.used})} · {t('Renova em')} {new Date(quota.data.data.renewsAt).toLocaleString(getLanguage(),{dateStyle:'short',timeStyle:'short'})}</p>}
+    {quota.data&&<p className="vitrine-quota">{t(quota.data.data.period==='month'?'{used} de {limit} publicações neste mês':'{used} de {limit} publicações nesta semana',{used:quota.data.data.used,limit:quota.data.data.limit})} · {t('Renova em')} {new Date(quota.data.data.renewsAt).toLocaleString(getLanguage(),{dateStyle:'short',timeStyle:'short'})}</p>}
     <div className="vitrine-tabs"><button aria-pressed={kind==='PRODUCT'} onClick={()=>update('kind','PRODUCT')}>{t('Produtos de lojas')}</button><button aria-pressed={kind==='COUPON'} onClick={()=>update('kind','COUPON')}>{t('Cupons de desconto')}</button></div>
     <div className="vitrine-view-actions"><button className="vitrine-filter-toggle" aria-expanded={filtersOpen} aria-controls="vitrine-filters" onClick={()=>setFiltersOpen(!filtersOpen)}><SlidersHorizontal size={15}/>{t('Filtros')}</button><details className="vitrine-section-help"><summary>{t('Sobre esta seção')}</summary><p className="vitrine-tab-description">{t(kind==='PRODUCT'?'Links de produtos de lojas aprovadas, com foto, preço e dicas da comunidade.':'Cupons compartilhados pela comunidade, com condições e indicação de onde usar.')}</p></details></div>
     <div className="vitrine-browse">

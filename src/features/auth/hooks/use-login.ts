@@ -8,6 +8,8 @@ export function useLogin() {
   return useMutation({
     mutationFn: (data: LoginInput) => login(data),
     onSuccess: async () => {
+      await queryClient.cancelQueries();
+      queryClient.clear();
       const me = await getMe();
       queryClient.setQueryData(['auth', 'me'], me);
     },

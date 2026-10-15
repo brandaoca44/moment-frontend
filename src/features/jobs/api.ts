@@ -1,0 +1,12 @@
+import { api } from '@/lib/api';
+export const jobCategories={technology:'Tecnologia',design:'Design',marketing:'Marketing',sales:'Vendas',support:'Atendimento',finance:'Finanças',operations:'Operações',hr:'Recursos humanos',education:'Educação',other:'Outros'};
+export const jobLevels={intern:'Estágio',junior:'Júnior',mid:'Pleno',senior:'Sênior',lead:'Liderança',any:'Todos os níveis'};
+export const jobContracts={clt:'CLT',pj:'PJ',internship:'Estágio',freelance:'Freelance',temporary:'Temporário'};
+export const reportReasons={PAYMENT:'Cobrança para participar',FAKE_COMPANY:'Empresa falsa ou representação indevida',FAKE_JOB:'Vaga inexistente ou enganosa',ONSITE:'Vaga presencial',DATA_ABUSE:'Coleta suspeita de dados',OTHER:'Outro motivo'};
+export type Company={id:string;name:string;cnpj:string;logoUrl:string;description:string;website:string;verifiedAt:string|null;status?:string;ownerId?:string;contactEmail?:string;representativeRole?:string;canPublish?:boolean};
+export type Job={id:string;ownerId:string;companyId:string;title:string;description:string;requirements:string;category:string;level:string;contract:string;modality:'REMOTE'|'HYBRID';location:string;hybridSchedule:string|null;salary:string|null;expiresAt:string;status:string;closedAt:string|null;deletedAt?:string|null;createdAt:string;applicationUrl?:string;company:Company;owner:{id:string;name:string;username:string;avatar:string|null}};
+export type Quota={used:number;limit:number;companies:number;companyLimit:number;renewsAt:string;trial:boolean;canManage:boolean};
+export type Page<T>={data:T[];meta:{total:number;pages:number}};
+export type Result={message:string;data?:{id:string}};
+export const read=<T,>(path:string)=>api<T>(`/jobs${path}`);
+export const write=(path:string,body?:unknown,method='POST')=>api<Result>(`/jobs${path}`,{method,...(body!==undefined?{body:JSON.stringify(body)}:{})});

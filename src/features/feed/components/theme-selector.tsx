@@ -1,4 +1,8 @@
 import { t, useLanguage } from '@/i18n';
+import '@/features/plans/appearance-options.css';
+import { useProfileAppearance } from '@/features/plans/use-profile-appearance';
+import { usePlan, PremiumNotice } from '@/features/plans/use-plan';
+import { premiumThemes } from '@/contexts/theme-context';
 import { useTheme, themes, type Theme, type ThemeId } from '@/contexts/theme-context';
 
 function ThemePreview({ item }: { item: Theme }) {
@@ -22,13 +26,15 @@ function ThemePreview({ item }: { item: Theme }) {
 export function ThemeSelector({ standalone = false }: { standalone?: boolean }) {
   useLanguage();
   const { themeId, setTheme } = useTheme();
+  const access = usePlan().data?.data;
+  const sync = useProfileAppearance();
 
   const inner = (
     <>
       <style>{`
         .theme-selector {
           display: grid;
-          grid-template-columns: repeat(3, minmax(0, 1fr));
+          grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr));
           gap: 12px;
         }
 
@@ -148,7 +154,7 @@ export function ThemeSelector({ standalone = false }: { standalone?: boolean }) 
         .theme-option-name {
           display: block;
           font-size: 14px;
-          font-weight: 900;
+          font-weight: 600;
           color: var(--text);
           letter-spacing: -0.01em;
         }
@@ -157,9 +163,9 @@ export function ThemeSelector({ standalone = false }: { standalone?: boolean }) 
           display: block;
           margin-top: 2px;
           font-size: 12px;
-          line-height: 1.35;
+          line-height: 1.5;
           color: var(--text-muted);
-          font-weight: 650;
+          font-weight: 400;
         }
 
         .theme-check {
@@ -195,11 +201,11 @@ export function ThemeSelector({ standalone = false }: { standalone?: boolean }) 
 
         .theme-selector-title {
           margin: 0 0 12px;
-          font-size: 12px;
-          font-weight: 900;
-          color: var(--amethyst);
-          letter-spacing: 0.08em;
-          text-transform: uppercase;
+          font-size: 14px;
+          font-weight: 600;
+          color: var(--text);
+          letter-spacing: normal;
+          text-transform: none;
           font-family: var(--font-ui);
         }
 
@@ -216,15 +222,16 @@ export function ThemeSelector({ standalone = false }: { standalone?: boolean }) 
 
       {standalone ? <p className="theme-selector-title">{t("Mude o tema")}</p> : null}
 
-      <div className="theme-selector">
-        {Object.values(themes).map((item) => {
+      <div className="appearance-groups">{[false, true].map(premium => <section className="appearance-group" key={String(premium)}><header className="appearance-group-heading"><h3>{t(premium ? 'Temas Premium' : 'Temas gratuitos')}</h3><span className={premium ? 'appearance-badge premium' : 'appearance-badge'}>{t(premium ? 'Exclusivo Premium' : 'Incluso no Free')}</span></header><div className="theme-selector">
+        {Object.values(themes).filter(item=>premiumThemes.has(item.id)===premium).map((item) => {
           const active = themeId === item.id;
 
           return (
             <button
               key={item.id}
               type="button"
-              onClick={() => setTheme(item.id as ThemeId)}
+              disabled={(premium && !access?.premium) || sync.isPending}
+              onClick={() => {setTheme(item.id as ThemeId);if(access?.premium)sync.mutate({theme:item.id});}}
               title={item.description}
               className={`theme-option${active ? ' active' : ''}`}
               aria-pressed={active}
@@ -241,7 +248,9 @@ export function ThemeSelector({ standalone = false }: { standalone?: boolean }) 
             </button>
           );
         })}
-      </div>
+      </div></section>)}</div>
+      {access?.trial && premiumThemes.has(themeId) && <PremiumNotice />}
+      {sync.isError && <small role="alert">{t('O tema foi aplicado aqui, mas não foi possível atualizar o perfil. Selecione novamente para tentar.')}</small>}
     </>
   );
 

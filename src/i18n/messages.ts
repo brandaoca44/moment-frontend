@@ -1,4 +1,366 @@
 const rows = `
+Aparência do perfil|Profile appearance|Apariencia del perfil
+Acompanhar minha aparência|Follow my appearance|Seguir mi apariencia
+Personalizar só o perfil|Customize only the profile|Personalizar solo el perfil
+Tema e fonte acompanham suas escolhas em Aparência.|Theme and font follow your choices in Appearance.|El tema y la fuente siguen tus elecciones en Apariencia.
+Um visual separado, escolhido por você.|A separate look, chosen by you.|Un estilo independiente, elegido por ti.
+No modo manual, mudar a aparência do site não altera o perfil. Para atualizar o perfil, escolha o tema e a fonte aqui e salve.|In manual mode, changing the site's appearance does not change your profile. To update your profile, choose the theme and font here and save.|En modo manual, cambiar la apariencia del sitio no cambia el perfil. Para actualizarlo, elige aquí el tema y la fuente y guarda.
+O tema foi aplicado aqui, mas não foi possível atualizar o perfil. Selecione novamente para tentar.|The theme was applied here, but your profile could not be updated. Select it again to retry.|El tema se aplicó aquí, pero no se pudo actualizar el perfil. Selecciónalo de nuevo para reintentar.
+A fonte foi aplicada aqui, mas não foi possível atualizar o perfil. Selecione novamente para tentar.|The font was applied here, but your profile could not be updated. Select it again to retry.|La fuente se aplicó aquí, pero no se pudo actualizar el perfil. Selecciónala de nuevo para reintentar.
+Sua identidade, em destaque|Your identity, highlighted|Tu identidad, destacada
+Uma apresentação exclusiva para o seu perfil.|An exclusive presentation for your profile.|Una presentación exclusiva para tu perfil.
+Escolha sua área|Choose your field|Elige tu área
+Ou personalize sua descrição|Or customize your description|O personaliza tu descripción
+Conselho e número do registro|Board and registration number|Consejo y número de registro
+Tecnologia da informação|Information technology|Tecnología de la información
+Engenharia|Engineering|Ingeniería
+Arquitetura|Architecture|Arquitectura
+Educação|Education|Educación
+Psicologia|Psychology|Psicología
+Contabilidade|Accounting|Contabilidad
+Moda e beleza|Fashion and beauty|Moda y belleza
+Viagens|Travel|Viajes
+Ex.: criador de conteúdo sobre viagens|E.g. travel content creator|Ej.: creador de contenido de viajes
+Entretenimento|Entertainment|Entretenimiento
+Ex.: vídeos sobre tecnologia|E.g. technology videos|Ej.: vídeos sobre tecnología
+Comércio|Commerce|Comercio
+Serviços|Services|Servicios
+Indústria|Industry|Industria
+Ex.: fundador de uma empresa de tecnologia|E.g. technology company founder|Ej.: fundador de una empresa tecnológica
+Apresentador|Presenter|Presentador
+Artista|Artist|Artista
+Esportista|Athlete|Deportista
+Comunicador|Communicator|Comunicador
+Ex.: apresentador ou representante público|E.g. presenter or public representative|Ej.: presentador o representante público
+Deputado federal|Federal representative|Diputado federal
+Deputado estadual|State representative|Diputado estatal
+Senador|Senator|Senador
+Governador|Governor|Gobernador
+Prefeito|Mayor|Alcalde
+Vereador|Council member|Concejal
+Ex.: deputado federal|E.g. federal representative|Ej.: diputado federal
+Desenvolvimento de software|Software development|Desarrollo de software
+Segurança da informação|Information security|Seguridad de la información
+Ciência de dados|Data science|Ciencia de datos
+Infraestrutura e redes|Infrastructure and networks|Infraestructura y redes
+Suporte de TI|IT support|Soporte de TI
+Produto e UX|Product and UX|Producto y UX
+Ex.: desenvolvedor de software|E.g. software developer|Ej.: desarrollador de software
+Engenharia civil|Civil engineering|Ingeniería civil
+Engenharia elétrica|Electrical engineering|Ingeniería eléctrica
+Engenharia agronômica|Agricultural engineering|Ingeniería agronómica
+Engenharia mecânica|Mechanical engineering|Ingeniería mecánica
+Engenharia de produção|Industrial engineering|Ingeniería industrial
+Engenharia de software|Software engineering|Ingeniería de software
+Ex.: engenharia elétrica|E.g. electrical engineering|Ej.: ingeniería eléctrica
+Arquitetura e urbanismo|Architecture and urban planning|Arquitectura y urbanismo
+Interiores|Interiors|Interiores
+Paisagismo|Landscape architecture|Paisajismo
+Ex.: arquitetura de interiores|E.g. interior architecture|Ej.: arquitectura de interiores
+Design gráfico|Graphic design|Diseño gráfico
+Design de produto|Product design|Diseño de producto
+Design de interfaces|Interface design|Diseño de interfaces
+Design de moda|Fashion design|Diseño de moda
+Ex.: design de interfaces|E.g. interface design|Ej.: diseño de interfaces
+Professor|Teacher|Profesor
+Pesquisador|Researcher|Investigador
+Pedagogo|Educator|Pedagogo
+Instrutor|Instructor|Instructor
+Ex.: professor de matemática|E.g. mathematics teacher|Ej.: profesor de matemáticas
+Direito civil|Civil law|Derecho civil
+Direito penal|Criminal law|Derecho penal
+Direito trabalhista|Labor law|Derecho laboral
+Direito empresarial|Business law|Derecho empresarial
+Ex.: direito trabalhista|E.g. labor law|Ej.: derecho laboral
+Clínica geral|General practice|Medicina general
+Pediatria|Pediatrics|Pediatría
+Cardiologia|Cardiology|Cardiología
+Medicina de família|Family medicine|Medicina familiar
+Ex.: medicina de família|E.g. family medicine|Ej.: medicina familiar
+Psicologia clínica|Clinical psychology|Psicología clínica
+Psicologia organizacional|Organizational psychology|Psicología organizacional
+Psicologia escolar|School psychology|Psicología escolar
+Ex.: psicologia clínica|E.g. clinical psychology|Ej.: psicología clínica
+Nutrição clínica|Clinical nutrition|Nutrición clínica
+Nutrição esportiva|Sports nutrition|Nutrición deportiva
+Saúde coletiva|Public health|Salud colectiva
+Ex.: nutrição esportiva|E.g. sports nutrition|Ej.: nutrición deportiva
+Atenção primária|Primary care|Atención primaria
+Enfermagem hospitalar|Hospital nursing|Enfermería hospitalaria
+Saúde da família|Family health|Salud familiar
+Ex.: saúde da família|E.g. family health|Ej.: salud familiar
+Contabilidade empresarial|Business accounting|Contabilidad empresarial
+Auditoria|Auditing|Auditoría
+Consultoria tributária|Tax consulting|Consultoría tributaria
+Ex.: contabilidade empresarial|E.g. business accounting|Ej.: contabilidad empresarial
+Autônomo|Self-employed|Autónomo
+Freelancer|Freelancer|Freelancer
+Consultor|Consultant|Consultor
+Prestador de serviços|Service provider|Prestador de servicios
+Ex.: profissional autônomo|E.g. self-employed professional|Ej.: profesional autónomo
+Perfil Premium|Premium profile|Perfil Premium
+Sua categoria e sua aparência, para quem visita seu perfil.|Your category and appearance, for people visiting your profile.|Tu categoría y apariencia, para quienes visitan tu perfil.
+Categoria do perfil|Profile category|Categoría del perfil
+Sem categoria|No category|Sin categoría
+Profissão, cargo ou especialidade|Profession, role or specialty|Profesión, cargo o especialidad
+Ex.: deputado federal ou criador de conteúdo|E.g. representative or content creator|Ej.: diputado o creador de contenido
+Estado ou região|State or region|Estado o región
+Registro profissional (opcional)|Professional registration (optional)|Registro profesional (opcional)
+Essas informações são públicas e autodeclaradas. O Premium não verifica identidade, cargo ou registro profissional.|This information is public and self-declared. Premium does not verify identity, role or professional registration.|Esta información es pública y autodeclarada. Premium no verifica identidad, cargo ni registro profesional.
+Tema do perfil|Profile theme|Tema del perfil
+Fonte do perfil|Profile font|Fuente del perfil
+Visitantes veem este tema e esta fonte somente no seu perfil. O restante do site mantém as preferências deles.|Visitors see this theme and font only on your profile. The rest of the site keeps their preferences.|Los visitantes ven este tema y fuente solo en tu perfil. El resto del sitio mantiene sus preferencias.
+Salvar perfil Premium|Save Premium profile|Guardar perfil Premium
+Perfil Premium salvo.|Premium profile saved.|Perfil Premium guardado.
+Não foi possível carregar seu perfil.|Could not load your profile.|No se pudo cargar tu perfil.
+Registro autodeclarado|Self-declared registration|Registro autodeclarado
+Informações autodeclaradas, sem verificação de identidade ou profissão.|Self-declared information, without identity or profession verification.|Información autodeclarada, sin verificación de identidad o profesión.
+Este perfil usa uma aparência Premium. Ao sair, suas preferências continuam iguais. Não é um selo de identidade verificada.|This profile uses a Premium appearance. Your preferences remain unchanged when you leave. This is not an identity verification badge.|Este perfil usa una apariencia Premium. Al salir, tus preferencias siguen iguales. No es una insignia de identidad verificada.
+Influenciador|Influencer|Influencer
+Empresário|Entrepreneur|Empresario
+Figura pública|Public figure|Figura pública
+Político|Politician|Político
+Advogado|Lawyer|Abogado
+Médico|Doctor|Médico
+Nutricionista|Nutritionist|Nutricionista
+Enfermeiro|Nurse|Enfermero
+Profissional|Professional|Profesional
+Usar plano Free|Use Free plan|Usar plan Free
+Testar Premium gratuitamente|Try Premium for free|Probar Premium gratis
+Acesso gratuito de testes. Sem cobrança e sem assinatura automática.|Free test access. No charges or automatic subscription.|Acceso gratuito de prueba. Sin cobros ni suscripción automática.
+Atualizando seu plano…|Updating your plan…|Actualizando tu plan…
+O teste Premium não está disponível no momento.|The Premium trial is currently unavailable.|La prueba Premium no está disponible por el momento.
+Premium de testes ativado. Não há cobrança nem assinatura automática.|Premium trial activated. No charges or automatic subscription.|Prueba Premium activada. Sin cobros ni suscripción automática.
+Plano Free selecionado. Seus conteúdos continuam salvos.|Free plan selected. Your content remains saved.|Plan Free seleccionado. Tu contenido sigue guardado.
+Ao testar o Premium, os limites acima e as opções exclusivas de aparência ficam disponíveis nesta conta. Você pode voltar ao Free por aqui. Seus conteúdos continuam salvos e as cotas utilizadas não são reiniciadas.|When trying Premium, the limits above and exclusive appearance options become available on this account. You can return to Free here. Your content remains saved and used quotas are not reset.|Al probar Premium, los límites anteriores y las opciones exclusivas de apariencia quedan disponibles en esta cuenta. Puedes volver a Free aquí. Tu contenido sigue guardado y los cupos utilizados no se reinician.
+Exclusivo Premium|Premium exclusive|Exclusivo Premium
+Incluso no Free|Included in Free|Incluido en Free
+Fontes Premium|Premium fonts|Fuentes Premium
+Escolha a fonte para os textos e menus do Moment.|Choose the font for Moment text and menus.|Elige la fuente para los textos y menús de Moment.
+O visual original do Moment.|The original Moment look.|El estilo original de Moment.
+Moderna, com formas limpas e discretas.|Modern, with clean and subtle shapes.|Moderna, con formas limpias y discretas.
+Traços suaves e um toque acolhedor.|Soft shapes with a welcoming touch.|Trazos suaves y un toque acogedor.
+Sóbria e confortável para textos longos.|Understated and comfortable for long texts.|Sobria y cómoda para textos largos.
+Seu momento, suas histórias.|Your moment, your stories.|Tu momento, tus historias.
+Tudo do Free, com mais espaço e personalização.|Everything in Free, with more room and personalization.|Todo lo de Free, con más espacio y personalización.
+Publicações e comunidade|Posts and community|Publicaciones y comunidad
+{count} caracteres|{count} characters|{count} caracteres
+Tópicos nas estações|Station topics|Temas en las estaciones
+Crie estações, participe de conversas, curta e responda. As notificações estão incluídas nos dois planos.|Create stations, join conversations, like and reply. Notifications are included in both plans.|Crea estaciones, participa en conversaciones, da Me gusta y responde. Las notificaciones se incluyen en ambos planes.
+Produtos e cupons|Products and coupons|Productos y cupones
+{count} por mês|{count} per month|{count} al mes
+{count} por semana|{count} per week|{count} por semana
+Uma cota compartilhada para indicar produtos e cupons de lojas aprovadas.|A shared quota for recommending products and coupons from approved stores.|Un cupo compartido para recomendar productos y cupones de tiendas aprobadas.
+Empresas cadastradas|Registered companies|Empresas registradas
+Até {count} empresas|Up to {count} companies|Hasta {count} empresas
+{count} empresa|{count} company|{count} empresa
+Divulgação de vagas|Job postings|Publicación de vacantes
+A cota mensal vale para todas as suas empresas. Buscar vagas é gratuito.|The monthly quota covers all your companies. Searching for jobs is free.|El cupo mensual se aplica a todas tus empresas. Buscar empleo es gratis.
+Temas|Themes|Temas
+4 temas exclusivos + os gratuitos|4 exclusive themes + the free themes|4 temas exclusivos + los gratuitos
+3 temas incluídos|3 included themes|3 temas incluidos
+Claro, Escuro e Ametista|Light, Dark and Amethyst|Claro, Oscuro y Amatista
+Fontes|Fonts|Fuentes
+3 fontes extras|3 extra fonts|3 fuentes adicionales
+Fonte padrão|Default font|Fuente predeterminada
+Compartilhe sua opinião|Share your feedback|Comparte tu opinión
+Conte como foi testar o plano.|Tell us about trying the plan.|Cuéntanos cómo fue probar el plan.
+O que funcionou bem? O que podemos melhorar?|What worked well? What could we improve?|¿Qué funcionó bien? ¿Qué podemos mejorar?
+Não inclua senhas, documentos ou dados bancários.|Do not include passwords, documents or bank details.|No incluyas contraseñas, documentos ni datos bancarios.
+Vagas e empresas|Jobs and companies|Vacantes y empresas
+Em Vagas Moment, o nome, CNPJ, logo, descrição e site da empresa, além dos dados das vagas aprovadas e do perfil que publicou, são exibidos aos participantes autenticados. O e-mail profissional e a relação do responsável com a empresa ficam restritos ao titular e à moderação para análise.|In Moment Jobs, the company name, CNPJ, logo, description and website, together with approved job details and the posting profile, are displayed to authenticated participants. The work email and the account holder's relationship with the company are restricted to the account holder and moderators for review.|En Empleos Moment, el nombre, CNPJ, logo, descripción y sitio de la empresa, junto con las vacantes aprobadas y el perfil que publica, se muestran a los participantes autenticados. El correo profesional y la relación del responsable con la empresa quedan restringidos al titular y la moderación para su revisión.
+A candidatura acontece fora do Moment, no destino informado pela empresa. Não recebemos currículos ou documentos de candidatos nesta etapa. Denúncias ficam restritas à moderação; não envie documentos, senhas ou dados bancários no relato.|Applications take place outside Moment, at the destination provided by the company. We do not receive candidate resumes or documents at this stage. Reports are restricted to moderators; do not include documents, passwords or bank details.|La candidatura se realiza fuera de Moment, en el destino indicado por la empresa. No recibimos currículums ni documentos de candidatos en esta etapa. Las denuncias quedan restringidas a la moderación; no incluyas documentos, contraseñas ni datos bancarios.
+Vitrine|Showcase|Vitrina
+Vagas|Jobs|Empleos
+Vagas Moment|Moment Jobs|Empleos Moment
+Vagas: {count} empresa cadastrada|Jobs: {count} registered company|Empleos: {count} empresa registrada
+Vagas: até {count} empresas cadastradas|Jobs: up to {count} registered companies|Empleos: hasta {count} empresas registradas
+Vagas: {count} publicações por mês|Jobs: {count} listings per month|Empleos: {count} publicaciones al mes
+A cota de vagas é compartilhada entre todas as suas empresas. Excluir uma vaga não devolve a cota mensal.|Your job posting quota is shared across all your companies. Deleting a listing does not restore the monthly quota.|El cupo de vacantes se comparte entre todas tus empresas. Eliminar una vacante no devuelve el cupo mensual.
+Oportunidades home office e híbridas, com espaço para quem procura e quem contrata.|Remote and hybrid opportunities for job seekers and employers.|Oportunidades remotas e híbridas para quienes buscan empleo y quienes contratan.
+Como você quer usar Vagas Moment?|How would you like to use Moment Jobs?|¿Cómo quieres usar Empleos Moment?
+Você está procurando emprego?|Are you looking for a job?|¿Estás buscando empleo?
+Você está oferecendo uma vaga?|Are you offering a job?|¿Estás ofreciendo una vacante?
+Explore as oportunidades|Explore opportunities|Explora las oportunidades
+Gerencie empresas e vagas|Manage companies and job listings|Gestiona empresas y vacantes
+Sua segurança vem primeiro|Your safety comes first|Tu seguridad es lo primero
+Nunca pague taxas, faça Pix ou compre cursos para participar de uma seleção. Confirme a empresa antes de enviar documentos ou dados bancários. Encontrou algo suspeito? Denuncie.|Never pay fees, transfer money or buy courses to take part in a hiring process. Check the company before sharing documents or bank details. See something suspicious? Report it.|Nunca pagues tasas, transfieras dinero ni compres cursos para participar en una selección. Comprueba la empresa antes de enviar documentos o datos bancarios. ¿Ves algo sospechoso? Denúncialo.
+CNPJ informado e cadastro aprovado não garantem a autenticidade da vaga. A confirmação de representação da empresa é separada.|A submitted CNPJ and an approved company listing do not guarantee a job's authenticity. Company representation is checked separately.|Un CNPJ informado y un registro aprobado no garantizan la autenticidad de la vacante. La representación de la empresa se comprueba por separado.
+Representação confirmada|Representation confirmed|Representación confirmada
+Aguardando análise|Awaiting review|Pendiente de revisión
+Home office|Remote|Remota
+Híbrida|Hybrid|Híbrida
+Vaga encerrada|Job closed|Vacante cerrada
+Minhas empresas|My companies|Mis empresas
+Minhas vagas|My job listings|Mis vacantes
+Cadastrar empresa|Register company|Registrar empresa
+Editar empresa|Edit company|Editar empresa
+Enviar alterações para análise|Submit changes for review|Enviar cambios para revisión
+Empresa cadastrada e enviada para análise.|Company registered and submitted for review.|Empresa registrada y enviada para revisión.
+Alterações da empresa enviadas para análise.|Company changes submitted for review.|Cambios de la empresa enviados para revisión.
+Cadastre uma empresa que você está autorizado a representar. O cadastro passa por análise e não recebe um selo automaticamente.|Register a company you are authorized to represent. Registrations are reviewed and do not automatically receive a badge.|Registra una empresa que estés autorizado a representar. Los registros se revisan y no reciben una insignia automáticamente.
+Nome da empresa|Company name|Nombre de la empresa
+Aceitamos CNPJ numérico e alfanumérico. A validação do número não confirma a representação.|Numeric and alphanumeric Brazilian CNPJ registrations are accepted. Number validation does not confirm representation.|Se aceptan CNPJ brasileños numéricos y alfanuméricos. La validación del número no confirma la representación.
+Sobre a empresa|About the company|Sobre la empresa
+Site oficial|Official website|Sitio oficial
+E-mail profissional|Work email|Correo profesional
+Usado na análise do cadastro. Não será exibido aos candidatos.|Used during registration review. Not displayed to candidates.|Se utiliza para revisar el registro. No se muestra a los candidatos.
+Sua relação com a empresa|Your relationship with the company|Tu relación con la empresa
+Proprietário, recrutador ou representante|Owner, recruiter or representative|Propietario, reclutador o representante
+Prévia da empresa|Company preview|Vista previa de la empresa
+Adicionar logo ou foto da empresa|Add a company logo or photo|Añadir el logo o una foto de la empresa
+JPG, PNG ou WebP · até 5 MB|JPG, PNG or WebP · up to 5 MB|JPG, PNG o WebP · hasta 5 MB
+Escolha uma imagem JPG, PNG ou WebP de até 5 MB.|Choose a JPG, PNG or WebP image up to 5 MB.|Elige una imagen JPG, PNG o WebP de hasta 5 MB.
+Confirmo que tenho autorização para representar esta empresa e que os dados informados são verdadeiros.|I confirm that I am authorized to represent this company and that the information is accurate.|Confirmo que tengo autorización para representar a esta empresa y que los datos son verídicos.
+Apenas home office ou híbrida. Cada envio aceito consome a cota mensal, mesmo em análise ou após exclusão.|Remote or hybrid only. Each accepted submission uses the monthly quota, even under review or after deletion.|Solo remota o híbrida. Cada envío aceptado consume el cupo mensual, incluso en revisión o después de eliminarlo.
+Selecione uma empresa|Select a company|Selecciona una empresa
+Empresa|Company|Empresa
+Cargo|Job title|Puesto
+Área|Field|Área
+Experiência|Experience|Experiencia
+Contratação|Contract type|Contratación
+Modalidade|Work arrangement|Modalidad
+Cidade e estado|City and state|Ciudad y estado
+Onde o candidato pode morar|Where the candidate may live|Dónde puede residir el candidato
+Informe a cidade e o estado do trabalho presencial.|Enter the city and state for onsite work.|Indica la ciudad y el estado del trabajo presencial.
+Informe as regiões aceitas, mesmo para vagas totalmente remotas.|List eligible locations, even for fully remote jobs.|Indica las regiones aceptadas, incluso para vacantes totalmente remotas.
+Frequência presencial|Office attendance|Frecuencia presencial
+Ex.: dois dias por semana no escritório|E.g. two days a week in the office|Ej.: dos días por semana en la oficina
+Descrição da vaga|Job description|Descripción de la vacante
+Requisitos|Requirements|Requisitos
+Remuneração|Compensation|Remuneración
+Ex.: R$ 3.000 a R$ 4.000 por mês|E.g. BRL 3,000–4,000 per month|Ej.: BRL 3.000–4.000 al mes
+Link da candidatura|Application link|Enlace de candidatura
+Use o link direto no site da empresa ou em uma plataforma de recrutamento aceita. Não use encurtadores.|Use a direct link on the company website or an accepted recruiting platform. Do not use shortened URLs.|Usa un enlace directo al sitio de la empresa o a una plataforma de contratación aceptada. No uses acortadores.
+Receber candidaturas até|Applications close|Recibir candidaturas hasta
+Validade máxima de 90 dias.|Valid for up to 90 days.|Vigencia máxima de 90 días.
+Confirmo que a vaga é verdadeira e não exige taxas, compras ou pagamentos para participar da seleção.|I confirm this job is real and does not require fees, purchases or payments to participate in the hiring process.|Confirmo que la vacante es real y no exige tasas, compras ni pagos para participar en la selección.
+Enviar vaga para análise|Submit job for review|Enviar vacante para revisión
+Vaga enviada para análise.|Job submitted for review.|Vacante enviada para revisión.
+Divulgar vaga|Post a job|Publicar vacante
+{used} de {limit} empresas cadastradas|{used} of {limit} companies registered|{used} de {limit} empresas registradas
+{used} de {limit} vagas neste mês|{used} of {limit} job listings this month|{used} de {limit} vacantes este mes
+Comece pela sua empresa|Start with your company|Empieza por tu empresa
+Cadastre a empresa uma vez e vincule suas próximas vagas a ela.|Register your company once and link future job listings to it.|Registra tu empresa una vez y vincula tus próximas vacantes a ella.
+Pausada pelo limite do plano|Paused by plan limit|En pausa por el límite del plan
+Usar esta empresa|Use this company|Usar esta empresa
+Empresa selecionada para novas publicações.|Company selected for new listings.|Empresa seleccionada para nuevas publicaciones.
+Todas as vagas passam por análise. Cadastros aprovados não recebem confirmação de representação automaticamente.|All job listings are reviewed. Approved company registrations do not automatically receive confirmation of representation.|Todas las vacantes se revisan. Los registros aprobados no reciben confirmación de representación automáticamente.
+Você ainda não divulgou vagas.|You have not posted any jobs yet.|Aún no has publicado vacantes.
+Buscar cargo ou empresa|Search job title or company|Buscar puesto o empresa
+Localidade|Location|Localidad
+Remota e híbrida|Remote and hybrid|Remota e híbrida
+Todas as áreas|All fields|Todas las áreas
+Todos os níveis|All levels|Todos los niveles
+Nenhuma oportunidade por aqui ainda|No opportunities here yet|Aún no hay oportunidades aquí
+Tente outros filtros ou volte mais tarde. Novas vagas aparecem após a análise.|Try other filters or come back later. New jobs appear after review.|Prueba otros filtros o vuelve más tarde. Las nuevas vacantes aparecen después de la revisión.
+Finanças|Finance|Finanzas
+Operações|Operations|Operaciones
+Recursos humanos|Human resources|Recursos humanos
+Educação|Education|Educación
+Atendimento|Customer support|Atención al cliente
+Vendas|Sales|Ventas
+Estágio|Internship|Prácticas
+Júnior|Junior|Júnior
+Pleno|Mid-level|Intermedio
+Sênior|Senior|Sénior
+Liderança|Leadership|Liderazgo
+Temporário|Temporary|Temporal
+Denunciar vaga|Report job|Denunciar vacante
+Denunciar empresa|Report company|Denunciar empresa
+Cobrança para participar|Payment required to participate|Cobro para participar
+Empresa falsa ou representação indevida|Fake company or unauthorized representation|Empresa falsa o representación indebida
+Vaga inexistente ou enganosa|Fake or misleading job|Vacante inexistente o engañosa
+Vaga presencial|Onsite job|Vacante presencial
+Coleta suspeita de dados|Suspicious data collection|Recogida sospechosa de datos
+Outro motivo|Other reason|Otro motivo
+Conte o que aconteceu|Tell us what happened|Cuéntanos qué ocurrió
+Não envie senhas, documentos ou dados bancários.|Do not send passwords, documents or bank details.|No envíes contraseñas, documentos ni datos bancarios.
+Denúncia recebida. A moderação vai analisar.|Report received. Moderators will review it.|Denuncia recibida. El equipo de moderación la revisará.
+Você está saindo do Moment. A candidatura acontece no site indicado pela empresa. Nunca pague para participar da seleção.|You are leaving Moment. Applications take place on the website provided by the company. Never pay to participate in a hiring process.|Estás saliendo de Moment. La candidatura se realiza en el sitio indicado por la empresa. Nunca pagues para participar en una selección.
+Continuar para a candidatura|Continue to application|Continuar a la candidatura
+Quero me candidatar|Apply for this job|Quiero postularme
+Candidatura em site externo|Application on an external site|Candidatura en un sitio externo
+Publicado por|Posted by|Publicado por
+Encerrar vaga|Close job|Cerrar vacante
+Vaga excluída. A cota não será devolvida.|Job deleted. The quota will not be restored.|Vacante eliminada. El cupo no se devolverá.
+Vaga encerrada.|Job closed.|Vacante cerrada.
+Vagas desta empresa|Jobs at this company|Vacantes de esta empresa
+Nenhuma vaga aberta nesta empresa.|No open jobs at this company.|No hay vacantes abiertas en esta empresa.
+Revisar vagas e empresas|Review jobs and companies|Revisar vacantes y empresas
+Verifique a empresa, a representação, o destino da candidatura e possíveis cobranças antes de aprovar. CNPJ válido não comprova autenticidade.|Check the company, its representation, application destination and any fees before approving. A valid CNPJ does not prove authenticity.|Comprueba la empresa, la representación, el destino de candidatura y posibles cobros antes de aprobar. Un CNPJ válido no demuestra autenticidad.
+Empresas|Companies|Empresas
+Vagas para análise|Jobs awaiting review|Vacantes pendientes de revisión
+Aprovar cadastro|Approve registration|Aprobar registro
+Aprovar vaga|Approve job|Aprobar vacante
+Confirmar representação|Confirm representation|Confirmar representación
+Confirme somente após verificar, por um canal independente, que o responsável representa esta empresa.|Confirm only after independently verifying that this person represents the company.|Confirma solo después de verificar por un canal independiente que la persona representa a esta empresa.
+Aprovar o cadastro permite analisar as vagas. Confirmar a representação é uma etapa separada e exige verificação manual.|Approving registration allows job reviews. Confirming representation is a separate step requiring manual verification.|Aprobar el registro permite revisar vacantes. Confirmar la representación es una etapa separada que requiere verificación manual.
+Retirar este conteúdo da exibição pública?|Remove this content from public display?|¿Retirar este contenido de la vista pública?
+Análise concluída.|Review completed.|Revisión completada.
+Nenhuma pendência por aqui.|Nothing pending here.|No hay nada pendiente aquí.
+A fila mostra até 50 itens por seção. Após analisar, os próximos aparecem automaticamente.|The queue shows up to 50 items per section. After review, the next items appear automatically.|La cola muestra hasta 50 elementos por sección. Tras revisarlos, los siguientes aparecen automáticamente.
+Informe um CNPJ válido.|Enter a valid CNPJ.|Introduce un CNPJ válido.
+Use um site HTTPS público, sem encurtadores ou redirecionamentos.|Use a public HTTPS website without shortened URLs or redirects.|Usa un sitio HTTPS público sin acortadores ni redirecciones.
+Use um link direto da empresa ou da plataforma de recrutamento.|Use a direct company or recruiting platform link.|Usa un enlace directo de la empresa o plataforma de contratación.
+A candidatura precisa usar o site da empresa ou uma plataforma de recrutamento aceita.|Applications must use the company website or an accepted recruiting platform.|La candidatura debe usar el sitio de la empresa o una plataforma de contratación aceptada.
+Informe o link direto para a candidatura.|Enter the direct application link.|Introduce el enlace directo a la candidatura.
+Apenas vagas home office ou híbridas são permitidas.|Only remote or hybrid jobs are allowed.|Solo se permiten vacantes remotas o híbridas.
+Informe a frequência presencial da vaga híbrida.|Enter office attendance for the hybrid job.|Indica la frecuencia presencial de la vacante híbrida.
+A validade deve ser futura e de até 90 dias.|The expiry must be in the future and within 90 days.|La fecha de vencimiento debe ser futura y de hasta 90 días.
+Você atingiu o limite de empresas do seu plano.|You reached your plan's company limit.|Alcanzaste el límite de empresas de tu plan.
+Este CNPJ já está cadastrado. Entre em contato com o suporte se precisar reivindicar a empresa.|This CNPJ is already registered. Contact support if you need to claim the company.|Este CNPJ ya está registrado. Contacta con soporte si necesitas reclamar la empresa.
+Este CNPJ já está cadastrado.|This CNPJ is already registered.|Este CNPJ ya está registrado.
+Confirme que você representa esta empresa.|Confirm that you represent this company.|Confirma que representas a esta empresa.
+Empresa indisponível.|Company unavailable.|Empresa no disponible.
+O CNPJ de uma empresa cadastrada não pode ser alterado.|A registered company's CNPJ cannot be changed.|No se puede cambiar el CNPJ de una empresa registrada.
+Selecione uma empresa da sua conta.|Select a company from your account.|Selecciona una empresa de tu cuenta.
+Esta empresa está pausada pelo limite do plano. Selecione-a em Minhas empresas.|This company is paused by your plan limit. Select it in My companies.|Esta empresa está en pausa por el límite de tu plan. Selecciónala en Mis empresas.
+Você atingiu a cota mensal de vagas do seu plano.|You reached your plan's monthly job quota.|Alcanzaste el cupo mensual de vacantes de tu plan.
+Esta vaga já foi divulgada. Excluir ou alterar o link não libera uma nova publicação.|This job has already been posted. Deleting it or changing the link does not allow reposting.|Esta vacante ya se publicó. Eliminarla o cambiar el enlace no permite volver a publicarla.
+Vaga indisponível.|Job unavailable.|Vacante no disponible.
+Esta vaga não recebe mais candidaturas.|This job no longer accepts applications.|Esta vacante ya no recibe candidaturas.
+Não é permitido cobrar para participar da seleção.|Charging to participate in a hiring process is not allowed.|No está permitido cobrar para participar en la selección.
+Compare o que está incluso em cada plano.|Compare what is included in each plan.|Compara lo que incluye cada plan.
+O essencial para fazer parte do Moment.|The essentials to be part of Moment.|Lo esencial para formar parte de Moment.
+Mais espaço e personalização para você.|More room and personalization for you.|Más espacio y personalización para ti.
+Criar e participar de estações|Create and join stations|Crear estaciones y participar en ellas
+Curtidas, comentários, respostas e notificações|Likes, comments, replies and notifications|Me gusta, comentarios, respuestas y notificaciones
+Temas Claro, Escuro e Ametista|Light, Dark and Amethyst themes|Temas Claro, Oscuro y Amatista
+Fonte padrão do Moment|Moment's default font|Fuente predeterminada de Moment
+Tudo do plano Free|Everything in Free|Todo lo que incluye Free
+Quatro temas exclusivos: Midnight, Aurora, Champagne e Rosé|Four exclusive themes: Midnight, Aurora, Champagne and Rosé|Cuatro temas exclusivos: Midnight, Aurora, Champagne y Rosé
+Três fontes: Manrope, Nunito Sans e Source Sans 3|Three fonts: Manrope, Nunito Sans and Source Sans 3|Tres fuentes: Manrope, Nunito Sans y Source Sans 3
+Seu plano atual|Your current plan|Tu plan actual
+Produtos e cupons compartilham a cota. Excluir uma publicação não devolve a vaga.|Products and coupons share the quota. Deleting a post does not restore the slot.|Los productos y cupones comparten el cupo. Eliminar una publicación no devuelve el espacio.
+Gerencie seu perfil, aparência e privacidade.|Manage your profile, appearance and privacy.|Gestiona tu perfil, apariencia y privacidad.
+Não foi possível renovar a sessão. Tente novamente.|Your session could not be renewed. Please try again.|No se pudo renovar tu sesión. Inténtalo de nuevo.
+Enviar feedback|Send feedback|Enviar comentarios
+Como foi sua experiência?|How was your experience?|¿Cómo fue tu experiencia?
+Feedback enviado. Obrigado por ajudar a melhorar o Moment.|Feedback sent. Thank you for helping improve Moment.|Comentarios enviados. Gracias por ayudar a mejorar Moment.
+Quatro temas e três fontes Premium|Four Premium themes and three fonts|Cuatro temas y tres fuentes Premium
+Premium em teste|Premium testing access|Premium en prueba
+Este recurso faz parte do plano Premium. Aproveite o acesso gratuito durante a fase de testes.|This feature belongs to Premium. Enjoy free access during testing.|Esta función pertenece al plan Premium. Disfruta del acceso gratuito durante las pruebas.
+Seu plano|Your plan|Tu plan
+Benefícios e acesso de testes|Benefits and testing access|Ventajas y acceso de prueba
+Não foi possível carregar seu plano.|Your plan could not be loaded.|No se pudo cargar tu plan.
+Moments: até {count} caracteres|Moments: up to {count} characters|Moments: hasta {count} caracteres
+Tópicos: até {count} caracteres|Topics: up to {count} characters|Temas: hasta {count} caracteres
+Vitrine: {count} publicações por mês|Marketplace: {count} posts per month|Vitrina: {count} publicaciones al mes
+Vitrine: {count} publicações por semana|Marketplace: {count} posts per week|Vitrina: {count} publicaciones por semana
+Não há cobrança durante esta fase de testes.|There are no charges during this testing phase.|No se cobra durante esta fase de pruebas.
+Temas Premium|Premium themes|Temas Premium
+Temas gratuitos|Free themes|Temas gratuitos
+Fonte de leitura|Reading font|Fuente de lectura
+Padrão|Default|Predeterminada
+Azul-marinho e reflexos suaves|Navy blue and soft highlights|Azul marino y reflejos suaves
+Verde suave e luz natural|Soft green and natural light|Verde suave y luz natural
+Tons quentes e dourado discreto|Warm tones and subtle gold|Tonos cálidos y dorado discreto
+Gradiente rosado e leitura suave|Gentle pink gradient and comfortable reading|Gradiente rosa suave y lectura cómoda
+Este emoji ultrapassa o limite de {count} caracteres.|This emoji exceeds the {count} character limit.|Este emoji supera el límite de {count} caracteres.
+Cada envio aceito utiliza uma vaga do seu plano, mesmo se for excluído ou ficar em análise.|Each accepted submission uses a slot in your plan, even if deleted or under review.|Cada envío aceptado utiliza un espacio de tu plan, aunque se elimine o quede en revisión.
+{used} de {limit} publicações neste mês|{used} of {limit} posts this month|{used} de {limit} publicaciones este mes
+{used} de {limit} publicações nesta semana|{used} of {limit} posts this week|{used} de {limit} publicaciones esta semana
 Entenda a Vitrine Moment|Discover how Moment Marketplace works|Descubre cómo funciona Vitrina Moment
 Sobre esta seção|About this section|Sobre esta sección
 Todas as categorias|All categories|Todas las categorías

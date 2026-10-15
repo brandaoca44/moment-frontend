@@ -1,7 +1,9 @@
 import { t, useLanguage } from '@/i18n';
 import { createContext, useContext, useEffect, useState } from 'react';
+import { usePlan } from '@/features/plans/use-plan';
 
-export type ThemeId = 'light' | 'dark' | 'amethyst-dark';
+export type ThemeId = 'light' | 'dark' | 'amethyst-dark' | 'midnight' | 'aurora' | 'champagne' | 'rose';
+export const premiumThemes = new Set<ThemeId>(['midnight', 'aurora', 'champagne', 'rose']);
 
 export type Theme = {
   id: ThemeId;
@@ -24,6 +26,10 @@ export type Theme = {
 };
 
 export const themes: Record<ThemeId, Theme> = {
+  midnight: { id:'midnight', name:'Midnight', get description(){return t('Azul-marinho e reflexos suaves');}, colors:{bg:'#101827',bgSecondary:'#152136',surface:'#1c2a40',surfaceSoft:'#24344c',border:'#3b4e68',text:'#f1f5fc',textSoft:'#d0dced',textMuted:'#a9bcd5',amethyst:'#8db8ff',amethystLight:'#b2d1ff',amethystBg:'#243c60',amethystBorder:'#5278ad'} },
+  aurora: { id:'aurora', name:'Aurora', get description(){return t('Verde suave e luz natural');}, colors:{bg:'#f2f8f5',bgSecondary:'#e5f0e9',surface:'#ffffff',surfaceSoft:'#f5faf7',border:'#d0e0d6',text:'#20392d',textSoft:'#415f4e',textMuted:'#597463',amethyst:'#236e50',amethystLight:'#5c9e80',amethystBg:'#e1f0e7',amethystBorder:'#b9d7c5'} },
+  champagne: { id:'champagne', name:'Champagne', get description(){return t('Tons quentes e dourado discreto');}, colors:{bg:'#faf7f0',bgSecondary:'#f0e9dc',surface:'#fffdf8',surfaceSoft:'#faf5ec',border:'#e3d8c4',text:'#3c3327',textSoft:'#655842',textMuted:'#7a694e',amethyst:'#86622a',amethystLight:'#b28b4e',amethystBg:'#f5ead5',amethystBorder:'#dbc397'} },
+  rose: { id:'rose', name:'Rosé', get description(){return t('Gradiente rosado e leitura suave');}, colors:{bg:'#fcf5f8',bgSecondary:'#f4e7ee',surface:'#fffdfE',surfaceSoft:'#fcf6f9',border:'#ead2de',text:'#402a36',textSoft:'#694959',textMuted:'#815e70',amethyst:'#a13d6c',amethystLight:'#c8759c',amethystBg:'#f7e4ed',amethystBorder:'#e1b4ca'} },
   light: {
     id: 'light',
     get name() { return t("Claro"); },
@@ -97,14 +103,17 @@ const ThemeContext = createContext<ThemeContextType>({
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   useLanguage();
-  const [themeId, setThemeId] = useState<ThemeId>(() => {
+  const access = usePlan().data?.data;
+  const [selectedTheme, setThemeId] = useState<ThemeId>(() => {
     const saved = localStorage.getItem('moment-theme') as ThemeId | null;
     return saved && themes[saved] ? saved : 'light';
   });
 
+  const themeId = premiumThemes.has(selectedTheme) && !access?.premium ? 'light' : selectedTheme;
   const theme = themes[themeId];
 
   function setTheme(id: ThemeId) {
+    if (premiumThemes.has(id) && !access?.premium) return;
     setThemeId(id);
     localStorage.setItem('moment-theme', id);
   }
@@ -112,7 +121,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const root = document.documentElement;
     const c = theme.colors;
-    const isLight = themeId === 'light';
+    const isLight = ['light', 'aurora', 'champagne', 'rose'].includes(themeId);
     const isAmethystDark = themeId === 'amethyst-dark';
     const isNeutralDark = themeId === 'dark';
     root.style.colorScheme = isLight ? 'light' : 'dark';
@@ -208,6 +217,15 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
         ? 'radial-gradient(ellipse at 85% 0%, rgba(125, 82, 165, 0.12), transparent 55%), linear-gradient(160deg, #1b1327 0%, #110d19 55%, #17101f 100%)'
         : c.bg;
     document.body.style.color = c.text;
+    if (premiumThemes.has(themeId)) {
+      const rgb = (hex: string) => [1,3,5].map(i=>parseInt(hex.slice(i,i+2),16)).join(', ');
+      for (const [name, value] of Object.entries({ 'accent-rgb':c.amethyst, 'accent-soft-rgb':c.amethystLight, 'accent-deep-rgb':c.amethyst, 'accent-pale-rgb':c.amethystBorder, 'accent-faint-rgb':c.amethystBg })) root.style.setProperty(`--${name}`,rgb(value));
+      root.style.setProperty('--surface-glass', c.surface);
+      root.style.setProperty('--surface-elevated', c.surfaceSoft);
+      root.style.setProperty('--sidebar-bg', c.surface);
+      root.style.setProperty('--card-bg', c.surface);
+      document.body.style.background = `linear-gradient(145deg, ${c.bg}, ${c.bgSecondary})`;
+    }
   }, [theme, themeId]);
 
   return (

@@ -1,5 +1,5 @@
 import { DiscoverySidebar } from './discovery-sidebar';
-import { ShoppingBag } from 'lucide-react';
+import { ShoppingBag, BriefcaseBusiness } from 'lucide-react';
 import { t, useLanguage } from '@/i18n';
 import {
   Link,
@@ -164,8 +164,13 @@ const navItems = [
   },
   {
     to: '/vitrine',
-    get label() { return t("Vitrine Moment"); },
+    get label() { return t("Vitrine"); },
     icon: <ShoppingBag size={20} />,
+  },
+  {
+    to: '/jobs',
+    get label() { return t('Vagas'); },
+    icon: <BriefcaseBusiness size={20} />,
   },
   {
     to: '/notifications',
@@ -184,18 +189,6 @@ const navItems = [
     icon: <IconSettings />,
   },
 ];
-
-function getInitials(name?: string) {
-  if (!name) return '?';
-
-  return name
-    .trim()
-    .split(/\s+/)
-    .slice(0, 2)
-    .map((part) => part[0])
-    .join('')
-    .toUpperCase();
-}
 
 export function AppLayout() {
   useLanguage();
@@ -794,7 +787,7 @@ export function AppLayout() {
           min-width: 0;
           padding: 28px 24px;
         }
-        .app-page > :is(.feed-page, .profile-page, .notifications-page, .explore-page, .settings-page, .stations-page, .vitrine, .reports-page, .conversation) {
+        .app-page > :is(.feed-page, .profile-page, .notifications-page, .explore-page, .settings-page, .stations-page, .vitrine, .jobs-page, .reports-page, .conversation) {
           box-sizing: border-box;
           width: 100%;
           min-width: 0;
@@ -880,44 +873,6 @@ export function AppLayout() {
             <LegalLinks />
           </nav>
 
-          <div className="app-user-section">
-            <div className="app-user-row">
-              <div className="app-avatar">
-                {user?.avatar ? (
-                  <img
-                    src={user.avatar}
-                    alt={user.name}
-                    className="app-avatar-image"
-                  />
-                ) : (
-                  <span className="app-avatar-initials">
-                    {getInitials(user?.name)}
-                  </span>
-                )}
-              </div>
-
-              <div className="app-user-info">
-                <span className="app-user-name">
-                  {user?.name}
-                </span>
-
-                <span className="app-user-username">
-                  @{user?.username}
-                </span>
-              </div>
-            </div>
-
-            <button
-              type="button"
-              className="app-logout-btn"
-              onClick={handleLogout}
-              disabled={logout.isPending}
-              title={t("Sair")}
-              aria-label={t("Sair")}
-            >
-              <IconLogout />
-            </button>
-          </div>
         </aside>
 
         <main className="app-main">

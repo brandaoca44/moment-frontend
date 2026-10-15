@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Search, Sparkles, Users, ChevronRight, Compass } from 'lucide-react';
@@ -24,20 +24,17 @@ export function DiscoverySidebar() {
   useLanguage();
   const [desktop, setDesktop] = useState(() => window.matchMedia('(min-width:1121px)').matches);
   const [term, setTerm] = useState('');
-  const search = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
   useEffect(() => {
     const query = window.matchMedia('(min-width:1121px)');
     const change = () => setDesktop(query.matches);
     query.addEventListener('change', change);
-    const shortcut = (e: KeyboardEvent) => { if (query.matches && (e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); search.current?.focus(); } };
-    window.addEventListener('keydown', shortcut);
-    return () => { query.removeEventListener('change', change); window.removeEventListener('keydown', shortcut); };
+    return () => { query.removeEventListener('change', change); };
   }, []);
   const people = useQuery({ queryKey: ['explore', 'suggestions'], queryFn: () => getSuggestions(20), enabled: desktop });
   const discoveries = useQuery({ queryKey: ['stations', 'sidebar'], queryFn: () => stations('discover'), enabled: desktop });
   return <div className="discovery-sidebar">
-    <form className="discovery-search" role="search" onSubmit={event => { event.preventDefault(); navigate(`/explore?q=${encodeURIComponent(term.trim())}`); }}><Search size={17} aria-hidden="true" /><input ref={search} value={term} onChange={event => setTerm(event.target.value)} placeholder={t('Buscar momentos e pessoas')} aria-label={t('Buscar momentos e pessoas')} /><kbd aria-hidden="true">Ctrl K</kbd></form>
+    <form className="discovery-search" role="search" onSubmit={event => { event.preventDefault(); navigate(`/explore?q=${encodeURIComponent(term.trim())}`); }}><Search size={17} aria-hidden="true" /><input value={term} onChange={event => setTerm(event.target.value)} placeholder={t('Buscar momentos e pessoas')} aria-label={t('Buscar momentos e pessoas')} /></form>
     <section className="discovery-card" aria-labelledby="discover-stations-title"><header><Sparkles size={18} aria-hidden="true" /><h2 id="discover-stations-title">{t('Estações para descobrir')}</h2></header><p>{t('Encontre pessoas com os mesmos interesses.')}</p>
       {discoveries.isPending ? <p role="status">{t('Carregando...')}</p> : discoveries.isError ? <p role="alert">{t('Não foi possível carregar as sugestões.')} <button className="discovery-retry" onClick={() => discoveries.refetch()}>{t('Tentar novamente')}</button></p> : <ul className="discovery-stations">{discoveries.data.data.slice(0,5).map(station => {
         const count = station.membersCount ?? station._count?.members ?? 0;

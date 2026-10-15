@@ -1,6 +1,14 @@
 import { api } from '@/lib/api';
 
 export type ProfileUser = {
+  premium?: boolean;
+  premiumTrial?: boolean;
+  profileCategory?: string|null;
+  profileSpecialty?: string|null;
+  profileRegion?: string|null;
+  profileRegistration?: string|null;
+  profileTheme?: string|null;
+  profileFont?: string|null;
   emailConfirmedAt?: string | null;
   id: string;
   name: string;

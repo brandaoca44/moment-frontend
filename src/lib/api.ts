@@ -1,20 +1,26 @@
 import { t } from '@/i18n';
 const API_URL = (import.meta.env.VITE_API_URL ?? '').replace(/\/$/, '');
 
-let refreshing: Promise<boolean> | null = null;
+export class ApiError extends Error {
+  readonly status: number;
+  constructor(message: string, status: number) { super(message); this.name = 'ApiError'; this.status = status; }
+}
+let refreshing: Promise<'ok' | 'expired' | 'unavailable'> | null = null;
 
-async function refreshToken(): Promise<boolean> {
+async function refreshToken(): Promise<'ok' | 'expired' | 'unavailable'> {
   try {
     const res = await fetch(`${API_URL}/auth/refresh`, {
       method: 'POST',
       credentials: 'include',
+      cache: 'no-store',
+      referrerPolicy: 'no-referrer',
       headers: { 'X-Moment-Client': 'web' },
       signal: AbortSignal.timeout(10000),
     });
 
-    return res.ok;
+    return res.ok ? 'ok' : res.status === 401 ? 'expired' : 'unavailable';
   } catch {
-    return false;
+    return 'unavailable';
   }
 }
 
@@ -47,20 +53,29 @@ export async function api<T = unknown>(
   options?: RequestInit,
   _retry = true,
 ): Promise<T> {
+  if (!url.startsWith('/') || url.startsWith('//')) throw new Error(t('Erro na requisição'));
   const res = await fetch(`${API_URL}${url}`, {
     ...options,
     credentials: 'include',
+    cache: 'no-store',
+    referrerPolicy: 'no-referrer',
     headers: resolveHeaders(options),
   });
 
   if (res.status === 401 && _retry) {
     if (!refreshing) refreshing = refreshToken().finally(() => { refreshing = null; });
-    if (!await refreshing) throw new Error(t('Sua sessão expirou. Entre novamente.'));
+    const refreshed = await refreshing;
+    if (refreshed === 'expired') {
+      window.dispatchEvent(new Event('moment:session-ended'));
+      throw new ApiError(t('Sua sessão expirou. Entre novamente.'), 401);
+    }
+    if (refreshed !== 'ok') throw new ApiError(t('Não foi possível renovar a sessão. Tente novamente.'), 503);
     return api<T>(url, options, false);
   }
 
   if (res.status === 401 && !_retry) {
-    throw new Error(t('Sua sessão expirou. Entre novamente.'));
+    window.dispatchEvent(new Event('moment:session-ended'));
+    throw new ApiError(t('Sua sessão expirou. Entre novamente.'), 401);
   }
 
   if (res.status === 204) {
@@ -71,7 +86,7 @@ export async function api<T = unknown>(
 
   if (!contentType?.includes('application/json')) {
     if (!res.ok) {
-      throw new Error(await parseResponseError(res));
+      throw new ApiError(await parseResponseError(res), res.status);
     }
 
     throw new Error(t("Resposta inválida do servidor"));
@@ -80,7 +95,7 @@ export async function api<T = unknown>(
   const data = await res.json();
 
   if (!res.ok) {
-    throw new Error(t(typeof data?.message === 'string' ? data.message : t("Erro na requisição")));
+    throw new ApiError(t(typeof data?.message === 'string' ? data.message : t("Erro na requisição")), res.status);
   }
 
   return data;

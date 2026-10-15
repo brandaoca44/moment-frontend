@@ -8,6 +8,8 @@ export function useRegister() {
   return useMutation({
     mutationFn: (data: RegisterInput) => registerUser(data),
     onSuccess: async () => {
+      await queryClient.cancelQueries();
+      queryClient.clear();
       const me = await getMe();
       queryClient.setQueryData(['auth', 'me'], me);
     },

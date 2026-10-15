@@ -1,4 +1,5 @@
 import { relativeTime } from '@/i18n';
+import { usePlan, PremiumNotice } from '@/features/plans/use-plan';
 import { getLanguage } from '@/i18n';
 import { t, useLanguage } from '@/i18n';
 import { Link } from 'react-router-dom';
@@ -123,6 +124,8 @@ type Props = {
 
 
 export function PostCard({ post, repliesCount = 0, likesCount, remontsCount, liked, remonted, pinned = false, onTogglePin, pinPending = false, recommended = false }: Props) {
+  const plan = usePlan().data?.data;
+  const editLimit = Math.max(plan?.limits.moments ?? 220, post.content.length);
   useLanguage();
 
   const { data: meData } = useMe();
@@ -782,13 +785,14 @@ export function PostCard({ post, repliesCount = 0, likesCount, remontsCount, lik
 
             {comments.isError && <p role="alert" className="post-edit-error">{t(comments.error.message)}</p>}
             {comments.isSuccess && <p role="status" className="post-time">{post.commentsEnabled ? t("Comentários ativados.") : t("Comentários desativados.")}</p>}
-            {editing ? <form onSubmit={(event) => { event.preventDefault(); if (draft.trim() && draft.length <= 220 && !edit.isPending) edit.mutate(); }}>
+            {editing ? <form onSubmit={(event) => { event.preventDefault(); if (draft.trim() && draft.length <= editLimit && !edit.isPending) edit.mutate(); }}>
 
-              <textarea className="post-edit-text" aria-label={t("Editar momento")} value={draft} maxLength={220} disabled={edit.isPending} onChange={event => setDraft(event.target.value)} autoFocus />
+              <textarea className="post-edit-text" aria-label={t("Editar momento")} value={draft} maxLength={editLimit} disabled={edit.isPending} onChange={event => setDraft(event.target.value)} autoFocus />
+              {plan?.trial && draft.length > 220 && <PremiumNotice />}
 
               <div className="post-edit-controls">
 
-                <small>{draft.length}/220</small>
+                <small>{draft.length}/{editLimit}</small>
 
                 <button type="submit" disabled={edit.isPending || !draft.trim() || draft.trim() === displayed.content}>{edit.isPending ? t("Salvando...") : t("Salvar")}</button>
 

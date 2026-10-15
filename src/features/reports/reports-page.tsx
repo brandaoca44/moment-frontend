@@ -1,4 +1,5 @@
 import { getLanguage } from '@/i18n';
+import { JobsReviewShortcut } from '@/features/jobs/jobs-admin';
 import { t, useLanguage } from '@/i18n';
 import { useState } from 'react';
 import { Navigate } from 'react-router-dom';
@@ -62,6 +63,7 @@ export function ReportsPage() {
   return <section className="reports-page"><h1>{t("Moderação de denúncias")}</h1>
     <PendingContent />
     <StationReviewInbox moderator />
+    <JobsReviewShortcut />
     <RecommendationMetrics />
     <label>{t("Mostrar")}<select value={status} onChange={event => setStatus(event.target.value)}><option value="PENDING">{t("Pendentes")}</option><option value="DISMISSED">{t("Encerradas sem retirada")}</option><option value="HIDDEN">{t("Conteúdo retirado")}</option></select></label>
     <label>{t("Categoria")}<select value={reason} onChange={event => setReason(event.target.value)}><option value="">{t("Todas as categorias")}</option>{Object.entries(reasons).map(([key, label]) => <option key={key} value={key}>{label}</option>)}</select></label>

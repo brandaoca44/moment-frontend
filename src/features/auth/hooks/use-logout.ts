@@ -8,6 +8,7 @@ export function useLogout() {
     mutationFn: logout,
     onSuccess: () => {
       queryClient.clear();
+      window.dispatchEvent(new Event('moment:session-ended'));
     },
   });
 }

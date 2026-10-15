@@ -1,0 +1,20 @@
+export const categoryOptions = {
+  influencer: {name:'Influenciador', specialties:['Moda e beleza','Tecnologia','Lifestyle','Games','Viagens'], example:'Ex.: criador de conteúdo sobre viagens'},
+  youtuber: {name:'YouTuber',specialties:['Entretenimento','Educação','Games','Tecnologia'],example:'Ex.: vídeos sobre tecnologia'},
+  entrepreneur: {name:'Empresário',specialties:['Tecnologia','Comércio','Serviços','Indústria'],example:'Ex.: fundador de uma empresa de tecnologia'},
+  public_figure: {name:'Figura pública',specialties:['Apresentador','Artista','Esportista','Comunicador'],example:'Ex.: apresentador ou representante público'},
+  politician: {name:'Político',specialties:['Deputado federal','Deputado estadual','Senador','Governador','Prefeito','Vereador'],example:'Ex.: deputado federal'},
+  technology: {name:'Tecnologia da informação',specialties:['Desenvolvimento de software','Segurança da informação','Ciência de dados','Infraestrutura e redes','Suporte de TI','Produto e UX'],example:'Ex.: desenvolvedor de software'},
+  engineer: {name:'Engenharia',specialties:['Engenharia civil','Engenharia elétrica','Engenharia agronômica','Engenharia mecânica','Engenharia de produção','Engenharia de software'],example:'Ex.: engenharia elétrica'},
+  architect: {name:'Arquitetura',specialties:['Arquitetura e urbanismo','Interiores','Paisagismo'],example:'Ex.: arquitetura de interiores'},
+  designer: {name:'Design',specialties:['Design gráfico','Design de produto','Design de interfaces','Design de moda'],example:'Ex.: design de interfaces'},
+  educator: {name:'Educação',specialties:['Professor','Pesquisador','Pedagogo','Instrutor'],example:'Ex.: professor de matemática'},
+  lawyer: {name:'Advogado',specialties:['Direito civil','Direito penal','Direito trabalhista','Direito empresarial'],example:'Ex.: direito trabalhista'},
+  doctor: {name:'Médico',specialties:['Clínica geral','Pediatria','Cardiologia','Medicina de família'],example:'Ex.: medicina de família'},
+  psychologist: {name:'Psicologia',specialties:['Psicologia clínica','Psicologia organizacional','Psicologia escolar'],example:'Ex.: psicologia clínica'},
+  nutritionist: {name:'Nutricionista',specialties:['Nutrição clínica','Nutrição esportiva','Saúde coletiva'],example:'Ex.: nutrição esportiva'},
+  nurse: {name:'Enfermeiro',specialties:['Atenção primária','Enfermagem hospitalar','Saúde da família'],example:'Ex.: saúde da família'},
+  accountant: {name:'Contabilidade',specialties:['Contabilidade empresarial','Auditoria','Consultoria tributária'],example:'Ex.: contabilidade empresarial'},
+  professional: {name:'Profissional',specialties:['Autônomo','Freelancer','Consultor','Prestador de serviços'],example:'Ex.: profissional autônomo'},
+} as const;
+export const profileCategories = Object.fromEntries(Object.entries(categoryOptions).map(([key,value])=>[key,value.name])) as Record<keyof typeof categoryOptions,string>;

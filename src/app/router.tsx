@@ -1,10 +1,13 @@
 import { createBrowserRouter } from 'react-router-dom';
+import { JobsPage, JobDetail, CompanyPage } from '@/features/jobs/jobs-page';
+import { JobsAdmin } from '@/features/jobs/jobs-admin';
 import { VitrinePage, VitrineDetail } from '@/features/vitrine/vitrine-page';
 import { VitrineAdmin } from '@/features/vitrine/vitrine-admin';
 import { LegalPage } from '@/features/legal/legal-pages';
 import { StationsPage, StationPage, TopicPage } from '@/features/stations/stations-pages';
 import { AppLayout } from '@/components/layout/app-layout';
 import { ProtectedRoute } from '@/components/layout/protected-route';
+import { ModeratorRoute } from '@/components/layout/moderator-route';
 import { GuestRoute } from '@/components/layout/guest-route';
 import { FeedPage } from '@/features/feed/pages/feed-page';
 import { PostPage } from '@/features/feed/pages/post-page';
@@ -34,12 +37,18 @@ export const router = createBrowserRouter([
           { index: true, element: <FeedPage /> },
           { path: 'communities', element: <StationsPage /> },
           { path: 'vitrine', element: <VitrinePage /> },
-          { path: 'vitrine/review', element: <VitrineAdmin /> },
+          { path: 'jobs', element: <JobsPage /> },
+          { path: 'jobs/companies/:id', element: <CompanyPage /> },
+          { path: 'jobs/:id', element: <JobDetail /> },
+          { element: <ModeratorRoute />, children: [
+            { path: 'vitrine/review', element: <VitrineAdmin /> },
+            { path: 'jobs/review', element: <JobsAdmin /> },
+            { path: 'moderation', element: <ReportsPage /> },
+          ] },
           { path: 'vitrine/:id', element: <VitrineDetail /> },
           { path: 'communities/topics/:topicId', element: <TopicPage /> },
           { path: 'communities/:id', element: <StationPage /> },
           { path: 'posts/:id', element: <PostPage /> },
-          { path: 'moderation', element: <ReportsPage /> },
           { path: 'notifications', element: <NotificationsPage /> },
           { path: 'explore', element: <ExplorePage /> },
           { path: 'profile', element: <ProfilePage /> },

@@ -1,0 +1,20 @@
+.appearance-groups{display:grid;gap:24px;font-family:var(--font-ui)}
+.appearance-group{min-width:0}
+.appearance-group + .appearance-group{padding-top:22px;border-top:1px solid var(--border-soft)}
+.appearance-group-heading{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.appearance-group-heading h3{margin:0;font:600 14px/1.5 var(--font-ui);letter-spacing:normal;text-transform:none;color:var(--text)}
+.appearance-badge{font:400 11px/1.5 var(--font-ui);color:var(--text-muted);padding:3px 8px;border-radius:8px;background:var(--surface-elevated)}
+.appearance-badge.premium{color:var(--amethyst);background:var(--amethyst-soft,var(--surface-elevated))}
+.font-options{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,190px),1fr));gap:10px}
+.font-option{display:flex;flex-direction:column;gap:8px;min-width:0;padding:14px;text-align:left;border:1px solid var(--border-soft);border-radius:16px;background:var(--surface);color:var(--text);cursor:pointer;font-family:var(--font-ui)}
+.font-option[aria-pressed=true]{border-color:var(--amethyst);background:var(--surface-elevated)}
+.font-option:focus-visible{outline:2px solid var(--amethyst);outline-offset:3px}
+.font-option:disabled{cursor:not-allowed}
+.font-option-top{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:14px;font-weight:600}
+.font-option-status{font-size:12px;color:var(--amethyst)}
+.font-option-description{font-size:12px;line-height:1.5;color:var(--text-muted)}
+.font-option-sample{display:block;padding-top:10px;border-top:1px solid var(--border-soft);font-size:16px;line-height:1.6;font-weight:400}
+.font-option-characters{font-size:12px;color:var(--text-muted);letter-spacing:.04em}
+.font-option-default{width:100%;max-width:300px;justify-self:start}
+.font-selector{margin-top:28px;padding-top:24px;border-top:1px solid var(--border-soft)}
+.font-selector-intro{margin:0 0 16px;font-size:13px;line-height:1.5;color:var(--text-muted)}

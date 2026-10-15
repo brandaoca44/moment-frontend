@@ -1,4 +1,5 @@
 import { getLanguage } from '@/i18n';
+import { usePlan, PremiumNotice } from '@/features/plans/use-plan';
 import { api } from '@/lib/api';
 import { t as translate, useLanguage } from '@/i18n';
 import { EmojiText } from '@/components/ui/emoji-text';
@@ -340,6 +341,7 @@ export function StationsPage() {
   );
 }
 function Composer({ path, topic = false, onCreated, replyToId }: { path: string; topic?: boolean; onCreated?: (message: string) => void; replyToId?: string }) {
+  const plan = usePlan().data?.data;
   useLanguage();
   const fileInput = useRef<HTMLInputElement>(null);
   const [content, setContent] = useState("");
@@ -348,7 +350,7 @@ function Composer({ path, topic = false, onCreated, replyToId }: { path: string;
   const [file, setFile] = useState<File | null>(null);
   const [fileKey, setFileKey] = useState(0);
   const refresh = useRefresh();
-  const limit = nomad ? 220 : 440;
+  const limit = nomad ? 220 : plan?.limits.topics ?? 440;
   const send = useMutation({
     mutationFn: async () => {
       const imageUrl = !nomad && file ? await uploadPostImage(file) : undefined;
@@ -380,6 +382,7 @@ function Composer({ path, topic = false, onCreated, replyToId }: { path: string;
       }}
     >
       <h2>{topic ? translate("Abrir um tópico") : translate("Responder")}</h2>
+      {plan?.trial && !nomad && content.length > 440 && <PremiumNotice />}
       {topic && (
         <label>
           {translate(" Título ")}<input

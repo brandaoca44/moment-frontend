@@ -9,6 +9,7 @@ import { PostCard } from '@/features/feed/components/post-card';
 import { PositiveMarks } from '@/features/stations/positive-marks';
 import { ProfileBlock } from '../components/profile-block';
 import { ContentPreference } from '../components/content-preference';
+import { PremiumBadge, profileAppearance, profileCategories } from '../premium-profile';
 
 function formatCount(value: number) {
   return new Intl.NumberFormat(getLanguage(), {
@@ -307,8 +308,8 @@ export function ProfilePage() {
           align-items: center;
           justify-content: space-between;
           gap: 16px;
-          margin-top: 28px;
-          padding-top: 22px;
+          margin-top: 16px;
+          padding-top: 16px;
           border-top: 1px solid var(--border-soft);
         }
 
@@ -575,6 +576,13 @@ export function ProfilePage() {
           letter-spacing: 0.04em;
         }
 
+        .profile-details-line{display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;margin-top:16px;padding-top:14px;border-top:1px solid var(--border-soft);font-size:12px;line-height:1.5;color:var(--text-muted)}
+        .profile-handle{font-weight:500;color:var(--text-soft);overflow-wrap:anywhere}
+        .profile-appreciation .marks-panel{margin-top:12px;margin-bottom:0}
+        .profile-top-row .profile-identity{align-items:center}
+        .profile-kicker{margin-bottom:7px}
+        .profile-category{margin-top:7px}
+        .profile-name{white-space:normal;overflow-wrap:anywhere;font-size:clamp(26px,3vw,36px)}
         @media (max-width: 760px) {
           .profile-page {
             max-width: 100%;
@@ -641,7 +649,7 @@ export function ProfilePage() {
         }
       `}</style>
 
-      <div className="profile-page">
+      <div className={`profile-page${profile?.premium ? ' profile-personalized' : ''}`} style={profile?.premium ? profileAppearance(profile.profileTheme,profile.profileFont) : undefined}>
         {isInitialLoading && (
           <div className="profile-state compact">
             <div className="profile-spinner" />
@@ -672,17 +680,9 @@ export function ProfilePage() {
                   </div>
 
                   <div className="profile-names">
-                    <p className="profile-kicker">{t("Perfil")}</p>
+                    <div className="profile-kicker">{profile.premium ? <PremiumBadge/> : t('Perfil')}</div>
                     <h1 className="profile-name">{profile.name}</h1>
-                    <p className="profile-username">@{profile.username}</p>
-                    {profile.emailConfirmedAt && <small title="Confirma apenas o acesso ao e-mail; não verifica identidade.">{t("E-mail confirmado")}</small>}
-                    <p className="profile-since">
-                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <rect x="3" y="4" width="18" height="18" rx="2" />
-                        <path d="M16 2v4M8 2v4M3 10h18" />
-                      </svg>
-                      {t(" Desde ")}{formatDate(profile.createdAt)}
-                    </p>
+                    {profile.premium && profile.profileCategory && <><p className="profile-category" title={t('Informações autodeclaradas, sem verificação de identidade ou profissão.')}>{t(profileCategories[profile.profileCategory as keyof typeof profileCategories]??profile.profileCategory)}{profile.profileSpecialty && ` · ${profile.profileSpecialty}`}{profile.profileRegion && ` · ${profile.profileRegion}`}</p>{profile.profileRegistration && <small className="profile-profession-note">{profile.profileRegistration} · {t('Registro autodeclarado')}</small>}</>}
                   </div>
                 </div>
 
@@ -716,7 +716,8 @@ export function ProfilePage() {
                 <ProfileBlock userId={profile.id} name={profile.name} />
                 <ContentPreference targetType="USER" targetId={profile.id} />
               </div>}
-              <PositiveMarks userId={profile.id} own={isOwnProfile} />
+              <div className="profile-details-line"><span>{t(' Desde ')}{formatDate(profile.createdAt)}</span><span className="profile-handle">@{profile.username}</span>{profile.emailConfirmedAt && <span title="Confirma apenas o acesso ao e-mail; não verifica identidade.">{t('E-mail confirmado')}</span>}</div>
+              <div className="profile-appreciation"><PositiveMarks userId={profile.id} own={isOwnProfile} /></div>
               <div className="profile-meta-row">
                 <div className="profile-counters" aria-label={t("Estatísticas do perfil")}>
                   <div className="profile-counter">

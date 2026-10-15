@@ -1,4 +1,7 @@
 import { t, useLanguage } from '@/i18n';
+import { PlanSection } from '@/features/plans/use-plan';
+import { PremiumProfileSettings } from '@/features/profile/premium-profile';
+import { FontSelector } from '@/features/plans/font-selector';
 import { useEffect, useRef, useState, type ReactElement } from 'react';
 import { useMe } from '@/features/auth/hooks/use-me';
 import { useUpdateMe } from '../hooks/use-update-me';
@@ -14,7 +17,7 @@ import { LanguagePicker } from '@/i18n/language-picker';
 import { Globe } from 'lucide-react';
 import { RecommendationPreferencesPanel } from '@/features/feed/components/recommendation-preferences';
 
-type Section = 'profile' | 'appearance' | 'password' | 'privacy' | 'danger' | 'language';
+type Section = 'profile' | 'appearance' | 'password' | 'privacy' | 'danger' | 'language' | 'plan';
 
 type SettingsUser =
   | {
@@ -95,6 +98,12 @@ const menuItems: Array<{ id: Section; label: string; description: string; icon: 
     get label() { return t("Privacidade"); },
     get description() { return t("Bloqueios e conteúdo"); },
     icon: <IconLock />,
+  },
+  {
+    id: 'plan',
+    get label() { return t('Seu plano'); },
+    get description() { return t('Benefícios e acesso de testes'); },
+    icon: <Globe size={18} />,
   },
   {
     id: 'danger',
@@ -747,8 +756,11 @@ export function SettingsPage() {
           }
         }
 .settings-page { max-width:920px; }
-        .settings-page .settings-hero { padding:18px 20px; border-radius:20px; margin-bottom:18px; gap:14px; }
-        .settings-page .settings-title { font-size:28px; }
+        .settings-page .settings-hero { padding:18px 20px; border-radius:20px; margin-bottom:18px; gap:14px; box-shadow:var(--shadow-xs); background:var(--surface); }
+        .settings-page .settings-hero::before { display:none; }
+        .settings-page .settings-hero-content { min-width:0; }
+        .settings-page .settings-title { font-size:28px; font-weight:500; letter-spacing:-.025em; }
+        .settings-page .settings-kicker { font-size:12px; font-weight:500; text-transform:none; letter-spacing:0; margin-bottom:5px; }
         .settings-page .settings-avatar { width:54px; height:54px; border-width:2px; }
         .settings-page .settings-subtitle { margin-top:6px; font-size:13px; line-height:1.5; font-weight:400; }
         .settings-page .settings-section { padding:20px; border-radius:20px; }
@@ -777,10 +789,10 @@ export function SettingsPage() {
           </div>
 
           <div className="settings-hero-content">
-            <p className="settings-kicker">{t("Configurações")}</p>
-            <h1 className="settings-title">{t("Seu espaço no Moment")}</h1>
+            <p className="settings-kicker">{user?.name ?? 'Moment'}</p>
+            <h1 className="settings-title">{t("Configurações")}</h1>
             <p className="settings-subtitle">
-              {t(" Ajuste sua conta com calma. O Moment foi feito para parecer leve, seguro e confortável. ")}</p>
+              {t("Gerencie seu perfil, aparência e privacidade.")}</p>
           </div>
         </header>
 
@@ -807,8 +819,9 @@ export function SettingsPage() {
           </aside>
 
           <main>
-            {activeSection === 'profile' && <><ProfileSection user={user} />{user && <section className="settings-section" style={{ marginTop: 20 }}><PositiveMarks userId={user.id} own settings /></section>}</>}
+            {activeSection === 'profile' && <><ProfileSection user={user} /><PremiumProfileSettings/>{user && <section className="settings-section" style={{ marginTop: 20 }}><PositiveMarks userId={user.id} own settings /></section>}</>}
             {activeSection === 'appearance' && <AppearanceSection />}
+            {activeSection === 'plan' && <PlanSection />}
             {activeSection === 'language' && <section className="settings-section"><h2>{t('Idiomas')}</h2><p>{t('Escolha o idioma do Moment.')}</p><LanguagePicker /></section>}
             {activeSection === 'password' && <><PasswordSection /><section className="settings-section" style={{ marginTop: 20 }}><EmailConfirmation /></section></>}
             {activeSection === 'privacy' && <section className="settings-section">
@@ -840,6 +853,7 @@ function AppearanceSection() {
           {t(" Escolha o tema que combina com o seu momento. Cada opção mantém a leitura confortável. ")}</p>
       </div>
       <ThemeSelector />
+      <FontSelector />
     </section>
   );
 }
