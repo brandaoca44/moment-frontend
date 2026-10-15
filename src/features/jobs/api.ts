@@ -1,5 +1,5 @@
 import { api } from '@/lib/api';
-export const jobCategories={technology:'Tecnologia',design:'Design',marketing:'Marketing',sales:'Vendas',support:'Atendimento',finance:'Finanças',operations:'Operações',hr:'Recursos humanos',education:'Educação',other:'Outros'};
+export const jobCategories={technology:'Tecnologia',design:'Design',marketing:'Marketing',sales:'Vendas',support:'Atendimento',finance:'Finanças',operations:'Operações',hr:'Recursos humanos',education:'Educação',law:'Direito',other:'Outros'};
 export const jobLevels={intern:'Estágio',junior:'Júnior',mid:'Pleno',senior:'Sênior',lead:'Liderança',any:'Todos os níveis'};
 export const jobContracts={clt:'CLT',pj:'PJ',internship:'Estágio',freelance:'Freelance',temporary:'Temporário'};
 export const reportReasons={PAYMENT:'Cobrança para participar',FAKE_COMPANY:'Empresa falsa ou representação indevida',FAKE_JOB:'Vaga inexistente ou enganosa',ONSITE:'Vaga presencial',DATA_ABUSE:'Coleta suspeita de dados',OTHER:'Outro motivo'};

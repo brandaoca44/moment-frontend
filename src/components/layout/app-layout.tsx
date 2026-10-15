@@ -1,4 +1,6 @@
 import { DiscoverySidebar } from './discovery-sidebar';
+import { ProtectionStatus } from '@/features/profile/protection-mode';
+import { AccountDecisions, useAccountDecisions } from '@/features/reports/account-decisions';
 import { ShoppingBag, BriefcaseBusiness } from 'lucide-react';
 import { t, useLanguage } from '@/i18n';
 import {
@@ -6,6 +8,7 @@ import {
   NavLink,
   Outlet,
   useNavigate,
+  useLocation,
 } from 'react-router-dom';
 import { useState } from 'react';
 import { LegalLinks } from '@/features/legal/legal-pages';
@@ -193,6 +196,8 @@ const navItems = [
 export function AppLayout() {
   useLanguage();
   const navigate = useNavigate();
+  const location=useLocation();
+  const decisions=useAccountDecisions();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const { data } = useMe();
@@ -216,6 +221,10 @@ export function AppLayout() {
     }
   }
 
+  if(decisions.isPending)return <main className="account-decisions"><p role="status">{t('Carregando...')}</p></main>;
+  if(decisions.isError)return <main className="account-decisions"><p role="alert">{t('Não foi possível consultar as decisões.')}</p><button onClick={()=>decisions.refetch()}>{t('Tentar novamente')}</button><button onClick={handleLogout}>{t('Sair')}</button><LegalLinks/></main>;
+  if(decisions.data&&!decisions.data.data.access.account)return <main><AccountDecisions/><div className="account-decisions"><button onClick={handleLogout}>{t('Sair')}</button><LegalLinks/></div></main>;
+  const featureRestricted=decisions.data&&((location.pathname.startsWith('/vitrine')&&!decisions.data.data.access.vitrine)||(location.pathname.startsWith('/jobs')&&!decisions.data.data.access.jobs));
   return (
     <>
       <style>{`
@@ -876,7 +885,8 @@ export function AppLayout() {
         </aside>
 
         <main className="app-main">
-          <div className="app-page"><Outlet /></div>
+          <ProtectionStatus/>
+          <div className="app-page">{featureRestricted?<AccountDecisions/>:<Outlet />}</div>
         </main>
 
         <aside className="app-right-column">

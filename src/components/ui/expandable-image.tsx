@@ -30,7 +30,7 @@ function ImageViewer({ src, alt, onClose }: Props & { onClose: () => void }) {
       onClick={(event) => { if (event.target === event.currentTarget) onClose(); }}
     >
       <button type="button" autoFocus className="moment-image-close" onClick={onClose} aria-label={t("Fechar imagem")}>
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" /></svg>
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" /></svg>
       </button>
       <img className="moment-image-full" src={src} alt={alt} />
     </dialog>,
@@ -48,7 +48,7 @@ export function ExpandableImage({ src, alt, className }: Props) {
   }
 
   return <>
-    <button ref={triggerRef} type="button" className="moment-image-trigger" aria-label={t("Abrir imagem em tela cheia")} aria-haspopup="dialog" onClick={() => setOpen(true)}>
+    <button ref={triggerRef} type="button" className="moment-image-trigger" aria-label={t("Ampliar imagem")} aria-haspopup="dialog" onClick={() => setOpen(true)}>
       <img src={src} alt={alt} className={className} loading="lazy" />
     </button>
     {open && <ImageViewer src={src} alt={alt} onClose={close} />}

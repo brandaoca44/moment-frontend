@@ -1,6 +1,10 @@
 import { t, useLanguage } from '@/i18n';
+import { useSearchParams } from 'react-router-dom';
+import { ProtectionPanel } from '@/features/profile/protection-mode';
+import { AccountDecisions } from '@/features/reports/account-decisions';
 import { PlanSection } from '@/features/plans/use-plan';
 import { PremiumProfileSettings } from '@/features/profile/premium-profile';
+import { ProfileLinksSettings } from '@/features/profile/profile-links';
 import { FontSelector } from '@/features/plans/font-selector';
 import { useEffect, useRef, useState, type ReactElement } from 'react';
 import { useMe } from '@/features/auth/hooks/use-me';
@@ -17,7 +21,7 @@ import { LanguagePicker } from '@/i18n/language-picker';
 import { Globe } from 'lucide-react';
 import { RecommendationPreferencesPanel } from '@/features/feed/components/recommendation-preferences';
 
-type Section = 'profile' | 'appearance' | 'password' | 'privacy' | 'danger' | 'language' | 'plan';
+type Section = 'profile' | 'appearance' | 'password' | 'privacy' | 'danger' | 'language' | 'plan' | 'account-status';
 
 type SettingsUser =
   | {
@@ -105,6 +109,7 @@ const menuItems: Array<{ id: Section; label: string; description: string; icon: 
     get description() { return t('Benefícios e acesso de testes'); },
     icon: <Globe size={18} />,
   },
+  {id:'account-status',get label(){return t('Situação da conta');},get description(){return t('Decisões e solicitações de revisão');},icon:<IconLock/>},
   {
     id: 'danger',
     get label() { return t("Conta"); },
@@ -118,7 +123,9 @@ export function SettingsPage() {
   const { data: meData } = useMe();
   const user = meData?.data?.user;
 
-  const [activeSection, setActiveSection] = useState<Section>('profile');
+  const [params]=useSearchParams();
+  const [activeSection, setActiveSection] = useState<Section>(params.get('section')==='account-status'?'account-status':params.get('section')==='privacy'?'privacy':'profile');
+  useEffect(()=>{const section=params.get('section');if(section==='privacy'||section==='account-status')setActiveSection(section);},[params]);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   return (
@@ -819,13 +826,15 @@ export function SettingsPage() {
           </aside>
 
           <main>
-            {activeSection === 'profile' && <><ProfileSection user={user} /><PremiumProfileSettings/>{user && <section className="settings-section" style={{ marginTop: 20 }}><PositiveMarks userId={user.id} own settings /></section>}</>}
+            {activeSection === 'profile' && <><ProfileSection user={user} /><ProfileLinksSettings/><PremiumProfileSettings/>{user && <section className="settings-section" style={{ marginTop: 20 }}><PositiveMarks userId={user.id} own settings /></section>}</>}
             {activeSection === 'appearance' && <AppearanceSection />}
             {activeSection === 'plan' && <PlanSection />}
+            {activeSection === 'account-status' && <AccountDecisions/>}
             {activeSection === 'language' && <section className="settings-section"><h2>{t('Idiomas')}</h2><p>{t('Escolha o idioma do Moment.')}</p><LanguagePicker /></section>}
             {activeSection === 'password' && <><PasswordSection /><section className="settings-section" style={{ marginTop: 20 }}><EmailConfirmation /></section></>}
             {activeSection === 'privacy' && <section className="settings-section">
               <div className="settings-section-header"><h2 className="settings-section-title">{t("Privacidade e conteúdo")}</h2><p className="settings-section-subtitle">{t("Gerencie quem pode interagir com você e o que aparece nas suas listas.")}</p></div>
+              <ProtectionPanel />
               <ProfileBlock />
               <ContentPreferences />
               <RecommendationPreferencesPanel />

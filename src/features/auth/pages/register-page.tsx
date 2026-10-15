@@ -1,5 +1,6 @@
 import { t, useLanguage } from '@/i18n';
 import '../components/auth-layout.css';
+import './register-page.css';
 import '@/features/legal/legal.css';
 import { POLICY_VERSION } from '@/features/legal/policies';
 import { useState } from 'react';
@@ -40,7 +41,7 @@ export function RegisterPage() {
   }
 
   return (
-    <main className="auth-page" style={pageStyle}>
+    <main className="auth-page register-page" style={pageStyle}>
       <section className="auth-card" style={cardStyle}>
 
         {/* Painel esquerdo — brand */}
@@ -49,29 +50,29 @@ export function RegisterPage() {
             <img
               src={momentLogo}
               alt="Moment"
-              style={{ width: 240, height: 'auto' }}
+              style={{ width: 194, height: 'auto' }}
             />
 
             <div>
               <h1 style={brandTitleStyle}>
-                {t(" Seu jardim digital ")}<br />
-                {t(" começa aqui. ")}</h1>
+                {t('Boas conexões.')}<br />
+                {t('Novos momentos.')}</h1>
               <p style={brandTextStyle}>
-                {t(" Crie sua conta e entre em um espaço onde você pode ser livre, autêntico e conectado com o que realmente importa. ")}</p>
+                {t('Compartilhe suas histórias, descubra interesses e encontre pessoas com quem você se identifica.')}</p>
             </div>
 
             <div style={pillsRowStyle}>
-              <span style={pillStyle}>{t("✦ Gratuito para sempre")}</span>
-              <span style={pillStyle}>{t("✦ Sem anúncios invasivos")}</span>
-              <span style={pillStyle}>{t("✦ Você no controle")}</span>
+              <span style={pillStyle}>{t('Comece com o plano Free')}</span>
+              <span style={pillStyle}>{t('Encontre sua comunidade')}</span>
+              <span style={pillStyle}>{t('Escolha o que compartilhar')}</span>
             </div>
           </div>
 
-          <div style={decorativeCardStyle}>
+          <div style={decorativeCardStyle} aria-hidden="true">
             <img src={momentIcon} alt="" style={{ width: 52, height: 52 }} />
             <div>
               <p style={decorativeQuoteStyle}>
-                {t(" \"Um espaço só seu.\" ")}</p>
+                {t('Seu momento começa com você.')}</p>
               <p style={decorativeSubStyle}>— Moment</p>
             </div>
           </div>
@@ -83,13 +84,13 @@ export function RegisterPage() {
             <img
               src={momentIcon}
               alt="Moment"
-              style={{ width: 72, height: 72 }}
+              style={{ width: 44, height: 44 }}
             />
 
-            <div style={{ marginTop: 24, marginBottom: 32 }}>
-              <h2 style={titleStyle}>{t("Criar sua conta")}</h2>
+            <div style={{ marginTop: 16, marginBottom: 24 }}>
+              <h2 style={titleStyle}>{t('Faça parte do Moment')}</h2>
               <p style={subtitleStyle}>
-                {t(" Leva menos de um minuto. ")}</p>
+                {t('Crie seu perfil e encontre seu espaço.')}</p>
             </div>
 
             <form onSubmit={handleSubmit} style={formStyle}>
@@ -112,14 +113,14 @@ export function RegisterPage() {
 
                 <div style={fieldStyle}>
                   <label htmlFor="username" style={labelStyle}>
-                    {t(" Username ")}</label>
+                    {t('Nome de usuário')}</label>
                   <div style={usernameWrapStyle}>
                     <span style={usernameAtStyle}>@</span>
                     <input
                       id="username"
                       name="username"
                       type="text"
-                      placeholder="seuusername"
+                      placeholder={t('seuusuario')}
                       autoComplete="username"
                       value={form.username}
                       onChange={handleChange}
@@ -137,7 +138,7 @@ export function RegisterPage() {
                   id="email"
                   name="email"
                   type="email"
-                  placeholder="seu@email.com"
+                  placeholder={t('voce@exemplo.com')}
                   autoComplete="email"
                   value={form.email}
                   onChange={handleChange}
@@ -155,6 +156,7 @@ export function RegisterPage() {
                   type="password"
                   placeholder={t("Mínimo 8 caracteres")}
                   autoComplete="new-password"
+                  minLength={8}
                   value={form.password}
                   onChange={handleChange}
                   style={inputStyle}
@@ -164,8 +166,8 @@ export function RegisterPage() {
 
               <div style={fieldStyle}>
                 <label htmlFor="birthDate" style={labelStyle}>{t("Data de nascimento (não aparece no perfil)")}</label>
-                <input id="birthDate" name="birthDate" type="date" autoComplete="bday" value={form.birthDate} onChange={handleChange} style={inputStyle} required max={new Date().toISOString().slice(0, 10)} />
-                <small>{t("Idade prevista: 14+. O cadastro de adolescentes aguarda a implementação das proteções e ainda não está disponível.")}</small>
+                <input id="birthDate" name="birthDate" type="date" autoComplete="bday" value={form.birthDate} onChange={handleChange} style={inputStyle} required max={new Date().toISOString().slice(0, 10)} aria-describedby="register-age-note" />
+                <small id="register-age-note" className="register-age-note">{t('Nesta fase, o cadastro está disponível apenas para maiores de 18 anos. Sua data de nascimento não é pública.')}</small>
               </div>
               <label className="policy-checkbox"><input type="checkbox" checked={acceptedTerms} onChange={e => setAcceptedTerms(e.target.checked)} required /><span>{t("Li e aceito os ")}<Link to="/terms" target="_blank" rel="noopener noreferrer">{t("Termos de Uso")}</Link> {t(" e li o aviso de ")}<Link to="/privacy" target="_blank" rel="noopener noreferrer">{t("Privacidade")}</Link>.</span></label>
               {register.isError ? (
@@ -184,12 +186,6 @@ export function RegisterPage() {
                 {register.isPending ? t("Criando conta...") : t("Criar conta")}
               </button>
 
-              <p style={termsStyle}>
-                {t(" Ao criar uma conta você concorda com nossos")}{' '}
-                <Link to="/terms" style={termsLinkStyle}>{t("Termos de uso")}</Link>
-                {' '}{t("e")}{' '}
-                <Link to="/privacy" style={termsLinkStyle}>{t("Política de privacidade")}</Link>.
-              </p>
             </form>
 
             <p style={footerTextStyle}>
@@ -236,7 +232,7 @@ const cardStyle: React.CSSProperties = {
   borderRadius: 28,
   overflow: 'hidden',
   background: '#ffffff',
-  boxShadow: '0 28px 80px rgba(76, 29, 149, 0.16)',
+  boxShadow: '0 18px 60px rgba(76, 29, 149, 0.08)',
   border: '1px solid rgba(124, 58, 237, 0.12)',
 };
 
@@ -244,7 +240,7 @@ const brandPanelStyle: React.CSSProperties = {
   position: 'relative',
   padding: 'var(--auth-panel-padding)',
   background:
-    'linear-gradient(160deg, rgba(237, 233, 254, 0.95), rgba(196, 181, 253, 0.75))',
+    'radial-gradient(ellipse at 0% 0%, #f5f0ff, transparent 65%), radial-gradient(ellipse at 100% 100%, #ded2fa, transparent 70%), linear-gradient(145deg, #eee7fd, #f5f0fc)',
   display: 'var(--auth-brand-display)',
   flexDirection: 'column',
   justifyContent: 'space-between',
@@ -255,16 +251,16 @@ const brandContentStyle: React.CSSProperties = {
   position: 'relative',
   zIndex: 2,
   display: 'grid',
-  gap: 40,
+  gap: 30,
 };
 
 const brandTitleStyle: React.CSSProperties = {
   margin: 0,
-  fontSize: 36,
+  fontSize: 34,
   lineHeight: 1.18,
-  fontWeight: 800,
+  fontWeight: 600,
   letterSpacing: -0.8,
-  color: '#312e81',
+  color: '#40324f',
   fontFamily: "var(--font-ui)",
 };
 
@@ -272,7 +268,7 @@ const brandTextStyle: React.CSSProperties = {
   marginTop: 16,
   maxWidth: 380,
   color: '#5b5570',
-  fontSize: 17,
+  fontSize: 15,
   lineHeight: 1.65,
   fontFamily: "var(--font-ui)",
 };
@@ -288,12 +284,12 @@ const pillStyle: React.CSSProperties = {
   alignItems: 'center',
   gap: 8,
   fontSize: 14,
-  fontWeight: 600,
+  fontWeight: 400,
   color: '#4c1d95',
   fontFamily: "var(--font-ui)",
   background: 'rgba(255,255,255,0.55)',
   border: '1px solid rgba(124,58,237,0.18)',
-  borderRadius: 100,
+  borderRadius: 12,
   padding: '6px 16px',
   width: 'fit-content',
 };
@@ -301,8 +297,7 @@ const pillStyle: React.CSSProperties = {
 const decorativeCardStyle: React.CSSProperties = {
   position: 'relative',
   zIndex: 2,
-  width: 260,
-  height: 110,
+  maxWidth: 280,
   borderRadius: 24,
   background: 'rgba(255,255,255,0.72)',
   backdropFilter: 'blur(18px)',
@@ -311,9 +306,9 @@ const decorativeCardStyle: React.CSSProperties = {
   justifyContent: 'center',
   gap: 16,
   alignSelf: 'center',
-  boxShadow: '0 24px 55px rgba(124, 58, 237, 0.22)',
-  transform: 'rotate(-4deg)',
-  padding: '0 20px',
+  boxShadow: '0 8px 24px rgba(124, 58, 237, 0.06)',
+  padding: '18px 20px',
+  marginTop: 40,
 };
 
 const decorativeQuoteStyle: React.CSSProperties = {
@@ -337,8 +332,7 @@ const formPanelStyle: React.CSSProperties = {
   display: 'grid',
   placeItems: 'center',
   padding: 'var(--auth-panel-padding)',
-  background: '#ffffff',
-  overflowY: 'auto',
+  background: 'radial-gradient(ellipse at 100% 0%, #f0e9fd, transparent 65%), radial-gradient(ellipse at 0% 100%, #f1eafa, transparent 65%), linear-gradient(155deg, #fffefd, #fbf8ff)',
 };
 
 const formBoxStyle: React.CSSProperties = {
@@ -388,14 +382,13 @@ const labelStyle: React.CSSProperties = {
 
 const inputStyle: React.CSSProperties = {
   width: '100%',
-  height: 52,
+  height: 46,
   borderRadius: 14,
   border: '1px solid #e5e7eb',
-  background: '#fafafa',
+  background: 'rgba(255,255,255,0.78)',
   padding: '0 16px',
   fontSize: 15,
   color: '#111827',
-  outline: 'none',
   boxSizing: 'border-box',
   fontFamily: "var(--font-ui)",
 };
@@ -411,7 +404,7 @@ const usernameAtStyle: React.CSSProperties = {
   left: 14,
   fontSize: 15,
   color: AMETHYST,
-  fontWeight: 700,
+  fontWeight: 600,
   fontFamily: "var(--font-ui)",
   pointerEvents: 'none',
 };
@@ -430,7 +423,7 @@ const buttonStyle: React.CSSProperties = {
   fontSize: 16,
   fontWeight: 700,
   cursor: 'pointer',
-  boxShadow: '0 16px 32px rgba(124, 58, 237, 0.28)',
+  boxShadow: '0 8px 20px rgba(124, 58, 237, 0.14)',
   fontFamily: "var(--font-ui)",
   marginTop: 4,
 };
@@ -443,21 +436,6 @@ const errorStyle: React.CSSProperties = {
   padding: 13,
   fontSize: 14,
   fontFamily: "var(--font-ui)",
-};
-
-const termsStyle: React.CSSProperties = {
-  margin: 0,
-  fontSize: 12,
-  color: '#9ca3af',
-  textAlign: 'center',
-  lineHeight: 1.6,
-  fontFamily: "var(--font-ui)",
-};
-
-const termsLinkStyle: React.CSSProperties = {
-  color: AMETHYST,
-  fontWeight: 600,
-  textDecoration: 'none',
 };
 
 const footerTextStyle: React.CSSProperties = {

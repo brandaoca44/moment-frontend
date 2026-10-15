@@ -1,8 +1,10 @@
 export const categoryOptions = {
+  model: {name:'Modelo',specialties:['Moda','Fotografia','Modelo artístico'],example:'Ex.: modelo de moda e fotografia'},
+  adult_creator: {name:'Criador de conteúdo adulto · 18+',specialties:['Criador independente'],example:'Ex.: criador independente'},
   influencer: {name:'Influenciador', specialties:['Moda e beleza','Tecnologia','Lifestyle','Games','Viagens'], example:'Ex.: criador de conteúdo sobre viagens'},
   youtuber: {name:'YouTuber',specialties:['Entretenimento','Educação','Games','Tecnologia'],example:'Ex.: vídeos sobre tecnologia'},
   entrepreneur: {name:'Empresário',specialties:['Tecnologia','Comércio','Serviços','Indústria'],example:'Ex.: fundador de uma empresa de tecnologia'},
-  public_figure: {name:'Figura pública',specialties:['Apresentador','Artista','Esportista','Comunicador'],example:'Ex.: apresentador ou representante público'},
+  public_figure: {name:'Figura pública',specialties:['Apresentador','Artista','Esportista','Comunicador','Ministro do STF','Ministro do STJ','Ministro do TSE','Ministro do TST','Desembargador','Juiz'],example:'Ex.: apresentador, magistrado ou representante público'},
   politician: {name:'Político',specialties:['Deputado federal','Deputado estadual','Senador','Governador','Prefeito','Vereador'],example:'Ex.: deputado federal'},
   technology: {name:'Tecnologia da informação',specialties:['Desenvolvimento de software','Segurança da informação','Ciência de dados','Infraestrutura e redes','Suporte de TI','Produto e UX'],example:'Ex.: desenvolvedor de software'},
   engineer: {name:'Engenharia',specialties:['Engenharia civil','Engenharia elétrica','Engenharia agronômica','Engenharia mecânica','Engenharia de produção','Engenharia de software'],example:'Ex.: engenharia elétrica'},

@@ -1,6 +1,7 @@
 import { api } from '@/lib/api';
 
 export type ProfileUser = {
+  profileLinks?: import('../profile-links').ProfileLink[];
   premium?: boolean;
   premiumTrial?: boolean;
   profileCategory?: string|null;

@@ -1,4 +1,5 @@
 import { useState, type ReactNode } from 'react';
+import { PublicationRules } from '@/features/legal/publication-rules';
 import { usePlan, PremiumNotice } from '@/features/plans/use-plan';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -22,6 +23,7 @@ function OfferForm({country,close}:{country:string;close:()=>void}) {
   const save=useMutation({mutationFn:async(data:FormData)=>{if(!file)throw new Error(t('Selecione uma imagem.'));if(file.size>5*1024*1024)throw new Error(t('A imagem deve ter até 5 MB.'));const price=String(data.get('price')??'').replace(',','.');if(kind==='PRODUCT'&&(!Number.isFinite(Number(price))||Number(price)<=0))throw new Error(t('Informe o preço do produto.'));const imageUrl=await uploadPostImage(file);return write('',{country,kind,storeId:data.get('storeId'),category:data.get('category'),title:data.get('title'),description:data.get('description'),url:data.get('url'),imageUrl,affiliate:data.get('affiliate')==='on',...(price?{priceCents:Math.round(Number(price)*100)}:{}),...(kind==='COUPON'?{coupon:data.get('coupon')}:{}),...(data.get('expiresAt')?{expiresAt:new Date(String(data.get('expiresAt'))).toISOString()}: {})});},onSuccess:async()=>{await refresh();close();}});
   return <form className="vitrine-form" onSubmit={e=>{e.preventDefault();if(!save.isPending)save.mutate(new FormData(e.currentTarget));}}>
     <p className="vitrine-required-note">{t('Os campos com * são obrigatórios.')}</p><p>{t('Cada envio aceito utiliza uma vaga do seu plano, mesmo se for excluído ou ficar em análise.')}</p>{access?.trial&&<PremiumNotice />}
+    <PublicationRules kind="vitrine"/>
     <div className="vitrine-tabs"><button type="button" aria-pressed={kind==='PRODUCT'} onClick={()=>setKind('PRODUCT')}>{t('Produtos de lojas')}</button><button type="button" aria-pressed={kind==='COUPON'} onClick={()=>setKind('COUPON')}>{t('Cupons de desconto')}</button></div>
     <label>{t('Loja')} *<select name="storeId" required><option value="">{t('Selecione uma loja')}</option>{stores.data?.data.map(store=><option key={store.id} value={store.id}>{store.name}</option>)}</select></label>
     {stores.isError&&<Message error={stores.error}/>}{stores.data?.data.length===0&&<p>{t('Ainda não há lojas aprovadas neste país. Sugira uma loja para análise.')}</p>}

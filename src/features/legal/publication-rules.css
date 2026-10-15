@@ -1,0 +1,7 @@
+.publication-rules{border-top:1px solid var(--border-soft);padding-top:10px;color:var(--text-muted);font:400 12px/1.6 var(--font-ui)}
+.publication-rules summary{display:flex;align-items:center;gap:6px;list-style:none;cursor:pointer;font-size:12px;color:var(--text-soft)}
+.publication-rules summary::-webkit-details-marker{display:none}
+.publication-rules summary svg{color:var(--amethyst);flex-shrink:0}
+.publication-rules summary:focus-visible{outline:2px solid var(--amethyst);outline-offset:3px;border-radius:4px}
+.publication-rules p{font:400 12px/1.6 var(--font-ui)!important;margin:8px 0!important;color:var(--text-muted)!important}
+.publication-rules a{font-size:12px;color:var(--amethyst)}

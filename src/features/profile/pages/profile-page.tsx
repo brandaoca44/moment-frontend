@@ -6,10 +6,11 @@ import { useMe } from '@/features/auth/hooks/use-me';
 import { useFollowUser, useProfile, useTogglePin, useUserPosts } from '../hooks/use-profile';
 import type { ProfilePost } from '../api/profile';
 import { PostCard } from '@/features/feed/components/post-card';
-import { PositiveMarks } from '@/features/stations/positive-marks';
 import { ProfileBlock } from '../components/profile-block';
 import { ContentPreference } from '../components/content-preference';
 import { PremiumBadge, profileAppearance, profileCategories } from '../premium-profile';
+import { ProfileLinks } from '../profile-links';
+import { ProtectionShortcut } from '../protection-mode';
 
 function formatCount(value: number) {
   return new Intl.NumberFormat(getLanguage(), {
@@ -195,8 +196,12 @@ export function ProfilePage() {
         }
 
         .profile-names {
+          display: grid;
+          grid-template-columns: minmax(0, 1fr);
+          justify-items: start;
           min-width: 0;
           padding-top: 3px;
+          text-align: start;
         }
 
         .profile-kicker {
@@ -255,7 +260,7 @@ export function ProfilePage() {
           border: 1px solid transparent;
           font-family: var(--font-ui);
           font-size: 14px;
-          font-weight: 900;
+          font-weight: 500;
           text-decoration: none;
           cursor: pointer;
           transition:
@@ -328,25 +333,23 @@ export function ProfilePage() {
         .profile-counter strong {
           color: var(--text);
           font-size: 19px;
-          font-weight: 900;
+          font-weight: 600;
           line-height: 1;
         }
 
         .profile-counter span {
           color: var(--text-muted);
           font-size: 12px;
-          font-weight: 700;
+          font-weight: 400;
         }
 
         .profile-mutual {
           width: fit-content;
-          border-radius: 999px;
-          padding: 7px 12px;
-          border: 1px solid var(--amethyst-border);
-          background: var(--amethyst-bg);
-          color: var(--amethyst);
-          font-size: 12px;
-          font-weight: 900;
+          padding: 3px 0;
+          color: var(--text-muted);
+          font-size: 11px;
+          font-weight: 400;
+          line-height: 1.5;
         }
 
         .profile-section-title {
@@ -568,19 +571,26 @@ export function ProfilePage() {
 
         .profile-end-text {
           margin: 0;
-          padding: 16px 0 26px;
-          color: var(--amethyst-light);
+          padding: 14px 0 22px;
+          color: var(--text-muted);
           text-align: center;
-          font-size: 13px;
-          font-weight: 800;
-          letter-spacing: 0.04em;
+          font-size: 12px;
+          font-weight: 400;
+          letter-spacing: normal;
         }
 
+        .profile-own-actions{display:grid;gap:6px;width:100%;min-width:140px}
+        .profile-own-actions .profile-button{box-sizing:border-box;width:100%}
+        .profile-own-actions .protection-shortcut{display:flex;justify-content:center;align-items:center;box-sizing:border-box;width:100%;min-height:30px;padding:4px 10px;line-height:1.5;border-radius:10px}
+        .profile-own-actions .protection-shortcut:hover{background:var(--amethyst-bg);color:var(--amethyst)}
         .profile-details-line{display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;margin-top:16px;padding-top:14px;border-top:1px solid var(--border-soft);font-size:12px;line-height:1.5;color:var(--text-muted)}
-        .profile-handle{font-weight:500;color:var(--text-soft);overflow-wrap:anywhere}
-        .profile-appreciation .marks-panel{margin-top:12px;margin-bottom:0}
+        .profile-handle{font-weight:500;color:var(--amethyst);overflow-wrap:anywhere}
         .profile-top-row .profile-identity{align-items:center}
         .profile-kicker{margin-bottom:7px}
+        .profile-names > .profile-name,.profile-names > .profile-category,.profile-names > .profile-profession-note{box-sizing:border-box;width:100%;padding-inline:0;margin-inline:0;text-indent:0;text-align:start}
+        .profile-names > .profile-name{letter-spacing:normal}
+        /* Match the visible text edge: large heading glyphs have wider side bearings. */
+        .profile-names > .profile-category,.profile-names > .profile-profession-note{padding-inline-start:2px}
         .profile-category{margin-top:7px}
         .profile-name{white-space:normal;overflow-wrap:anywhere;font-size:clamp(26px,3vw,36px)}
         @media (max-width: 760px) {
@@ -688,8 +698,8 @@ export function ProfilePage() {
 
                 <div className="profile-action-row">
                   {isOwnProfile ? (
-                    <Link to="/settings" className="profile-button secondary">
-                      {t(" Editar perfil ")}</Link>
+                    <div className="profile-own-actions"><Link to="/settings" className="profile-button secondary">
+                      {t(" Editar perfil ")}</Link><ProtectionShortcut/></div>
                   ) : (
                     <button
                       type="button"
@@ -716,8 +726,8 @@ export function ProfilePage() {
                 <ProfileBlock userId={profile.id} name={profile.name} />
                 <ContentPreference targetType="USER" targetId={profile.id} />
               </div>}
-              <div className="profile-details-line"><span>{t(' Desde ')}{formatDate(profile.createdAt)}</span><span className="profile-handle">@{profile.username}</span>{profile.emailConfirmedAt && <span title="Confirma apenas o acesso ao e-mail; não verifica identidade.">{t('E-mail confirmado')}</span>}</div>
-              <div className="profile-appreciation"><PositiveMarks userId={profile.id} own={isOwnProfile} /></div>
+              <div className="profile-details-line"><span className="profile-handle">@{profile.username}</span><span>{t(' Desde ')}{formatDate(profile.createdAt)}</span>{profile.emailConfirmedAt && <span title="Confirma apenas o acesso ao e-mail; não verifica identidade.">{t('E-mail confirmado')}</span>}</div>
+              <ProfileLinks links={profile.profileLinks??[]} own={isOwnProfile}/>
               <div className="profile-meta-row">
                 <div className="profile-counters" aria-label={t("Estatísticas do perfil")}>
                   <div className="profile-counter">
@@ -812,7 +822,7 @@ export function ProfilePage() {
               )}
 
               {!hasNextPage && posts.length > 0 && (
-                <p className="profile-end-text">{t("✦ Todos os momentos ✦")}</p>
+                <p className="profile-end-text">{t('Você viu todos os momentos.')}</p>
               )}
             </div>
           </div>

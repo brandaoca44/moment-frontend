@@ -1,4 +1,5 @@
 import { t, useLanguage } from '@/i18n';
+import { useNavigate } from 'react-router-dom';
 import { useEffect, useLayoutEffect, useRef, useState, useId } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/api';
@@ -6,7 +7,7 @@ import { createPortal } from 'react-dom';
 import { reasons, sendReport, type TargetType } from './api';
 import './reports.css';
 
-function ReportDialog({ targetType, targetId, close }: { targetType: TargetType; targetId: string; close: () => void }) {
+export function ReportDialog({ targetType, targetId, close }: { targetType: TargetType; targetId: string; close: () => void }) {
   useLanguage();
   const dialog = useRef<HTMLDialogElement>(null);
   const [reason, setReason] = useState('');
@@ -23,7 +24,7 @@ function ReportDialog({ targetType, targetId, close }: { targetType: TargetType;
     return () => { element?.close(); document.body.style.overflow = previous; };
   }, []);
   return createPortal(<dialog className="report-dialog" ref={dialog} aria-labelledby="report-title" onCancel={event => { event.preventDefault(); if (!pending) close(); }}>
-    <h2 id="report-title">{targetType === 'STATION' ? t('Denunciar estação') : `${t("Denunciar ")}${targetType === 'POST' ? t('Momento') : t('Resposta')}`}</h2>
+    <h2 id="report-title">{targetType === 'LINK' ? t('Denunciar link') : targetType === 'STATION' ? t('Denunciar estação') : `${t("Denunciar ")}${targetType === 'POST' ? t('Momento') : t('Resposta')}`}</h2>
     {sent ? <><p role="status">{t("Denúncia recebida. A moderação vai analisar. Sua identidade não será exibida ao autor.")}</p><button onClick={close}>{t("Fechar")}</button></> : <form onSubmit={async event => {
       event.preventDefault(); if (!reason || submitting.current) return;
       submitting.current = true; setPending(true); setError('');
@@ -47,6 +48,7 @@ type MenuAction = { label: string; onSelect: () => void; disabled?: boolean; che
 
 export function ReportButton({ targetType, targetId, authorId, canReport = true, onDelete, deletePending = false, menuActions = [] }: { targetType: TargetType; targetId: string; authorId?: string; canReport?: boolean; onDelete?: () => void; deletePending?: boolean; menuActions?: MenuAction[] }) {
   useLanguage();
+  const navigate=useNavigate();
   const [open, setOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [position, setPosition] = useState({ top: 0, left: 0 });
@@ -99,6 +101,7 @@ export function ReportButton({ targetType, targetId, authorId, canReport = true,
       }
     }}>
       {menuActions.map(item => <button key={item.label} role={item.checked === undefined ? 'menuitem' : 'menuitemcheckbox'} aria-checked={item.checked} disabled={item.disabled} onClick={() => { closeMenu(); item.onSelect(); }}>{item.checked !== undefined && <span aria-hidden="true">{item.checked ? '✓ ' : ''}</span>}{item.label}</button>)}
+      <button role="menuitem" onClick={()=>{closeMenu();navigate(`/settings?section=privacy${canReport?`&target=${encodeURIComponent(targetType)}&id=${encodeURIComponent(targetId)}`:''}`);}}>{t(canReport?'Estou sofrendo assédio':'Ativar proteção')}</button>
       {canReport && <>{targetType !== 'STATION' && <><button role="menuitem" onClick={() => choose('MUTE')}>{t("Silenciar perfil")}</button>
       <button role="menuitem" onClick={() => choose('HIDE')}>{t("Ocultar esta postagem")}</button>
       {authorId && <button role="menuitem" className="content-menu-danger" onClick={() => choose('BLOCK')}>{t("Bloquear perfil")}</button>}</>}

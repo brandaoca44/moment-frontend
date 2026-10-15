@@ -42,7 +42,7 @@ export function PlanSection() {
     <p className="plan-footnote">{t('Ao testar o Premium, os limites acima e as opções exclusivas de aparência ficam disponíveis nesta conta. Você pode voltar ao Free por aqui. Seus conteúdos continuam salvos e as cotas utilizadas não são reiniciadas.')}</p>
     {access?.trial && <PremiumNotice />}
     <p className="plan-footnote">{t('Produtos e cupons compartilham a cota. Excluir uma publicação não devolve a vaga.')}</p>
-    <p className="plan-footnote">{t('A cota de vagas é compartilhada entre todas as suas empresas. Excluir uma vaga não devolve a cota mensal.')}</p>
+    <p className="plan-footnote">{t('A cota de vagas é compartilhada entre todas as suas empresas. Excluir uma vaga não devolve a cota semanal.')}</p>
     <p className="plan-footnote">{t('Não há cobrança durante esta fase de testes.')}</p>
     {access && <FeedbackForm />}
   </section>;
@@ -54,11 +54,11 @@ function planGroups(premium:boolean):PlanGroup[] {
       {label:'Moments',value:t('{count} caracteres',{count:premium?440:220})},
       {label:t('Tópicos nas estações'),value:t('{count} caracteres',{count:premium?660:440})},
     ],note:t('Crie estações, participe de conversas, curta e responda. As notificações estão incluídas nos dois planos.')},
-    {title:t('Vitrine'),icon:<ShoppingBag size={15}/>,items:[{label:t('Produtos e cupons'),value:t(premium?'{count} por mês':'{count} por semana',{count:premium?30:4})}],note:t('Uma cota compartilhada para indicar produtos e cupons de lojas aprovadas.')},
+    {title:t('Vitrine'),icon:<ShoppingBag size={15}/>,items:[{label:t('Produtos e cupons'),value:t('{count} por semana',{count:premium?10:3})},{label:t('Abrir links de lojas'),value:t('Sem limite de cliques')}],note:t('Uma cota compartilhada para indicar produtos e cupons de lojas aprovadas.')},
     {title:t('Vagas Moment'),icon:<BriefcaseBusiness size={15}/>,items:[
       {label:t('Empresas cadastradas'),value:t(premium?'Até {count} empresas':'{count} empresa',{count:premium?3:1})},
-      {label:t('Divulgação de vagas'),value:t('{count} por mês',{count:premium?10:4})},
-    ],note:t('A cota mensal vale para todas as suas empresas. Buscar vagas é gratuito.')},
+      {label:t('Divulgação de vagas'),value:t('{count} por semana',{count:premium?6:2})},
+    ],note:t('A cota semanal vale para todas as suas empresas. Buscar vagas é gratuito.')},
     {title:t('Aparência'),icon:<Palette size={15}/>,items:[
       {label:t('Temas'),value:t(premium?'4 temas exclusivos + os gratuitos':'3 temas incluídos'),detail:premium?'Midnight, Aurora, Champagne e Rosé':t('Claro, Escuro e Ametista')},
       {label:t('Fontes'),value:t(premium?'3 fontes extras':'Fonte padrão'),detail:premium?'Manrope, Nunito Sans e Source Sans 3':undefined},

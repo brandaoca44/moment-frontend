@@ -54,7 +54,7 @@ function Terms() {
       <section>
         <h2>{t("1. Uma rede de convivência")}</h2>
         <p>
-          {t(" O Moment reúne momentos, respostas e Estações de interesse. O objetivo é permitir expressão, diversão e debate com respeito. Discordar de ideias é permitido; perseguir, ameaçar ou discriminar pessoas não é. ")}</p>
+          {t('O Moment é uma rede de convivência respeitosa. Discurso de ódio, misoginia, racismo, ameaças, perseguição e desinformação são proibidos. Conteúdos de figuras públicas e propaganda eleitoral seguem as condições específicas destes Termos. As mesmas regras valem para Free e Premium.')}</p>
       </section>
       <section>
         <h2>{t("2. Idade e cadastro")}</h2>
@@ -66,45 +66,55 @@ function Terms() {
       <section>
         <h2>{t("3. Conteúdo permitido e proibido")}</h2>
         <p>
-          {t(" Fotos comuns de praia, piscina, esporte e moda, incluindo biquíni, são permitidas. Nudez explícita, atos sexuais, exploração sexual, sexualização de menores e imagens íntimas sem consentimento são proibidos. Casos educativos, de saúde ou artísticos podem exigir análise de contexto. ")}</p>
+          {t("Fotos artísticas do corpo, moda, praia e piscina, incluindo biquíni, são permitidas sem nudez, exposição de partes íntimas, atos sexuais ou simulação explícita desses atos. A classificação como artística não afasta essas restrições. Exploração sexual, sexualização de menores e imagens íntimas sem consentimento são proibidas. Estas regras valem para publicações, avatar, capa e prévias, independentemente de profissão, categoria ou plano.")}</p>
         <p>
-          {t(" Também são proibidos discurso de ódio, discriminação, ameaças, assédio, aliciamento, exposição de dados pessoais de terceiros, golpes, falsificação de identidade e spam. Relatos de violência, pedidos de ajuda e discussões educativas devem ser avaliados pelo contexto. ")}</p>
+          {t('São proibidos discriminação, incitação à violência, assédio, misoginia, racismo, aliciamento, exposição de dados de terceiros, golpes, falsificação de identidade e spam. Relatar uma agressão, pedir ajuda ou denunciar discriminação não equivale a praticá-la; o contexto deve ser analisado.')}</p>
+        <p>{t('Linchamento virtual e campanhas de cancelamento que envolvam intimidação, humilhação, perseguição ou ataques coordenados não são tolerados. Não convoque pessoas para atacar um perfil, expor dados, ameaçar ou manipular denúncias. Críticas respeitosas e denúncias legítimas não são, por si só, assédio.')}</p>
       </section>
       <section>
         <h2>{t("4. Debate político")}</h2>
         <p>
-          {t(" Debates respeitosos sobre políticas públicas, propostas e acontecimentos são permitidos. Perfis comuns não podem usar o Moment para pedidos de voto, organização ou arrecadação de campanha e propaganda partidária. A regra trata da conduta, não de palavras isoladas ou da identidade da pessoa. ")}</p>
-        <p>
-          {t(" Não há autorização automática para campanha por alguém se declarar político. Um eventual programa de perfis oficiais exigirá verificação e regras próprias. Anúncios políticos não estão disponíveis nesta etapa. ")}</p>
+          {t('Políticos e figuras públicas, incluindo integrantes do Judiciário, podem divulgar trabalhos próprios de forma factual e respeitosa. Isso não autoriza ataques pessoais, acusações inventadas ou apresentação enganosa de fatos. Conteúdo de promoção pessoal que caracterize campanha também deve cumprir as regras eleitorais.')}</p>
+        <p>{t('Por regra do Moment, propaganda eleitoral original fica restrita ao perfil do próprio candidato, com candidatura registrada na Justiça Eleitoral e situação conferida em fonte oficial, durante o período permitido para a eleição e o tipo de publicação. Será obrigatório informar a referência do processo de registro, o link oficial de consulta e o CNPJ de campanha. Número de urna, cargo autodeclarado ou assinatura Premium não comprovam regularidade.')}</p>
+        <p>{t('Outros participantes poderão apenas republicar a publicação eleitoral original autorizada, preservando autoria, contexto e identificação, sem criar campanha própria ou acrescentar conteúdo irregular. A republicação também deve respeitar os prazos e restrições aplicáveis. Disputas partidárias, ataques coordenados e arrecadação de campanha não são permitidos no Moment.')}</p>
+        <p>{t('A identificação prevista é “Propaganda eleitoral · registro conferido pelo Moment”, com referência à fonte oficial. Ela não significa aprovação do conteúdo pelo TSE nem garantia de legalidade. O fluxo de conferência e essa identificação ainda não estão disponíveis: informar dados no perfil não libera propaganda eleitoral automaticamente.')}</p>
+        <p>{t('Fake news e desinformação são proibidas, inclusive conteúdo fabricado, adulterado ou gravemente descontextualizado apresentado como verdadeiro. Não apresente suspeita, denúncia ou investigação como condenação, nem atribua crime ou culpa sem fundamento verificável. Ao citar processo judicial, identifique a fonte, a fase e o resultado, sem ocultar recurso ou absolvição conhecidos. Crítica respeitosa, opinião identificada, relato de boa-fé e notícia fiel não se confundem automaticamente com desinformação.')}</p>
+        <p>{t('Infrações confirmadas podem gerar retirada do conteúdo, restrições, suspensão ou encerramento da conta, conforme gravidade e reincidência, sem imunidade por cargo ou plano. Denúncias e sinais automáticos exigem análise de evidências e contexto, com possibilidade de contestação; não há banimento automático pelo volume de denúncias.')}</p>
       </section>
       <section>
-        <h2>{t("5. Divulgação de produtos")}</h2>
+        <h2>{t("5. Moderação e decisões")}</h2>
         <p>
-          {t(" A divulgação comercial deve usar destinos oficiais aprovados: inicialmente Shopee Brasil, Mercado Livre Brasil e Amazon Brasil. Identifique publicidade e links de afiliado. Links encurtados, redirecionados ou de outros destinos podem ser retidos para revisão. ")}</p>
+          {t(" Usamos verificações automáticas e revisão humana. Conteúdo pode ficar pendente enquanto é analisado, inclusive quando o serviço automático falha. As verificações não garantem a detecção de toda infração. ")}</p>
         <p>
-          {t(" A presença em um marketplace não garante a honestidade do vendedor. Golpes, falsificações e promessas enganosas são proibidos. O Moment não intermedeia pagamentos; confira as condições e a reputação do vendedor no destino oficial. ")}</p>
+          {t('Infrações confirmadas estão sujeitas à retirada de conteúdo, restrições e perda da conta, inclusive encerramento permanente em casos graves ou reincidentes. Racismo, misoginia, discurso de ódio, ameaças e assédio coordenado são tratados com rigor. Ser Premium não concede imunidade. Uma denúncia ou um sinal automático, isoladamente, não determina banimento; decisões devem considerar evidências e contexto.')}</p>
+        <p>{t('Advertências, suspensões, banimentos e restrições de Vitrine ou Vagas ficam registrados em Situação da conta, nas Configurações. O titular pode consultar o motivo e solicitar uma revisão por outro moderador, sem participação na decisão ou na denúncia vinculada. Contas suspensas ou banidas mantêm acesso autenticado limitado para consultar e contestar. Solicitar revisão não suspende automaticamente a medida; a revogação de uma medida não elimina outras restrições ativas.')}</p>
       </section>
       <section>
-        <h2>{t("6. Estações e Nômade")}</h2>
+        <h2>{t("6. Direitos sobre o conteúdo")}</h2>
+        <p>
+          {t(" Você mantém os direitos sobre suas criações e deve ter autorização para compartilhar conteúdo de terceiros. Ao publicar, autoriza o processamento, armazenamento e exibição necessários ao funcionamento do Moment. Não publique dados ou materiais que não possa compartilhar. ")}</p>
+        <p>{t('A plataforma, sua marca e sua infraestrutura são administradas pelo Moment e sua equipe. O cadastro concede uma autorização pessoal de uso do serviço, sujeita a estes termos; não transfere a propriedade da plataforma nem garante acesso permanente. Isso não retira seus direitos sobre dados pessoais e conteúdos, nem afasta as responsabilidades legais do Moment.')}</p>
+        <p>{t('Você é responsável pelas informações que fornece, pela proteção das credenciais e pelo uso que faz do perfil. O Moment não solicita sua senha por mensagens. Senhas são protegidas por hash; dados e conteúdos podem ser acessados por pessoas autorizadas e fornecedores quando necessário ao funcionamento, suporte, segurança, moderação e cumprimento de obrigações legais. Não prometemos ausência de acesso interno nem transferimos ao usuário responsabilidades que cabem à plataforma.')}</p>
+      </section>
+      <section>
+        <h2>{t('Links externos e categorias do perfil')}</h2><p>{t('Modelo e Criador de conteúdo adulto são categorias distintas, opcionais e autodeclaradas; não comprovam identidade, idade ou profissão. A categoria adulta não autoriza conteúdo explícito nem links adultos. Free e Premium podem cadastrar até três links profissionais HTTPS sem aprovação prévia de cada domínio. Golpes, phishing, links adultos, encurtadores e agregadores são proibidos; destinos identificados como perigosos são bloqueados. Outros sinais de risco podem impedir a publicação até revisão. Links podem ser denunciados e retirados após análise.')}</p><p>{t('Ao abrir um link do perfil, um aviso identifica a saída do Moment e o domínio de destino. O site externo tem regras próprias; confira o endereço e evite fornecer dados sem necessidade. A presença do link não garante seu conteúdo ou segurança e não elimina as responsabilidades legais do Moment. Sites profissionais e políticos seguem os mesmos controles.')}</p></section><section><h2>{t("7. Estações e Nômade")}</h2>
         <p>
           {t(" As regras gerais valem em todas as Estações. Administradores organizam o espaço, mas não podem autorizar conteúdo proibido pelo Moment. ")}</p>
         <p>
           {t(" O modo Nômade oculta seu perfil dos outros participantes e da fila local de revisão. A plataforma mantém sua identificação interna para segurança e aplicação das regras. Nômades publicam somente texto, até 220 caracteres, e dependem de aprovação. O modo não permite contornar bloqueios ou outras restrições. ")}</p>
       </section>
       <section>
-        <h2>{t("7. Moderação e decisões")}</h2>
+        <h2>{t("8. Divulgação de produtos")}</h2>
         <p>
-          {t(" Usamos verificações automáticas e revisão humana. Conteúdo pode ficar pendente enquanto é analisado, inclusive quando o serviço automático falha. As verificações não garantem a detecção de toda infração. ")}</p>
+          {t('Produtos e cupons devem ser publicados na Vitrine Moment, usando lojas e domínios aprovados no catálogo do país. Identifique publicidade e links de afiliado. A cota é de 3 publicações por semana no Free e 10 no Premium, compartilhada entre produtos e cupons. Abrir links não consome uma cota de cliques. Excluir não devolve a cota.')}</p>
         <p>
-          {t(" Denúncias não causam remoção por quantidade. A política prevê orientação, retirada e restrições proporcionais; casos graves ou reincidentes podem justificar banimento permanente. Erros devem poder ser contestados pelo suporte. IP compartilhado, sozinho, não comprova que duas contas pertencem à mesma pessoa. As ferramentas de sanção de contas e recurso estão em evolução nesta fase. ")}</p>
+          {t(" A presença em um marketplace não garante a honestidade do vendedor. Golpes, falsificações e promessas enganosas são proibidos. O Moment não intermedeia pagamentos; confira as condições e a reputação do vendedor no destino oficial. ")}</p>
+        <p>{t('Na Vitrine, informe foto, título, descrição, loja e link aprovado; produtos exigem preço e cupons exigem benefício, onde usar, código e validade. São proibidos links falsos, páginas de phishing, redirecionamentos enganosos, produtos inexistentes, informações inventadas e ofertas repetidas para contornar limites. Uma loja aprovada não significa garantia de cada vendedor ou oferta.')}</p>
+        <p>{t('Divulgar golpes ou links falsos pode resultar em retirada do conteúdo, perda do acesso à Vitrine, suspensão do perfil ou encerramento da conta após análise. A regra vale igualmente para Free e Premium. Não envie pagamentos, senhas ou códigos de acesso a quem promete liberar uma oferta.')}</p>
       </section>
+      <section><h2>{t('Vagas e recrutamento')}</h2><p>{t('Somente vagas home office ou híbridas são permitidas. Empresas e vagas passam por análise. O Free permite 2 vagas por semana e o Premium 6, com cota compartilhada entre as empresas da conta. Excluir uma vaga não devolve a cota. Nunca pague para participar de seleção. Categoria Recrutador, assinatura Premium e vínculo confirmado com uma empresa são coisas distintas.')}</p><p>{t('A empresa precisa informar CNPJ, identificação, logo, descrição, site e vínculo de quem publica. A vaga deve ser verdadeira, com atividades, requisitos, modalidade e destino de candidatura claros. Vagas híbridas precisam informar local e frequência presencial. Não são permitidas vagas presenciais, empresas usadas sem autorização, vagas inexistentes, links falsos, promessas enganosas ou cobrança para participar, garantir contratação ou liberar uma etapa seletiva.')}</p><p>{t('Golpes, vagas inexistentes e links falsos podem resultar em bloqueio da empresa ou da vaga, perda do acesso a Vagas Moment, suspensão do perfil ou encerramento da conta após análise, independentemente de assinatura. Use Denunciar diante de suspeita. Não envie documentos sensíveis, senhas ou pagamentos sem verificar o destinatário e a necessidade.')}</p><p>{t('Nesta versão, a candidatura acontece no site informado pela empresa. O Moment não confirma inscrições externas nem altera a ordem de candidatos em outros sites. Candidaturas internas, limites por plano e destaques de candidatos dependem de uma implementação futura e não são benefícios disponíveis agora.')}</p><p>{t('Toda vaga deve informar o salário oferecido ou uma faixa ou média estimada de remuneração, com moeda e período de pagamento. Estimativas devem ser identificadas como tais, corresponder à vaga e ter fundamento real; benefícios devem ser descritos separadamente. “A combinar” ou “salário competitivo”, sem valor, não atendem à regra.')}</p></section>
       <section>
-        <h2>{t("8. Direitos sobre o conteúdo")}</h2>
-        <p>
-          {t(" Você mantém os direitos sobre suas criações e deve ter autorização para compartilhar conteúdo de terceiros. Ao publicar, autoriza o processamento, armazenamento e exibição necessários ao funcionamento do Moment. Não publique dados ou materiais que não possa compartilhar. ")}</p>
-      </section>
-      <section>
-        <h2>{t("9. Alterações e contato")}</h2>
+        <h2>{t("10. Alterações e contato")}</h2>
         <p>
           {t(" Estas são as diretrizes iniciais do período de testes. Mudanças relevantes devem ser comunicadas. O aceite no novo cadastro registra a versão e a data; isso não substitui escolhas específicas de privacidade. ")}</p>
         <Contact />
@@ -116,23 +126,17 @@ function Privacy() {
   useLanguage();
   return (
     <>
-      <section><h2>{t('Vagas e empresas')}</h2><p>{t('Em Vagas Moment, o nome, CNPJ, logo, descrição e site da empresa, além dos dados das vagas aprovadas e do perfil que publicou, são exibidos aos participantes autenticados. O e-mail profissional e a relação do responsável com a empresa ficam restritos ao titular e à moderação para análise.')}</p><p>{t('A candidatura acontece fora do Moment, no destino informado pela empresa. Não recebemos currículos ou documentos de candidatos nesta etapa. Denúncias ficam restritas à moderação; não envie documentos, senhas ou dados bancários no relato.')}</p></section>
-      <section><h2>{t('Recomendações e métricas opcionais')}</h2><p>{t('Personalizar o Para você usa interesses escolhidos, estações e perfis seguidos. Métricas opcionais, desativadas por padrão e restritas a adultos, registram exibições e aberturas e permitem considerar curtidas e republicações recentes. Não coletamos texto digitado, mensagens privadas ou navegação externa para isso.')}</p><p>{t('Eventos são deduplicados por dia, ficam disponíveis por até 30 dias e são eliminados pela rotina horária de limpeza. A ordem do feed é guardada por 30 minutos para paginar. Interesses e escolhas de não interesse permanecem até serem redefinidos. Em Configurações, Privacidade, você pode desligar a personalização, apagar eventos ao desativar métricas e redefinir recomendações.')}</p></section>
       <section>
-        <h2>{t("Dados usados pelo Moment")}</h2>
+        <h2>{t("Dados usados pelo Moment")}</h2><p>{t('Os nomes e endereços dos links cadastrados ficam armazenados e são exibidos no perfil. Categorias são opcionais e públicas, incluindo a categoria de criador adulto: escolha conscientemente o que deseja divulgar e remova ou altere quando quiser. Não usamos essa categoria para inferir vida sexual ou segmentar anúncios. Os nomes dos links passam pela moderação de texto descrita nesta política. Denúncias preservam uma cópia do link para análise restrita da equipe.')}</p><p>{t('Para validar links de perfil, o servidor consulta o destino e seus redirecionamentos sem enviar cookies ou credenciais do usuário. Não exibimos prévias nem executamos scripts desses sites. Quando configurado, o Google Web Risk recebe a URL para consultar ameaças; um trecho limitado do texto público pode ser enviado à OpenAI para moderação. Não detectar ameaça não garante segurança: as verificações podem ser parciais e não analisam todas as imagens ou alterações futuras. Ao abrir o site, seu navegador se conecta ao destino, sujeito às regras dele; o endereço da página do Moment não é enviado como referência.')}</p>
         <p>
           {t(" O cadastro usa nome de exibição, username, e-mail e senha protegida por hash. Novos cadastros também registram a data de nascimento informada, versão dos termos e momento do aceite. Publicações, mídias, respostas, curtidas, relações entre contas, notificações, denúncias e decisões de revisão são armazenadas para oferecer esses recursos. ")}</p>
         <p>
           {t(" Nome, username, avatar e conteúdo publicado podem ser vistos por outros participantes. E-mail, nascimento e credenciais não fazem parte do perfil público. Não coloque endereço, telefone ou outras informações sensíveis em textos ou imagens públicos. ")}</p>
       </section>
-      <section>
-        <h2>{t("Finalidades e fornecedores")}</h2>
-        <p>
-          {t("Os dados são usados para autenticação, conteúdo, interações, recuperação de conta, moderação e prevenção de abuso. Textos podem ser enviados à OpenAI para moderação. Mídias são armazenadas no Cloudflare R2. Imagens de emojis Twemoji são carregadas pelo jsDelivr, que pode receber dados de conexão.")}
-        </p>
-        <p>
-          {t(" Serviços de infraestrutura podem processar dados fora do Brasil. A relação final dos provedores de hospedagem, mecanismos de transferência e bases legais de cada finalidade ainda precisa ser formalizada pelo responsável antes da abertura pública. ")}</p>
-      </section>
+      <section><h2>{t('Acesso restrito e responsabilidade')}</h2><p>{t('O Moment administra a plataforma, mas você mantém os direitos aplicáveis sobre seus dados pessoais e conteúdos. O acesso interno é restrito a finalidades de operação, suporte, moderação, segurança e obrigações legais. A plataforma não é um espaço sem acesso técnico ou de moderação; não compartilhe dados sensíveis em publicações, denúncias ou campos públicos de perfil.')}</p></section>
+      <section><h2>{t('Cargos públicos e dados eleitorais')}</h2><p>{t('Categorias e cargos informados no perfil são autodeclarados e públicos; não equivalem a verificação de identidade, vínculo institucional ou candidatura. Não inclua documentos pessoais ou dados de terceiros nesses campos. Informações públicas de processos e decisões só devem ser divulgadas quando necessárias, pertinentes e sem expor dados protegidos.')}</p><p>{t('A conferência eleitoral ainda não está disponível e não há formulário ativo para coletar registros ou documentos de campanha. Antes de ativá-la, o Moment deverá informar os dados exigidos, finalidade, base legal, acesso, campos públicos e prazo de conservação. A previsão é consultar referências oficiais do registro e CNPJ de campanha, sem solicitar documentos pessoais por publicações ou comentários. Não usamos esses dados para inferir opinião política ou segmentar publicidade eleitoral.')}</p></section>
+      <section><h2>{t('Modo Proteção')}</h2><p>{t('O Modo Proteção salva um prazo de 24 ou 72 horas na sua conta para restringir comentários, menções e respostas diretas e recolher notificações sociais. Está disponível para Free e Premium e pode ser desativado a qualquer momento. Não torna o perfil privado, não apaga conteúdo ou denúncias e não envia denúncias automaticamente. O estado detalhado fica disponível apenas ao titular; quem tenta interagir recebe uma mensagem genérica de indisponibilidade.')}</p></section>
+      <section><h2>{t('Recomendações e métricas opcionais')}</h2><p>{t('Personalizar o Para você usa interesses escolhidos, estações e perfis seguidos. Métricas opcionais, desativadas por padrão e restritas a adultos, registram exibições e aberturas e permitem considerar curtidas e republicações recentes. Não coletamos texto digitado, mensagens privadas ou navegação externa para isso.')}</p><p>{t('Eventos são deduplicados por dia, ficam disponíveis por até 30 dias e são eliminados pela rotina horária de limpeza. A ordem do feed é guardada por 30 minutos para paginar. Interesses e escolhas de não interesse permanecem até serem redefinidos. Em Configurações, Privacidade, você pode desligar a personalização, apagar eventos ao desativar métricas e redefinir recomendações.')}</p></section>
       <section>
         <h2>{t("Cookies e preferências")}</h2>
         <p>
@@ -145,6 +149,16 @@ function Privacy() {
           {t(" Nômade é uma forma de ocultar o perfil dos participantes, não anonimato perante a plataforma. A conta continua associada internamente ao conteúdo. Denúncias e decisões ficam acessíveis à equipe autorizada. ")}</p>
         <p>
           {t(" O cadastro de menores de 18 anos ainda não está habilitado enquanto preparamos as proteções para o público a partir de 14 anos. Não há verificação independente de idade concluída nesta versão. Se identificar possível participação indevida de menor, procure o suporte. ")}</p>
+      </section>
+      <section><h2>{t('Privacidade na Vitrine')}</h2><p>{t('Ao abrir uma oferta, você acessa um site externo, sujeito à política de privacidade da loja. Não informe senhas ou dados bancários em comentários e denúncias da Vitrine.')}</p></section>
+      <section><h2>{t('Vagas e empresas')}</h2><p>{t('Em Vagas Moment, o nome, CNPJ, logo, descrição e site da empresa, além dos dados das vagas aprovadas e do perfil que publicou, são exibidos aos participantes autenticados. O e-mail profissional e a relação do responsável com a empresa ficam restritos ao titular e à moderação para análise.')}</p><p>{t('A candidatura acontece fora do Moment, no destino informado pela empresa. Não recebemos currículos ou documentos de candidatos nesta etapa. Denúncias ficam restritas à moderação; não envie documentos, senhas ou dados bancários no relato.')}</p></section>
+      <section>
+        <h2>{t("Finalidades e fornecedores")}</h2>
+        <p>
+          {t("Os dados são usados para autenticação, conteúdo, interações, recuperação de conta, moderação e prevenção de abuso. Textos podem ser enviados à OpenAI para moderação. Mídias são armazenadas no Cloudflare R2. Imagens de emojis Twemoji são carregadas pelo jsDelivr, que pode receber dados de conexão.")}
+        </p>
+        <p>
+          {t(" Serviços de infraestrutura podem processar dados fora do Brasil. A relação final dos provedores de hospedagem, mecanismos de transferência e bases legais de cada finalidade ainda precisa ser formalizada pelo responsável antes da abertura pública. ")}</p>
       </section>
       <section>
         <h2>{t("Exclusão, conservação e seus pedidos")}</h2>
@@ -205,6 +219,9 @@ function Support() {
         </details>
       </section>
       <section>
+        <h2>{t('Ajuda com Estações')}</h2><p>{t('Publicações no modo Nômade aguardam aprovação. Para dúvidas sobre uma Estação, consulte suas regras; use Denunciar para conteúdo irregular, sem expor dados pessoais.')}</p>
+        <h2>{t('Ajuda com a Vitrine')}</h2><p>{t('Confira os dados da oferta e a loja de destino antes de abrir links. Use Denunciar em caso de golpe ou link falso. Nunca pague para liberar uma oferta.')}</p>
+        <h2>{t('Ajuda com Vagas')}</h2><p>{t('Confira empresa, modalidade e remuneração. Novas vagas exigem salário ou faixa estimada; valores sem moeda e período são considerados BRL por mês. A candidatura ocorre no site externo informado. Nunca pague para participar da seleção e denuncie vagas falsas.')}</p>
         <h2>{t("Fale com o responsável")}</h2>
         <Contact />
         <p>
