@@ -1,4 +1,5 @@
 import { relativeTime } from '@/i18n';
+import { StaffBadge } from '@/features/profile/staff-badge';
 import { getLanguage } from '@/i18n';
 import { t, useLanguage } from '@/i18n';
 import { useEffect, useId, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
@@ -32,7 +33,7 @@ function FeedReplyCard({ reply, postId, ownerId, viewerId, onReply, remove, remo
   return <article className="reply-card">
     <Link className="reply-avatar-link" to={`/profile/${encodeURIComponent(reply.user.username)}`} aria-label={`${t('Ver perfil de')} ${reply.user.name}`}><ReplyAvatar name={reply.user.name} avatar={reply.user.avatar} /></Link>
     <div className="reply-body">
-      <header><div className="reply-identity"><Link to={`/profile/${encodeURIComponent(reply.user.username)}`} className="reply-author"><strong>{reply.user.name}</strong><span>@{reply.user.username}</span></Link><span className="reply-time-divider" aria-hidden="true">·</span><ReplyTime date={reply.createdAt} /></div>
+      <header><div className="reply-identity"><Link to={`/profile/${encodeURIComponent(reply.user.username)}`} className="reply-author"><strong>{reply.user.name}</strong><span>@{reply.user.username}</span></Link><StaffBadge role={reply.user.staffRole}/><span className="reply-time-divider" aria-hidden="true">·</span><ReplyTime date={reply.createdAt} /></div>
         <ReportButton targetType="REPLY" targetId={reply.id} authorId={reply.user.id} canReport={viewerId !== reply.user.id} deletePending={removing} onDelete={viewerId === reply.user.id || viewerId === ownerId ? () => { if (window.confirm(t('Excluir esta resposta? Essa ação não pode ser desfeita.'))) remove(reply.id); } : undefined} />
       </header>
       {reply.replyToName && <p className="reply-context">{t('Respondendo a {name}', { name: reply.replyToName })}</p>}

@@ -5,7 +5,7 @@ export type PostUser = {
   id: string;
   name: string;
   username: string;
-  avatar: string | null;
+  avatar: string | null; staffRole?:string;
 };
 
 export type Post = {

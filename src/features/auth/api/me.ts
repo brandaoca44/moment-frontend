@@ -7,6 +7,7 @@ export type MeResponse = {
       id: string;
       language?: string;
       canModerate?: boolean;
+      staffRole?:string;
       name: string;
       username: string;
       email: string;

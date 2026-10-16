@@ -60,6 +60,8 @@ function planGroups(premium:boolean):PlanGroup[] {
       {label:t('Divulgação de vagas'),value:t('{count} por semana',{count:premium?6:2})},
     ],note:t('A cota semanal vale para todas as suas empresas. Buscar vagas é gratuito.')},
     {title:t('Aparência'),icon:<Palette size={15}/>,items:[
+      {label:t('Links do perfil'),value:t(premium?'Até 3 links':'1 link')},
+      {label:t('Divulgação da atuação'),value:t(premium?'Incluída no Premium':'Exclusiva do Premium'),detail:premium?t('Atuações protegidas exigem análise específica.'):undefined},
       {label:t('Temas'),value:t(premium?'4 temas exclusivos + os gratuitos':'3 temas incluídos'),detail:premium?'Midnight, Aurora, Champagne e Rosé':t('Claro, Escuro e Ametista')},
       {label:t('Fontes'),value:t(premium?'3 fontes extras':'Fonte padrão'),detail:premium?'Manrope, Nunito Sans e Source Sans 3':undefined},
     ]},

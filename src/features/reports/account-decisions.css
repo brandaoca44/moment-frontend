@@ -1,5 +1,12 @@
-.account-decisions{max-width:720px;margin:0 auto;padding:20px;color:var(--text);font-family:var(--font-ui)}
-.account-decisions>header{display:flex;align-items:flex-start;gap:9px;color:var(--amethyst);margin-bottom:18px}.account-decisions h2{font-size:22px;font-weight:500;margin:0;color:var(--text)}
+.account-decisions{max-width:720px;margin:0 auto;padding:28px;box-sizing:border-box;border:1px solid var(--border-soft);border-radius:24px;background:linear-gradient(135deg,var(--surface),var(--amethyst-bg));color:var(--text);font-family:var(--font-ui)}
+.account-decisions>header{display:flex;align-items:flex-start;gap:14px;color:var(--amethyst);margin-bottom:24px}.account-decisions h2{font-size:22px;font-weight:500;line-height:1.35;margin:0;color:var(--text)}
+.account-decisions-icon{display:grid;place-items:center;flex:0 0 40px;height:40px;border:1px solid var(--amethyst-border);border-radius:13px;background:var(--amethyst-bg)}
+.account-decisions>header>div{min-width:0;padding-top:4px}
+.account-decisions-empty{display:flex;align-items:center;gap:12px;padding:20px;border:1px solid var(--border-soft);border-radius:16px;background:var(--surface);color:var(--text-muted)}
+.account-decisions-empty>svg{flex-shrink:0;color:var(--amethyst)}.account-decisions-empty p{margin:0;color:var(--text)}
+.account-decisions-footer{display:flex;flex-wrap:wrap;gap:20px;border-top:1px solid var(--border-soft);padding-top:16px;margin-top:24px}
+.account-decisions-footer a{font-size:12px;line-height:1.5;color:var(--text-muted);text-decoration:none;transition:color .15s}.account-decisions-footer a:hover{color:var(--amethyst);text-decoration:underline}.account-decisions-footer a:focus-visible{outline:2px solid var(--amethyst);outline-offset:4px;border-radius:3px}
+@media(max-width:600px){.account-decisions{padding:20px;border-radius:20px}.account-decisions>header{gap:12px}.account-decisions-empty{padding:16px}}
 .account-decisions p,.sanctions-admin p{font-size:13px;font-weight:400;line-height:1.65;overflow-wrap:anywhere}.account-decisions>header p{margin:5px 0;color:var(--text-muted)}
 .account-decision{border:1px solid var(--border-soft);border-radius:14px;padding:14px;background:var(--surface);margin:12px 0;overflow-wrap:anywhere}
 .account-decision-heading{display:flex;justify-content:space-between;flex-wrap:wrap;align-items:center;gap:8px}.account-decision-heading strong{font-size:14px;font-weight:500}.account-decision-heading small{color:var(--amethyst)}

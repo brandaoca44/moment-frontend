@@ -40,6 +40,7 @@ function Pages({
   change: (p: number) => void;
 }) {
   useLanguage();
+  if(pages<=1)return null;
   return (
     <nav className="station-controls" aria-label={translate("Páginas")}>
       <button disabled={page <= 1} onClick={() => change(page - 1)}>
@@ -205,12 +206,17 @@ export function StationsPage() {
   const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
   const me = useMe().data?.data.user;
+  const teamMfa = useQuery({queryKey:['stations','team-mfa'],queryFn:()=>api<{data:{verified:boolean}}>('/mfa/status'),enabled:!!me?.canModerate,refetchOnWindowFocus:true,refetchInterval:30000});
+  const teamVerified=!!teamMfa.data?.data.verified;
+  const reviewLocked=tab==='pending'&&!teamVerified;
   const list = useQuery({
-    queryKey: ["stations", "list", tab, page, category, search],
+    queryKey: ["stations", "list", tab, page, category, search, tab==='pending'?teamVerified:null],
     queryFn: () => stations(tab, page, category, search),
+    enabled:!reviewLocked,
+    retry:(attempt,error)=>!error.message.includes('Forbidden')&&!error.message.includes('MFA')&&attempt<2,
   });
   return (
-    <section className="stations-page">
+    <section className="stations-page station-directory">
       <header className="station-directory-header">
         <div>
           <h1>{translate("Estações")}</h1>
@@ -219,8 +225,8 @@ export function StationsPage() {
         </div>
         <StationForm />
       </header>
-      <StationReviewInbox />
-      <div className="station-controls">
+      {(!me?.canModerate||teamVerified)&&<StationReviewInbox />}
+      <div className="station-controls station-directory-tabs">
         {[
           ["discover", translate("Descobrir")],
           ["mine", translate("Minhas estações")],
@@ -238,6 +244,7 @@ export function StationsPage() {
           </button>
         ))}
       </div>
+      {reviewLocked?<div className="station-review-locked" role="status"><span className="station-review-locked-icon"><ScrollText size={20} aria-hidden="true"/></span><div><h2>{translate('Aprovar estações')}</h2><p>{translate('Confirme o MFA em Segurança para acessar as ferramentas da equipe.')}</p><Link to="/settings?section=password&securityTab=mfa">{translate('Segurança')} <ChevronLeft size={14} style={{transform:'rotate(180deg)'}} aria-hidden="true"/></Link></div></div>:<>
       <form
         className="station-search"
         role="search"
@@ -294,7 +301,7 @@ export function StationsPage() {
           >
             {translate(" Limpar filtro ")}</button>
         )}
-        {me?.canModerate && <ReviewQueue id="" />}
+        {me?.canModerate && teamVerified && <ReviewQueue id="" />}
       </div>
       {list.isPending && <p role="status">{translate("Carregando estações...")}</p>}
       {list.isError && <p role="alert">{translate(list.error.message)}</p>}
@@ -337,6 +344,7 @@ export function StationsPage() {
       {list.data && (
         <Pages page={page} pages={list.data.meta.pages} change={setPage} />
       )}
+      </>}
     </section>
   );
 }
@@ -381,7 +389,8 @@ function Composer({ path, topic = false, onCreated, replyToId }: { path: string;
           send.mutate();
       }}
     >
-      <h2>{topic ? translate("Abrir um tópico") : translate("Responder")}</h2>
+      <h2>{topic ? translate("Criar tópico") : translate("Sua resposta")}</h2>
+      <p className="station-composer-help">{translate(topic?'Escolha um título claro e compartilhe sua ideia com a estação.':'Compartilhe sua resposta com respeito e mantenha o assunto da conversa.')}</p>
       {plan?.trial && !nomad && content.length > 440 && <PremiumNotice />}
       {topic && (
         <label>
@@ -558,13 +567,13 @@ export function StationPage() {
       {detail.isError && <p role="alert">{translate(detail.error.message)}</p>}
       {s && (
         <>
-          {s.coverUrl && (
-            <img className="station-cover" src={s.coverUrl} alt="" />
-          )}
-          <h1>{s.name}</h1>
-          <p>{s.description}</p>
-          <p>
-            {translate(s.category)} · {s.membersCount} {translate(" membros ")}</p>
+          <header className="station-identity">
+            <div className="station-identity-top">
+              <div className="station-identity-photo">{s.coverUrl?<img src={s.coverUrl} alt=""/>:<span aria-hidden="true">{s.name.slice(0,2).toUpperCase()}</span>}</div>
+              <div className="station-identity-title"><h1>{s.name}</h1><p>{translate(s.category)}<span aria-hidden="true"> · </span>{translate(s.membersCount===1?'{count} participante':'{count} participantes',{count:s.membersCount??0})}</p></div>
+            </div>
+          <p className="station-identity-description">{s.description}</p>
+          {s.status==='APPROVED'&&!s.banned&&<p className="station-participation-hint">{translate(s.joined?'Você faz parte desta estação. Responda às conversas ou crie um tópico.':'Participe para responder às conversas e criar tópicos.')}</p>}
           <div className="station-toolbar station-management-actions">
             <StationDialog icon={<ScrollText size={16} aria-hidden="true" />} label={translate("Regras")} title={translate("Regras da estação")}>
               <p>{s.rules}</p>
@@ -593,19 +602,20 @@ export function StationPage() {
                   ? translate("Participação removida")
                   : s.joined
                     ? translate("Sair da estação")
-                    : translate("Entrar na estação")}
+                    : translate("Participar da estação")}
               </button>
             )}
             {membership.isError && (
               <p role="alert">{translate(membership.error.message)}</p>
             )}
           </div>
+          </header>
           {s.status === "APPROVED" && (
             <>
-              <div className="station-controls">
-                <h2 className="station-topics-heading">{translate("Tópicos")}</h2>
-                {s.joined && (
-                  <StationDialog label={translate("Novo tópico")}>
+              <div className="station-conversations-heading">
+                <div><h2 className="station-topics-heading">{translate("Conversas da estação")}</h2><p>{translate('Abra uma conversa para ler e responder.')}</p></div>
+                {s.joined && !s.banned && (
+                  <StationDialog icon={<Plus size={16} aria-hidden="true"/>} label={translate("Criar tópico")}>
                     {(close) => <Composer path={`${id}/topics`} topic onCreated={(message) => { setCreatedMessage(message); setPage(1); setSort('recent'); close(); }} />}
                   </StationDialog>
                 )}
@@ -638,21 +648,19 @@ export function StationPage() {
                   key={t.id}
                   to={`/communities/topics/${t.id}`}
                 >
-                  <span className="station-topic-label">
-                    {translate(" Tópico · Abrir conversa → ")}</span>
                   <strong>{t.title}</strong>
                   <span className="station-muted">
                     {translate(" Criado por ")}{t.creator ?? "Membro"}
                   </span>
-                  <br />
                   <small>
                     {t._count.entries} {translate(" respostas · Última atividade:")}{" "}
                     {new Date(t.lastActivity).toLocaleString(getLanguage())}
                   </small>
+                  <span className="station-topic-open">{translate('Ver conversa')} <ChevronLeft size={14} style={{transform:'rotate(180deg)'}} aria-hidden="true"/></span>
                 </Link>
               ))}
               {list.data?.data.length === 0 && (
-                <p>{translate("A conversa começa com o primeiro tópico.")}</p>
+                <div className="station-empty-state"><h3>{translate('Ainda não há conversas por aqui.')}</h3><p>{translate(s.joined?'Crie o primeiro tópico e convide a estação a conversar.':'Participe da estação para começar uma conversa.')}</p></div>
               )}
               {list.data && (
                 <Pages
@@ -713,7 +721,8 @@ function EntryCard({
       {entry.root && (
         <span className="station-topic-label">{translate("Publicação inicial")}</span>
       )}
-      <header>
+      <header className="station-entry-heading">
+        <div className="station-entry-author">
         {entry.nomad ? (
           <strong>{entry.alias}</strong>
         ) : (
@@ -723,11 +732,14 @@ function EntryCard({
             {entry.author?.name}
           </Link>
         )}
+        {!entry.nomad&&<StaffBadge role={entry.author?.staffRole}/>}
+        </div>
         <time dateTime={entry.createdAt}>
           {new Date(entry.createdAt).toLocaleString(getLanguage())}
         </time>
       </header>
       {entry.replyToName && <div className="forum-reply-context">{translate('Respondendo a {name}', { name: entry.replyToName })}</div>}
+      {entry.moderationStatus==='PENDING_REVIEW'&&<p className="station-pending-notice" role="status">{translate('Aguardando aprovação. Esta publicação ainda não está visível para todos.')}</p>}
       <p><EmojiText text={entry.content} /></p>
       {entry.imageUrl && (
         <ExpandableImage src={entry.imageUrl} alt="Imagem da conversa" />
@@ -792,6 +804,8 @@ function ReplyThread({ entry, canManage, canPost, stationId, alternate, initiall
 }
 export function TopicPage() {
   useLanguage();
+  const composerRef=useRef<HTMLDivElement>(null);
+  const [replyNotice,setReplyNotice]=useState('');
   const { topicId = "" } = useParams();
   const [params, setParams] = useSearchParams();
   const [page, setPage] = useState(1);
@@ -822,6 +836,7 @@ export function TopicPage() {
               canManage={t.canManage}
               canPost={t.canPost}
               stationId={t.stationId}
+              onReply={()=>{composerRef.current?.scrollIntoView({behavior:'smooth',block:'center'});composerRef.current?.querySelector('textarea')?.focus({preventScroll:true});}}
             />
           )}
           <h2>{translate("Respostas")}</h2>
@@ -862,19 +877,20 @@ export function TopicPage() {
               stationId={t.stationId}
             />
           ))}
-          {t.entries.length === 0 && <p>{translate("Ainda não há respostas.")}</p>}
+          {t.entries.length === 0 && <div className="station-empty-state"><p>{translate(t.canPost?'Seja a primeira pessoa a responder a esta conversa.':'Ainda não há respostas.')}</p></div>}
           <Pages
             page={query.data!.meta.page}
             pages={query.data!.meta.pages}
             change={(next) => { setParams(previous => { previous.delete('thread'); return previous; }, { replace: true }); setPage(next); }}
           />
           {t.canPost ? (
-            <Composer path={`topics/${topicId}/replies`} />
+            <div ref={composerRef}><p className="forum-reply-context">{translate('Respondendo à conversa: {title}',{title:t.title})}</p><Composer path={`topics/${topicId}/replies`} onCreated={setReplyNotice}/>{replyNotice&&<p className="station-pending-notice" role="status">{translate(replyNotice)}</p>}</div>
           ) : (
-            !t.root?.removed && <p>{translate("Entre na estação para participar.")}</p>
+            !t.root?.removed && <div className="station-empty-state"><p>{translate("Entre na estação para participar.")}</p><Link to={`/communities/${t.stationId}`}>{translate('Ver estação')}</Link></div>
           )}
         </>
       )}
     </section>
   );
 }
+import { StaffBadge } from '@/features/profile/staff-badge';

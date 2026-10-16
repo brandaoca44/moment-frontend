@@ -1,10 +1,15 @@
+import { MfaPanel, StaffManagementPanel, useTeamSecurity } from '@/features/profile/team-security';
+import { VerificationSettings } from '@/features/profile/verification';
 import { t, useLanguage } from '@/i18n';
 import { useSearchParams } from 'react-router-dom';
 import { ProtectionPanel } from '@/features/profile/protection-mode';
 import { AccountDecisions } from '@/features/reports/account-decisions';
 import { PlanSection } from '@/features/plans/use-plan';
 import { PremiumProfileSettings } from '@/features/profile/premium-profile';
-import { ProfileLinksSettings } from '@/features/profile/profile-links';
+import { ProfileLinksFields, type ProfileLink } from '@/features/profile/profile-links';
+import { useQuery } from '@tanstack/react-query';
+import { api } from '@/lib/api';
+import { usePlan } from '@/features/plans/use-plan';
 import { FontSelector } from '@/features/plans/font-selector';
 import { useEffect, useRef, useState, type ReactElement } from 'react';
 import { useMe } from '@/features/auth/hooks/use-me';
@@ -16,7 +21,6 @@ import { ThemeSelector } from '@/features/feed/components/theme-selector';
 import { ProfileBlock } from '@/features/profile/components/profile-block';
 import { ContentPreferences } from '@/features/profile/components/content-preference';
 import { EmailConfirmation } from '@/features/profile/components/email-confirmation';
-import { PositiveMarks } from '@/features/stations/positive-marks';
 import { LanguagePicker } from '@/i18n/language-picker';
 import { Globe } from 'lucide-react';
 import { RecommendationPreferencesPanel } from '@/features/feed/components/recommendation-preferences';
@@ -123,9 +127,11 @@ export function SettingsPage() {
   const { data: meData } = useMe();
   const user = meData?.data?.user;
 
-  const [params]=useSearchParams();
-  const [activeSection, setActiveSection] = useState<Section>(params.get('section')==='account-status'?'account-status':params.get('section')==='privacy'?'privacy':'profile');
-  useEffect(()=>{const section=params.get('section');if(section==='privacy'||section==='account-status')setActiveSection(section);},[params]);
+  const [params,setParams]=useSearchParams();
+  const allowedSections=['profile','appearance','password','privacy','danger','language','plan','account-status'];
+  const activeSection=(allowedSections.includes(params.get('section')??'')?params.get('section'):'profile') as Section;
+  const profileTab=['premium','verification'].includes(params.get('profileTab')??'')?params.get('profileTab')!:'information';
+  function setActiveSection(section:Section){setParams(previous=>{const next=new URLSearchParams(previous);next.set('section',section);return next;});}
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   return (
@@ -779,6 +785,28 @@ export function SettingsPage() {
         .settings-page .settings-menu { padding:7px; border-radius:18px; }
         @media(min-width:761px) { .settings-page .settings-layout{grid-template-columns:200px minmax(0,1fr);gap:18px;} }
         @media(max-width:520px) { .settings-page .settings-title{font-size:24px}.settings-page .settings-section{padding:16px}.settings-page .settings-hero{padding:16px} }
+        .settings-profile-tabs{display:flex;gap:4px;padding:5px;margin-bottom:16px;border:1px solid var(--border-soft);border-radius:15px;background:var(--surface-soft);flex-wrap:wrap}
+        .settings-profile-tabs button{flex:1;min-width:0;padding:10px 12px;border:1px solid transparent;border-radius:10px;background:transparent;color:var(--text-muted);font:400 12px/1.5 var(--font-ui)}
+        .settings-profile-tabs button[aria-pressed=true]{background:var(--surface);border-color:var(--amethyst-border);color:var(--amethyst);font-weight:500}
+        .settings-profile-workspace>.settings-section{margin-top:0!important}
+        .settings-security-workspace .mfa-panel{margin-top:0}
+.settings-privacy-content>.protection-panel,.settings-privacy-content>.settings-preference-group,.settings-privacy-content>.recommendation-preferences{margin:0;border:0;padding:0;background:transparent;box-shadow:none}
+.settings-privacy-content h3{margin-top:0;font-size:16px;font-weight:500}
+.settings-privacy-intro,.settings-privacy-content p{font-size:13px;line-height:1.7;color:var(--text-muted)}
+.settings-privacy-content .station-controls{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid var(--border-soft);font-size:13px}
+.settings-privacy-content .station-controls>span{min-width:0;overflow-wrap:anywhere}
+.settings-privacy-content button{font:400 12px/1.5 var(--font-ui);border:1px solid var(--border);border-radius:11px;padding:8px 12px;background:var(--surface);color:var(--text)}
+.settings-privacy-content .protection-activate{background:var(--amethyst-bg);border-color:var(--amethyst-border);color:var(--amethyst)}
+@media(max-width:600px){.settings-security-workspace>.settings-profile-tabs,.settings-privacy-workspace>.settings-profile-tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}}
+.settings-profile-workspace .settings-form{gap:14px}
+        .settings-profile-workspace .settings-input{padding:11px 13px;min-height:44px}
+        .settings-page .settings-profile-workspace .settings-input.with-at{padding-left:33px}
+        .settings-profile-workspace .settings-at{left:15px;width:14px;text-align:center;font-weight:500}
+        .profile-links-inline{min-width:0;border:0;border-top:1px solid var(--border-soft);padding:16px 0 0;margin:2px 0 0}
+        .profile-links-inline legend{padding:0 8px 0 0;font-size:14px;font-weight:500}
+        .profile-links-inline .profile-link-editor{padding:12px;gap:10px;border-radius:13px}
+        .profile-links-inline>.profile-links-help{font-size:12px;line-height:1.6;margin:8px 0 12px}
+        @media(max-width:520px){.settings-profile-tabs button{padding:8px 6px;font-size:11px}}
       `}</style>
 
       <div className="settings-page">
@@ -826,19 +854,13 @@ export function SettingsPage() {
           </aside>
 
           <main>
-            {activeSection === 'profile' && <><ProfileSection user={user} /><ProfileLinksSettings/><PremiumProfileSettings/>{user && <section className="settings-section" style={{ marginTop: 20 }}><PositiveMarks userId={user.id} own settings /></section>}</>}
+            {activeSection === 'profile' && <div className="settings-profile-workspace"><nav className="settings-profile-tabs" aria-label={t('Opções do perfil')}>{[['information','Informações do perfil'],['premium','Perfil Premium'],['verification','Verificação']].map(([key,label])=><button type="button" key={key} aria-pressed={profileTab===key} onClick={()=>setParams(previous=>{const next=new URLSearchParams(previous);next.set('profileTab',key);return next;})}>{t(label)}</button>)}</nav>{profileTab==='information'&&<><ProfileSection user={user} /></>}{profileTab==='premium'&&<PremiumProfileSettings/>}{profileTab==='verification'&&<VerificationSettings/>}</div>}
             {activeSection === 'appearance' && <AppearanceSection />}
             {activeSection === 'plan' && <PlanSection />}
             {activeSection === 'account-status' && <AccountDecisions/>}
             {activeSection === 'language' && <section className="settings-section"><h2>{t('Idiomas')}</h2><p>{t('Escolha o idioma do Moment.')}</p><LanguagePicker /></section>}
-            {activeSection === 'password' && <><PasswordSection /><section className="settings-section" style={{ marginTop: 20 }}><EmailConfirmation /></section></>}
-            {activeSection === 'privacy' && <section className="settings-section">
-              <div className="settings-section-header"><h2 className="settings-section-title">{t("Privacidade e conteúdo")}</h2><p className="settings-section-subtitle">{t("Gerencie quem pode interagir com você e o que aparece nas suas listas.")}</p></div>
-              <ProtectionPanel />
-              <ProfileBlock />
-              <ContentPreferences />
-              <RecommendationPreferencesPanel />
-            </section>}
+            {activeSection === 'password' && <SecuritySection/>}
+            {activeSection === 'privacy' && <PrivacySection/>}
             {activeSection === 'danger' && (
               <DangerSection
                 showConfirm={showDeleteConfirm}
@@ -852,6 +874,30 @@ export function SettingsPage() {
   );
 }
 
+function SecuritySection(){
+  useLanguage();const status=useTeamSecurity();const [params,setParams]=useSearchParams();
+  const me=useMe().data?.data.user;
+  const eligible=['OWNER','COMMUNITY_MANAGER','MODERATOR','MOMENT_TEAM'].includes(me?.staffRole??'')&&!!status.data?.data.eligible,owner=eligible&&me?.staffRole==='OWNER'&&status.data?.data.role==='OWNER';
+  const options=[['password','Senha'],['email','E-mail'],...(eligible?[['mfa','Autenticador']]:[]),...(owner?[['team','Gerenciar equipe']]:[])];
+  const selected=options.some(([key])=>key===params.get('securityTab'))?params.get('securityTab')!:'password';
+  return <div className="settings-profile-workspace settings-security-workspace"><nav className="settings-profile-tabs" aria-label={t('Opções de segurança')}>{options.map(([key,label])=><button type="button" key={key} aria-pressed={selected===key} onClick={()=>setParams(previous=>{const next=new URLSearchParams(previous);next.set('securityTab',key);return next;})}>{t(label)}</button>)}</nav>
+    {selected==='password'&&<PasswordSection/>}
+    {selected==='email'&&<section className="settings-section"><header className="settings-section-header"><h2 className="settings-section-title">{t('E-mail da conta')}</h2><p className="settings-section-subtitle">{t('Confirme seu endereço para proteger o acesso à sua conta.')}</p></header><EmailConfirmation/></section>}
+    {eligible&&<div hidden={selected!=='mfa'}><MfaPanel/></div>}
+    {owner&&selected==='team'&&<StaffManagementPanel/>}
+  </div>;
+}
+function PrivacySection(){
+  useLanguage();const [params,setParams]=useSearchParams();
+  const options=[['protection','Modo Proteção'],['blocks','Bloqueios'],['content','Silenciamentos e conteúdo'],['recommendations','Recomendações']];
+  const selected=options.some(([key])=>key===params.get('privacyTab'))?params.get('privacyTab')!:'protection';
+  return <div className="settings-profile-workspace settings-privacy-workspace"><nav className="settings-profile-tabs" aria-label={t('Opções de privacidade')}>{options.map(([key,label])=><button type="button" key={key} aria-pressed={selected===key} onClick={()=>setParams(previous=>{const next=new URLSearchParams(previous);next.set('privacyTab',key);return next;})}>{t(label)}</button>)}</nav><section className="settings-section"><div className="settings-section-header"><h2 className="settings-section-title">{t('Privacidade e conteúdo')}</h2><p className="settings-section-subtitle">{t('Controle suas interações e escolha o que deseja ver no Moment.')}</p></div><div className="settings-privacy-content">
+  {selected==='protection'&&<ProtectionPanel/>}
+  {selected==='blocks'&&<><p className="settings-privacy-intro">{t('Bloquear impede interações entre as contas. Você pode desfazer um bloqueio abaixo.')}</p><ProfileBlock/></>}
+  {selected==='content'&&<ContentPreferences/>}
+  {selected==='recommendations'&&<RecommendationPreferencesPanel/>}
+  </div></section></div>;
+}
 function AppearanceSection() {
   useLanguage();
   return (
@@ -869,6 +915,11 @@ function AppearanceSection() {
 
 function ProfileSection({ user }: { user: SettingsUser }) {
   useLanguage();
+  const plan=usePlan();
+  const linksQuery=useQuery({queryKey:['profile-links'],queryFn:()=>api<{data:ProfileLink[]}>('/users/me/links')});
+  const [linksDraft,setLinksDraft]=useState<{label:string;url:string}[]|null>(null);
+  const links=linksDraft??linksQuery.data?.data.map(({label,url})=>({label,url}))??[];
+  const linkLimit=plan.data?.data.premium?3:1;
   const updateMe = useUpdateMe();
   const updateAvatar = useUpdateAvatar();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -903,7 +954,9 @@ function ProfileSection({ user }: { user: SettingsUser }) {
       await updateMe.mutateAsync({
         name: name.trim(),
         username: normalizedUsername,
+        ...(linksDraft!==null?{links:linksDraft}:{}),
       });
+      if(linksDraft!==null){await linksQuery.refetch();setLinksDraft(null);}
 
       setUsername(normalizedUsername);
       setSuccess(t("Perfil atualizado com sucesso."));
@@ -956,7 +1009,7 @@ function ProfileSection({ user }: { user: SettingsUser }) {
   const normalizedUsername = username.trim().replace(/^@/, '');
   const hasProfileChanges =
     name.trim() !== (user?.name ?? '') ||
-    normalizedUsername !== (user?.username ?? '');
+    normalizedUsername !== (user?.username ?? '')||linksDraft!==null;
 
   return (
     <section className="settings-section">
@@ -1040,6 +1093,9 @@ function ProfileSection({ user }: { user: SettingsUser }) {
             {t(" O e-mail fica protegido e não pode ser alterado por aqui. ")}</span>
         </label>
 
+        {linksQuery.isPending&&<p role="status">{t('Carregando...')}</p>}
+        {linksQuery.isError&&<p role="alert">{t('Não foi possível carregar.')} <button type="button" onClick={()=>linksQuery.refetch()}>{t('Tentar novamente')}</button></p>}
+        {linksQuery.data&&<ProfileLinksFields links={links} onChange={setLinksDraft} limit={linkLimit} disabled={updateMe.isPending}/>}
         {updateMe.isError ? (
           <div className="settings-feedback error">
             {updateMe.error instanceof Error
@@ -1066,10 +1122,10 @@ function ProfileSection({ user }: { user: SettingsUser }) {
 
         <button
           type="submit"
-          disabled={updateMe.isPending || !hasProfileChanges}
+          disabled={updateMe.isPending || !hasProfileChanges || !linksQuery.data || linksDraft!==null&&links.length>linkLimit}
           className="settings-primary-button"
         >
-          {updateMe.isPending ? t("Salvando...") : t("Salvar alterações")}
+          {updateMe.isPending ? t("Salvando...") : t("Salvar perfil")}
         </button>
       </form>
     </section>

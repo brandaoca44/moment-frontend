@@ -1,0 +1,13 @@
+.profile-connections-trigger{border:0;background:transparent;padding:0;text-align:left;font:inherit;border-radius:4px}
+.profile-connections-trigger:hover span{color:var(--amethyst)}
+.profile-connections-trigger:focus-visible{outline:2px solid var(--amethyst);outline-offset:5px}
+.profile-connections{width:min(460px,calc(100vw - 32px));max-height:80dvh;overflow:auto;box-sizing:border-box;padding:22px;border:1px solid var(--border);border-radius:22px;background:var(--surface);color:var(--text);font-family:var(--font-ui);box-shadow:var(--shadow-soft)}
+.profile-connections::backdrop{background:#17132266;backdrop-filter:blur(5px)}
+.profile-connections>header{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:18px}.profile-connections>header h2{margin:0;font-size:20px;font-weight:500;text-transform:capitalize}
+.profile-connections>header button{display:grid;place-items:center;width:32px;height:32px;padding:0;border:1px solid var(--border);border-radius:50%;background:var(--surface-soft);color:var(--text-muted)}
+.profile-connections p{font-size:13px;color:var(--text-muted);line-height:1.6}.profile-connections ul{list-style:none;margin:0;padding:0}
+.profile-connections li{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:12px 0;border-bottom:1px solid var(--border-soft)}
+.profile-connections li>a{display:flex;align-items:center;gap:12px;flex:1;min-width:0;text-decoration:none;color:var(--text)}
+.profile-connections li>a>span:last-child{min-width:0;overflow-wrap:anywhere}.profile-connections li strong{font-size:14px;font-weight:500}.profile-connections li small{display:block;margin-top:3px;font-size:12px;color:var(--text-muted)}
+.connection-avatar{display:grid;place-items:center;flex:0 0 40px;height:40px;border-radius:50%;overflow:hidden;background:var(--amethyst-bg);color:var(--amethyst)}.connection-avatar img{width:100%;height:100%;object-fit:cover}
+.connections-more{display:block;margin:18px auto 0;border:1px solid var(--amethyst-border);border-radius:12px;background:var(--amethyst-bg);color:var(--amethyst);padding:9px 16px;font:inherit;font-size:13px}

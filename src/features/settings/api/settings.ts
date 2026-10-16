@@ -1,6 +1,7 @@
 import { api } from '@/lib/api';
 
 export type UpdateMeInput = {
+  links?:{label:string;url:string}[];
   name?: string;
   username?: string;
 };

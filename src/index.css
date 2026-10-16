@@ -97,6 +97,16 @@ button:disabled {
   cursor: not-allowed;
 }
 
+/* Keep the click affordance consistent across native and accessible controls. */
+:is(button, a[href], summary, select, input[type='button'], input[type='submit'], input[type='reset'], input[type='checkbox'], input[type='radio'], input[type='file'], label[for], [role='button'], [role='link'], [role='tab'], [role='menuitem'], [role='option'], [role='checkbox'], [role='radio'], [role='switch']):not(:disabled):not([aria-disabled='true']),
+:is(button, a[href], summary, label[for], [role='button'], [role='link'], [role='tab'], [role='menuitem'], [role='option'], [role='checkbox'], [role='radio'], [role='switch']):not(:disabled):not([aria-disabled='true']) :is(span, svg, path, img, strong, small) {
+  cursor: pointer !important;
+}
+
+:is(button, select, input, [role='button'], [role='link'], [role='tab'], [role='menuitem'], [role='option'], [role='checkbox'], [role='radio'], [role='switch']):is(:disabled, [aria-disabled='true']) {
+  cursor: not-allowed !important;
+}
+
 input,
 textarea,
 select {

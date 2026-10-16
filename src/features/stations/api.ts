@@ -45,7 +45,7 @@ export type Entry = {
   root: boolean;
   nomad: boolean;
   alias: string | null;
-  author: { id: string; name: string; username: string } | null;
+  author: { id: string; name: string; username: string; staffRole?:string } | null;
   mine: boolean;
   createdAt: string;
   liked: boolean;

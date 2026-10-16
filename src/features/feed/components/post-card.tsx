@@ -1,3 +1,4 @@
+import { StaffBadge } from '@/features/profile/staff-badge';
 import { relativeTime } from '@/i18n';
 import { usePlan, PremiumNotice } from '@/features/plans/use-plan';
 import { getLanguage } from '@/i18n';
@@ -691,7 +692,7 @@ export function PostCard({ post, repliesCount = 0, likesCount, remontsCount, lik
 
               <div className="post-user-info">
 
-                <Link className="post-name" style={{ textDecoration: 'none' }} to={`/profile/${encodeURIComponent(post.user.username)}`}>{post.user.name}</Link>
+                <Link className="post-name" style={{ textDecoration: 'none' }} to={`/profile/${encodeURIComponent(post.user.username)}`}>{post.user.name}</Link><StaffBadge role={post.user.staffRole}/>
 
                 <Link className="post-username" style={{ textDecoration: 'none' }} to={`/profile/${encodeURIComponent(post.user.username)}`}>@{post.user.username}</Link>
 

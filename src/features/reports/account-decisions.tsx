@@ -14,12 +14,13 @@ export function useAccountDecisions(){const me=useMe();return useQuery({queryKey
 function date(value:string){return new Date(value).toLocaleString(getLanguage());}
 export function AccountDecisions(){
   useLanguage();const query=useAccountDecisions();
-  return <section className="account-decisions"><header><ShieldCheck size={19}/><div><h2>{t('Situação da conta')}</h2><p>{t('Consulte decisões de moderação e solicite uma revisão.')}</p></div></header>
+  return <section className="account-decisions"><header><span className="account-decisions-icon"><ShieldCheck size={20}/></span><div><h2>{t('Situação da conta')}</h2><p>{t('Consulte decisões de moderação e solicite uma revisão.')}</p></div></header>
     {query.isPending&&<p role="status">{t('Carregando...')}</p>}{query.isError&&<p role="alert">{t('Não foi possível consultar as decisões.')} <button onClick={()=>query.refetch()}>{t('Tentar novamente')}</button></p>}
     {query.data&&!query.data.data.access.account&&<p className="account-restriction-notice">{t('Seu acesso à rede está restrito. Esta área continua disponível para consultar o motivo e contestar. A restrição independe do plano da conta.')}</p>}
-    {query.data?.data.decisions.length===0&&<p>{t('Nenhuma decisão registrada na sua conta.')}</p>}
+    {query.data?.data.decisions.length===0&&<div className="account-decisions-empty"><ShieldCheck size={22} aria-hidden="true"/><p>{t('Nenhuma decisão registrada na sua conta.')}</p></div>}
     {query.data?.data.decisions.map(row=><DecisionCard key={row.id} row={row}/>)}
-    <p className="account-decisions-note">{t('A revisão não suspende automaticamente a medida. Conteúdos e registros são preservados. Se outra restrição continuar ativa, o acesso pode permanecer limitado.')}</p><Link to="/support">{t('Suporte')}</Link> · <Link to="/privacy">{t('Privacidade')}</Link>
+    {!!query.data?.data.decisions.length&&<p className="account-decisions-note">{t('A revisão não suspende automaticamente a medida. Conteúdos e registros são preservados. Se outra restrição continuar ativa, o acesso pode permanecer limitado.')}</p>}
+    <footer className="account-decisions-footer"><Link to="/support">{t('Suporte')}</Link><Link to="/privacy">{t('Privacidade')}</Link></footer>
   </section>;
 }
 function DecisionCard({row}:{row:Decision}){

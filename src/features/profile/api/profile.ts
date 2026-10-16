@@ -1,6 +1,7 @@
 import { api } from '@/lib/api';
 
 export type ProfileUser = {
+  verification?:{category:string;specialty:string;region:string;reviewedAt:string;expiresAt:string}|null;
   profileLinks?: import('../profile-links').ProfileLink[];
   premium?: boolean;
   premiumTrial?: boolean;
@@ -14,7 +15,7 @@ export type ProfileUser = {
   id: string;
   name: string;
   username: string;
-  avatar: string | null;
+  avatar: string | null; staffRole?:string;
   createdAt: string;
   _count: {
     posts: number;
@@ -39,7 +40,7 @@ export type ProfilePost = {
     id: string;
     name: string;
     username: string;
-    avatar: string | null;
+    avatar: string | null; staffRole?:string;
   };
   _count: {
     replies?: number;

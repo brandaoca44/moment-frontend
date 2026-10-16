@@ -1,3 +1,5 @@
+import { StaffBadge, StaffNotice } from '../staff-badge';
+import { ProfileConnections } from '../profile-connections';
 import { getLanguage } from '@/i18n';
 import { t, useLanguage } from '@/i18n';
 import { useEffect, useMemo, useRef } from 'react';
@@ -690,9 +692,9 @@ export function ProfilePage() {
                   </div>
 
                   <div className="profile-names">
-                    <div className="profile-kicker">{profile.premium ? <PremiumBadge/> : t('Perfil')}</div>
+                    <div className="profile-kicker" style={{display:'flex',gap:8,flexWrap:'wrap',alignItems:'center'}}>{profile.premium ? <PremiumBadge/> : !profile.staffRole||profile.staffRole==='NONE'?t('Perfil'):null}<StaffBadge role={profile.staffRole}/></div>
                     <h1 className="profile-name">{profile.name}</h1>
-                    {profile.premium && profile.profileCategory && <><p className="profile-category" title={t('Informações autodeclaradas, sem verificação de identidade ou profissão.')}>{t(profileCategories[profile.profileCategory as keyof typeof profileCategories]??profile.profileCategory)}{profile.profileSpecialty && ` · ${profile.profileSpecialty}`}{profile.profileRegion && ` · ${profile.profileRegion}`}</p>{profile.profileRegistration && <small className="profile-profession-note">{profile.profileRegistration} · {t('Registro autodeclarado')}</small>}</>}
+                    {(profile.premium||profile.verification) && profile.profileCategory && <><p className="profile-category" title={t(profile.verification?'Atuação conferida pela equipe em fonte oficial. Não representa apoio às publicações.':'Informações autodeclaradas, sem verificação de identidade ou profissão.')}>{t(profileCategories[profile.profileCategory as keyof typeof profileCategories]??profile.profileCategory)}{profile.profileSpecialty && ` · ${profile.profileSpecialty}`}{profile.profileRegion && ` · ${profile.profileRegion}`}</p>{profile.verification&&<small className="profile-profession-note">{t('Atuação verificada')}</small>}</>}
                   </div>
                 </div>
 
@@ -727,7 +729,7 @@ export function ProfilePage() {
                 <ContentPreference targetType="USER" targetId={profile.id} />
               </div>}
               <div className="profile-details-line"><span className="profile-handle">@{profile.username}</span><span>{t(' Desde ')}{formatDate(profile.createdAt)}</span>{profile.emailConfirmedAt && <span title="Confirma apenas o acesso ao e-mail; não verifica identidade.">{t('E-mail confirmado')}</span>}</div>
-              <ProfileLinks links={profile.profileLinks??[]} own={isOwnProfile}/>
+              {isOwnProfile&&<StaffNotice role={profile.staffRole}/>}<ProfileLinks links={profile.profileLinks??[]} own={isOwnProfile}/>
               <div className="profile-meta-row">
                 <div className="profile-counters" aria-label={t("Estatísticas do perfil")}>
                   <div className="profile-counter">
@@ -735,15 +737,8 @@ export function ProfilePage() {
                     <span>{t("momentos")}</span>
                   </div>
 
-                  <div className="profile-counter">
-                    <strong>{formatCount(profile._count.followers)}</strong>
-                    <span>{t("seguidores")}</span>
-                  </div>
-
-                  <div className="profile-counter">
-                    <strong>{formatCount(profile._count.follows)}</strong>
-                    <span>{t("seguindo")}</span>
-                  </div>
+                  <ProfileConnections key={`${profile.id}-followers`} userId={profile.id} kind="followers" count={formatCount(profile._count.followers)}/>
+                  <ProfileConnections key={`${profile.id}-following`} userId={profile.id} kind="following" count={formatCount(profile._count.follows)}/>
                 </div>
 
                 {!isOwnProfile && profile.isFollowedBy && (
