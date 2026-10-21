@@ -1,4 +1,5 @@
 import { DiscoverySidebar } from './discovery-sidebar';
+import { ChatDock, ChatHeaderButton } from '@/features/chat/chat';
 import { ProtectionStatus } from '@/features/profile/protection-mode';
 import { AccountDecisions, useAccountDecisions } from '@/features/reports/account-decisions';
 import { ShoppingBag, BriefcaseBusiness } from 'lucide-react';
@@ -826,6 +827,7 @@ export function AppLayout() {
               </span>
             </Link>
 
+            <ChatHeaderButton/>
             <button
               type="button"
               className="app-mobile-menu-toggle"
@@ -892,6 +894,7 @@ export function AppLayout() {
         <aside className="app-right-column">
           <DiscoverySidebar />
         </aside>
+        <ChatDock/>
       </div>
     </>
   );

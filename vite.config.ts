@@ -7,7 +7,7 @@ export default defineConfig(({ mode }) => {
   const apiOrigin = env.VITE_API_URL && !env.VITE_API_URL.startsWith('/') ? new URL(env.VITE_API_URL).origin : '';
   // Styles remain inline because the current React UI uses inline styles.
   // Scripts cannot run inline or from third-party origins in a production build.
-  const csp = `default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' https: data: blob: ${apiOrigin}; font-src 'self'; connect-src 'self' ${apiOrigin}; object-src 'none'; base-uri 'self'; form-action 'self'`;
+  const csp = `default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' https: data: blob: ${apiOrigin}; media-src 'self' ${apiOrigin}; font-src 'self'; connect-src 'self' ${apiOrigin}; object-src 'none'; base-uri 'self'; form-action 'self'`;
   const security: Plugin = {
     name: 'moment-browser-security', apply: 'build',
     transformIndexHtml: { order: 'post', handler: () => [{ tag: 'meta', attrs: { 'http-equiv': 'Content-Security-Policy', content: csp }, injectTo: 'head-prepend' }] },

@@ -1,4 +1,5 @@
 import { StaffBadge, StaffNotice } from '../staff-badge';
+import { ChatContactButton } from '@/features/chat/chat';
 import { ProfileConnections } from '../profile-connections';
 import { getLanguage } from '@/i18n';
 import { t, useLanguage } from '@/i18n';
@@ -585,6 +586,7 @@ export function ProfilePage() {
         .profile-own-actions .profile-button{box-sizing:border-box;width:100%}
         .profile-own-actions .protection-shortcut{display:flex;justify-content:center;align-items:center;box-sizing:border-box;width:100%;min-height:30px;padding:4px 10px;line-height:1.5;border-radius:10px}
         .profile-own-actions .protection-shortcut:hover{background:var(--amethyst-bg);color:var(--amethyst)}
+        .profile-info-actions{display:flex;flex-direction:column}.profile-info-actions .profile-details-line{order:0}.profile-info-actions .profile-secondary-actions{order:1;margin-top:12px}
         .profile-details-line{display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;margin-top:16px;padding-top:14px;border-top:1px solid var(--border-soft);font-size:12px;line-height:1.5;color:var(--text-muted)}
         .profile-handle{font-weight:500;color:var(--amethyst);overflow-wrap:anywhere}
         .profile-top-row .profile-identity{align-items:center}
@@ -703,7 +705,7 @@ export function ProfilePage() {
                     <div className="profile-own-actions"><Link to="/settings" className="profile-button secondary">
                       {t(" Editar perfil ")}</Link><ProtectionShortcut/></div>
                   ) : (
-                    <button
+                    <div className="profile-visitor-actions"><button
                       type="button"
                       disabled={followMutation.isPending}
                       onClick={() =>
@@ -719,16 +721,18 @@ export function ProfilePage() {
                         : profile.isFollowing
                           ? t("Seguindo")
                           : t("Seguir")}
-                    </button>
+                    </button><ChatContactButton userId={profile.id}/></div>
                   )}
                 </div>
               </div>
 
+              <div className="profile-info-actions">
               {!isOwnProfile && <div className="profile-secondary-actions" aria-label={t("Ações do perfil")}>
                 <ProfileBlock userId={profile.id} name={profile.name} />
                 <ContentPreference targetType="USER" targetId={profile.id} />
               </div>}
               <div className="profile-details-line"><span className="profile-handle">@{profile.username}</span><span>{t(' Desde ')}{formatDate(profile.createdAt)}</span>{profile.emailConfirmedAt && <span title="Confirma apenas o acesso ao e-mail; não verifica identidade.">{t('E-mail confirmado')}</span>}</div>
+              </div>
               {isOwnProfile&&<StaffNotice role={profile.staffRole}/>}<ProfileLinks links={profile.profileLinks??[]} own={isOwnProfile}/>
               <div className="profile-meta-row">
                 <div className="profile-counters" aria-label={t("Estatísticas do perfil")}>

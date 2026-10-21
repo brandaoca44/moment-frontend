@@ -1,4 +1,5 @@
 import { MfaGate } from '@/features/profile/team-security';
+import { ChatReportsAdmin } from '@/features/chat/chat';
 import { VerificationAdmin } from '@/features/profile/verification';
 import { getLanguage } from '@/i18n';
 import { SanctionsAdmin } from './account-decisions';
@@ -70,6 +71,7 @@ function ReportsContent() {
     <JobsReviewShortcut />
     <SanctionsAdmin/>
     <VerificationAdmin/>
+    <ChatReportsAdmin/>
     <RecommendationMetrics />
     <label>{t("Mostrar")}<select value={status} onChange={event => setStatus(event.target.value)}><option value="PENDING">{t("Pendentes")}</option><option value="DISMISSED">{t("Encerradas sem retirada")}</option><option value="HIDDEN">{t("Conteúdo retirado")}</option></select></label>
     <label>{t("Categoria")}<select value={reason} onChange={event => setReason(event.target.value)}><option value="">{t("Todas as categorias")}</option>{Object.entries(reasons).map(([key, label]) => <option key={key} value={key}>{label}</option>)}</select></label>

@@ -3,7 +3,8 @@ const API_URL = (import.meta.env.VITE_API_URL ?? '').replace(/\/$/, '');
 
 export class ApiError extends Error {
   readonly status: number;
-  constructor(message: string, status: number) { super(message); this.name = 'ApiError'; this.status = status; }
+  readonly retryAfterMs: number;
+  constructor(message: string, status: number, retryAfterMs = 60000) { super(message); this.name = 'ApiError'; this.status = status; this.retryAfterMs = retryAfterMs; }
 }
 let refreshing: Promise<'ok' | 'expired' | 'unavailable'> | null = null;
 
@@ -52,6 +53,7 @@ export async function api<T = unknown>(
   url: string,
   options?: RequestInit,
   _retry = true,
+  responseType: 'json' | 'blob' = 'json',
 ): Promise<T> {
   if (!url.startsWith('/') || url.startsWith('//')) throw new Error(t('Erro na requisição'));
   const res = await fetch(`${API_URL}${url}`, {
@@ -70,7 +72,7 @@ export async function api<T = unknown>(
       throw new ApiError(t('Sua sessão expirou. Entre novamente.'), 401);
     }
     if (refreshed !== 'ok') throw new ApiError(t('Não foi possível renovar a sessão. Tente novamente.'), 503);
-    return api<T>(url, options, false);
+    return api<T>(url, options, false, responseType);
   }
 
   if (res.status === 401 && !_retry) {
@@ -81,6 +83,14 @@ export async function api<T = unknown>(
   if (res.status === 204) {
     return null as T;
   }
+
+  if (res.status === 429) {
+    const seconds = Number(res.headers.get('Retry-After'));
+    const delay = Number.isFinite(seconds) && seconds > 0 ? Math.max(60000, seconds * 1000) : 60000;
+    throw new ApiError(t('Muitas consultas em pouco tempo. Aguarde um instante antes de tentar novamente.'), 429, delay);
+  }
+
+  if (res.ok && responseType === 'blob') return await res.blob() as T;
 
   const contentType = res.headers.get('content-type');
 

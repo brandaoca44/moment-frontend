@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import './expandable-image.css';
 
-type Props = { src: string; alt: string; className?: string };
+type Props = { src: string; alt: string; className?: string; onError?: () => void };
 
 function ImageViewer({ src, alt, onClose }: Props & { onClose: () => void }) {
   useLanguage();
@@ -38,7 +38,7 @@ function ImageViewer({ src, alt, onClose }: Props & { onClose: () => void }) {
   );
 }
 
-export function ExpandableImage({ src, alt, className }: Props) {
+export function ExpandableImage({ src, alt, className, onError }: Props) {
   useLanguage();
   const [open, setOpen] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
@@ -49,7 +49,7 @@ export function ExpandableImage({ src, alt, className }: Props) {
 
   return <>
     <button ref={triggerRef} type="button" className="moment-image-trigger" aria-label={t("Ampliar imagem")} aria-haspopup="dialog" onClick={() => setOpen(true)}>
-      <img src={src} alt={alt} className={className} loading="lazy" />
+      <img src={src} alt={alt} className={className} loading="lazy" onError={onError} />
     </button>
     {open && <ImageViewer src={src} alt={alt} onClose={close} />}
   </>;

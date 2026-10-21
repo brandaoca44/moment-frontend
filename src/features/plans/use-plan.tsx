@@ -24,7 +24,7 @@ export function PlanSection() {
     onSuccess: async result => {
       await client.cancelQueries({queryKey:['plans']});
       client.setQueryData(['plans',me.data?.data?.user?.id],{data:result.data});
-      await Promise.all(['plans','vitrine','jobs','profile','premium-profile'].map(key => client.invalidateQueries({queryKey:[key]})));
+      await Promise.all(['plans','vitrine','jobs','profile','premium-profile','chat'].map(key => client.invalidateQueries({queryKey:[key]})));
     },
   });
   return <section className="settings-section plan-section">

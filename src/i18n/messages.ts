@@ -1,4 +1,112 @@
 const rows = `
+Não foi possível carregar o anexo.|Could not load the attachment.|No se pudo cargar el archivo adjunto.
+Fotos|Photos|Fotos
+Vídeos|Videos|Vídeos
+Enviar vídeos é um recurso da conta Premium.|Sending videos is a Premium account feature.|Enviar vídeos es una función de la cuenta Premium.
+Selecione uma foto JPG, PNG ou WebP de até 5 MB.|Select a JPG, PNG or WebP photo up to 5 MB.|Selecciona una foto JPG, PNG o WebP de hasta 5 MB.
+Selecione um vídeo MP4 de até 20 MB e 60 segundos.|Select an MP4 video up to 20 MB and 60 seconds.|Selecciona un vídeo MP4 de hasta 20 MB y 60 segundos.
+Troque mensagens em particular.|Exchange private messages.|Intercambia mensajes en privado.
+Chat|Chat|Chat
+Chat Moment|Chat Moment|Chat Moment
+Abrir chat|Open chat|Abrir chat
+Muitas consultas em pouco tempo. Aguarde um instante antes de tentar novamente.|Too many requests in a short time. Please wait a moment before trying again.|Demasiadas consultas en poco tiempo. Espera un momento antes de volver a intentarlo.
+Abrir conversas|Open conversations|Abrir conversaciones
+Conversar|Message|Conversar
+Conversa|Conversation|Conversación
+Conversas|Conversations|Conversaciones
+Conversas privadas|Private conversations|Conversaciones privadas
+Privacidade das mensagens|Message privacy|Privacidad de los mensajes
+Solicitação de conversa|Conversation request|Solicitud de conversación
+Conversa privada|Private conversation|Conversación privada
+Um espaço para conversar com calma.|A space to chat at your own pace.|Un espacio para conversar con calma.
+Recolher|Collapse|Contraer
+Expandir|Expand|Ampliar
+Buscar uma pessoa|Find a person|Buscar una persona
+Buscar nome ou @usuário|Search name or @username|Buscar nombre o @usuario
+Solicitações|Requests|Solicitudes
+Nenhuma pessoa encontrada.|No people found.|No se encontraron personas.
+Aguardando aceitação|Awaiting acceptance|Esperando aceptación
+Nenhuma solicitação por enquanto.|No requests yet.|No hay solicitudes por ahora.
+Comece uma conversa buscando uma pessoa acima.|Start a conversation by searching for someone above.|Inicia una conversación buscando una persona arriba.
+Solicitações precisam de aceitação. Você decide com quem conversar.|Requests need acceptance. You choose who to chat with.|Las solicitudes requieren aceptación. Tú decides con quién conversar.
+Quem pode me enviar mensagens?|Who can message me?|¿Quién puede enviarme mensajes?
+Pessoas que se seguem mutuamente conversam diretamente. Outros contatos passam por solicitação.|Mutual followers can chat directly. Other contacts send a request.|Las personas que se siguen mutuamente pueden conversar directamente. Los demás contactos envían una solicitud.
+Receber solicitações|Allow requests|Recibir solicitudes
+Somente pessoas que sigo|Only people I follow|Solo personas a las que sigo
+Ninguém|Nobody|Nadie
+Modo Proteção ativo: novas mensagens ficam pausadas.|Protection Mode is on: incoming messages are paused.|Modo Protección activo: los nuevos mensajes están pausados.
+Mensagens são criptografadas no servidor, mas não têm criptografia de ponta a ponta. A equipe acessa o conteúdo de mensagens denunciadas para análise.|Messages are encrypted on the server but are not end-to-end encrypted. The team can review reported messages.|Los mensajes están cifrados en el servidor, pero no tienen cifrado de extremo a extremo. El equipo puede revisar los mensajes denunciados.
+Mensagens ficam disponíveis por 90 dias e anexos por 30 dias.|Messages are available for 90 days and attachments for 30 days.|Los mensajes están disponibles durante 90 días y los archivos adjuntos durante 30 días.
+Opções da conversa|Conversation options|Opciones de la conversación
+Bloquear este perfil e impedir novas mensagens?|Block this profile and stop new messages?|¿Bloquear este perfil e impedir nuevos mensajes?
+Bloquear perfil|Block profile|Bloquear perfil
+Mensagens|Messages|Mensajes
+Carregar anteriores|Load earlier messages|Cargar mensajes anteriores
+Mensagem retirada pela moderação.|Message removed by moderation.|Mensaje retirado por moderación.
+Diga olá para começar com calma.|Say hello to get started.|Di hola para empezar con calma.
+Aceite a solicitação para responder e receber anexos.|Accept the request to reply and receive attachments.|Acepta la solicitud para responder y recibir archivos adjuntos.
+Envie uma apresentação curta. Fotos e outras mensagens são liberadas após a aceitação.|Send a short introduction. Photos and more messages become available after acceptance.|Envía una presentación breve. Las fotos y más mensajes estarán disponibles tras la aceptación.
+Aceitar conversa|Accept conversation|Aceptar conversación
+Recusar|Decline|Rechazar
+Denúncia enviada. Você também pode bloquear este perfil.|Report sent. You can also block this profile.|Denuncia enviada. También puedes bloquear este perfil.
+Sua mensagem|Your message|Tu mensaje
+Escreva uma mensagem…|Write a message…|Escribe un mensaje…
+Remover arquivo|Remove file|Eliminar archivo
+Foto até 5 MB ou vídeo MP4 até 20 MB e 60 segundos.|Photo up to 5 MB or MP4 video up to 20 MB and 60 seconds.|Foto de hasta 5 MB o vídeo MP4 de hasta 20 MB y 60 segundos.
+Foto JPG, PNG ou WebP até 5 MB. Vídeos são exclusivos do Premium.|JPG, PNG or WebP photo up to 5 MB. Sending videos is exclusive to Premium.|Foto JPG, PNG o WebP de hasta 5 MB. Enviar vídeos es exclusivo de Premium.
+Anexar foto ou vídeo|Attach photo or video|Adjuntar foto o vídeo
+Enviar mensagem|Send message|Enviar mensaje
+Anexo indisponível ou expirado.|Attachment unavailable or expired.|Archivo adjunto no disponible o caducado.
+Foto enviada na conversa|Photo sent in the conversation|Foto enviada en la conversación
+Denunciar mensagem|Report message|Denunciar mensaje
+Somente a mensagem denunciada e seu relato serão enviados à equipe para análise.|Only the reported message and your explanation are sent to the team for review.|Solo el mensaje denunciado y tu relato se envían al equipo para su revisión.
+Conte o que aconteceu, sem incluir dados sensíveis.|Explain what happened without including sensitive information.|Cuenta lo que pasó sin incluir datos sensibles.
+Enviar denúncia|Send report|Enviar denuncia
+Denúncias de mensagens privadas|Private message reports|Denuncias de mensajes privados
+A equipe recebe somente mensagens denunciadas, sem acesso geral às conversas.|The team receives only reported messages, without general access to conversations.|El equipo recibe solo mensajes denunciados, sin acceso general a las conversaciones.
+Nenhuma denúncia pendente.|No pending reports.|No hay denuncias pendientes.
+Justificativa da revisão|Review reason|Justificación de la revisión
+Retirar mensagem|Remove message|Retirar mensaje
+Encerrar sem retirada|Close without removal|Cerrar sin retirada
+Ver anexo denunciado|View reported attachment|Ver archivo adjunto denunciado
+Anexo da mensagem denunciada|Reported message attachment|Archivo adjunto del mensaje denunciado
+Privado entre participantes, sem criptografia de ponta a ponta.|Private between participants, without end-to-end encryption.|Privado entre participantes, sin cifrado de extremo a extremo.
+Também pausa novas mensagens recebidas no chat privado enquanto a proteção estiver ativa.|Also pauses incoming private chat messages while protection is active.|También pausa los nuevos mensajes recibidos en el chat privado mientras la protección está activa.
+O chat ainda não foi configurado no servidor.|Chat has not been configured on the server yet.|El chat aún no está configurado en el servidor.
+Configure o armazenamento privado do chat.|Configure private chat storage.|Configura el almacenamiento privado del chat.
+O chat exige um bucket separado e privado.|Chat requires a separate private bucket.|El chat requiere un bucket privado separado.
+Use um vídeo MP4 válido, com até 60 segundos.|Use a valid MP4 video up to 60 seconds.|Usa un vídeo MP4 válido de hasta 60 segundos.
+Vídeo inválido.|Invalid video.|Vídeo no válido.
+O arquivo deve ter até 20 MB.|The file must be up to 20 MB.|El archivo debe tener hasta 20 MB.
+Enviar vídeos é exclusivo do Premium.|Sending videos is exclusive to Premium.|Enviar vídeos es exclusivo de Premium.
+Use foto JPG, PNG ou WebP de até 5 MB.|Use a JPG, PNG or WebP photo up to 5 MB.|Usa una foto JPG, PNG o WebP de hasta 5 MB.
+Não foi possível processar a foto.|Could not process the photo.|No se pudo procesar la foto.
+Anexo indisponível.|Attachment unavailable.|Archivo adjunto no disponible.
+Conversa indisponível.|Conversation unavailable.|Conversación no disponible.
+Preferência de mensagens atualizada.|Message preference updated.|Preferencia de mensajes actualizada.
+Escolha outro perfil para conversar.|Choose another profile to chat with.|Elige otro perfil para conversar.
+Este perfil não está recebendo mensagens agora.|This profile is not receiving messages right now.|Este perfil no está recibiendo mensajes ahora.
+Este perfil recebe mensagens apenas de pessoas que segue.|This profile only receives messages from people they follow.|Este perfil solo recibe mensajes de personas a las que sigue.
+Você atingiu o limite de novas conversas. Tente em outro dia.|You reached the new conversation limit. Try another day.|Has alcanzado el límite de nuevas conversaciones. Inténtalo otro día.
+Página inválida.|Invalid page.|Página no válida.
+Esta solicitação não está disponível.|This request is unavailable.|Esta solicitud no está disponible.
+Conversa aceita.|Conversation accepted.|Conversación aceptada.
+Solicitação recusada.|Request declined.|Solicitud rechazada.
+Escreva uma mensagem ou escolha uma foto.|Write a message or choose a photo.|Escribe un mensaje o elige una foto.
+Esta mensagem não é permitida pelas regras do Moment.|This message is not allowed under Moment's rules.|Este mensaje no está permitido por las reglas de Moment.
+Aguarde a aceitação. Envie apenas uma apresentação de até 500 caracteres, sem anexos.|Wait for acceptance. Send only one introduction up to 500 characters without attachments.|Espera la aceptación. Envía solo una presentación de hasta 500 caracteres, sin archivos adjuntos.
+Links só podem ser enviados depois de aceitar a conversa.|Links can only be sent after the conversation is accepted.|Los enlaces solo se pueden enviar después de aceptar la conversación.
+Aguarde um pouco antes de enviar novas mensagens.|Wait a moment before sending more messages.|Espera un momento antes de enviar más mensajes.
+Mensagem indisponível para denúncia.|Message unavailable for reporting.|Mensaje no disponible para denunciar.
+Esta mensagem já foi denunciada.|This message has already been reported.|Este mensaje ya fue denunciado.
+Denúncia enviada para análise. A equipe recebe apenas a mensagem denunciada.|Report sent for review. The team receives only the reported message.|Denuncia enviada para revisión. El equipo recibe solo el mensaje denunciado.
+Outro integrante da equipe deve revisar esta denúncia.|Another team member must review this report.|Otro miembro del equipo debe revisar esta denuncia.
+Denúncia já analisada.|Report already reviewed.|Denuncia ya revisada.
+Denúncia analisada.|Report reviewed.|Denuncia revisada.
+Formato de arquivo não permitido.|File format not allowed.|Formato de archivo no permitido.
+Mensagens privadas|Private messages|Mensajes privados
+Conversas são restritas aos participantes e protegidas por criptografia no servidor, sem criptografia de ponta a ponta. Mensagens e anexos não são enviados automaticamente a serviços externos de IA neste fluxo. Ao denunciar, uma cópia da mensagem e do anexo é disponibilizada à equipe autorizada, sem abrir o restante da conversa.|Conversations are restricted to participants and encrypted on the server, without end-to-end encryption. Messages and attachments are not automatically sent to external AI services in this flow. When reported, a copy of the message and attachment is made available to authorized staff without exposing the rest of the conversation.|Las conversaciones están restringidas a los participantes y cifradas en el servidor, sin cifrado de extremo a extremo. Los mensajes y archivos adjuntos no se envían automáticamente a servicios externos de IA en este flujo. Al denunciar, una copia del mensaje y del archivo adjunto queda disponible para el equipo autorizado, sin mostrar el resto de la conversación.
+Mensagens ficam disponíveis por 90 dias; anexos por 30 dias. A limpeza é periódica e pode depender de processamento em lotes. Denúncias pendentes são preservadas para análise; após a decisão, suas cópias ficam por 180 dias. Arquivos órfãos após exclusão de conta são removidos pela rotina de armazenamento, com margem de 24 horas; backups seguem seu ciclo de retenção.|Messages remain available for 90 days; attachments for 30 days. Cleanup is periodic and may depend on batch processing. Pending reports are preserved for review; after a decision, copies remain for 180 days. Orphan files after account deletion are removed by storage cleanup with a 24-hour margin; backups follow their retention cycle.|Los mensajes están disponibles durante 90 días; los archivos adjuntos durante 30 días. La limpieza es periódica y puede depender de lotes. Las denuncias pendientes se conservan para revisión; tras la decisión, las copias permanecen 180 días. Los archivos huérfanos tras eliminar la cuenta se eliminan mediante la rutina de almacenamiento con un margen de 24 horas; las copias de seguridad siguen su ciclo de retención.
 Opções de segurança|Security options|Opciones de seguridad
 Autenticador|Authenticator|Autenticador
 E-mail da conta|Account email|Correo de la cuenta
