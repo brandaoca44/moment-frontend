@@ -23,11 +23,12 @@ function ThemePreview({ item }: { item: Theme }) {
   );
 }
 
-export function ThemeSelector({ standalone = false }: { standalone?: boolean }) {
+export function ThemeSelector({ standalone = false, group = 'all' }: { standalone?: boolean; group?: 'all' | 'free' | 'premium' }) {
   useLanguage();
   const { themeId, setTheme } = useTheme();
   const access = usePlan().data?.data;
   const sync = useProfileAppearance();
+  const visibleGroups = group === 'all' ? [false, true] : [group === 'premium'];
 
   const inner = (
     <>
@@ -222,7 +223,7 @@ export function ThemeSelector({ standalone = false }: { standalone?: boolean }) 
 
       {standalone ? <p className="theme-selector-title">{t("Mude o tema")}</p> : null}
 
-      <div className="appearance-groups">{[false, true].map(premium => <section className="appearance-group" key={String(premium)}><header className="appearance-group-heading"><h3>{t(premium ? 'Temas Premium' : 'Temas gratuitos')}</h3><span className={premium ? 'appearance-badge premium' : 'appearance-badge'}>{t(premium ? 'Exclusivo Premium' : 'Incluso no Free')}</span></header><div className="theme-selector">
+      <div className="appearance-groups">{visibleGroups.map(premium => <section className="appearance-group" key={String(premium)}><header className="appearance-group-heading"><h3>{t(premium ? 'Temas Premium' : 'Temas gratuitos')}</h3><span className={premium ? 'appearance-badge premium' : 'appearance-badge'}>{t(premium ? 'Exclusivo Premium' : 'Incluso no Free')}</span></header><div className="theme-selector">
         {Object.values(themes).filter(item=>premiumThemes.has(item.id)===premium).map((item) => {
           const active = themeId === item.id;
 

@@ -2,7 +2,7 @@ import { DiscoverySidebar } from './discovery-sidebar';
 import { ChatDock, ChatHeaderButton } from '@/features/chat/chat';
 import { ProtectionStatus } from '@/features/profile/protection-mode';
 import { AccountDecisions, useAccountDecisions } from '@/features/reports/account-decisions';
-import { ShoppingBag, BriefcaseBusiness } from 'lucide-react';
+import { ShoppingBag, BriefcaseBusiness, MessagesSquare } from 'lucide-react';
 import { t, useLanguage } from '@/i18n';
 import {
   Link,
@@ -164,7 +164,7 @@ const navItems = [
   {
     to: '/communities',
     get label() { return t("Estações"); },
-    icon: <IconUser />,
+    icon: <MessagesSquare size={20} aria-hidden="true" />,
   },
   {
     to: '/vitrine',

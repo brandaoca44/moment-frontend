@@ -14,7 +14,7 @@ export function FontSync() {
   useEffect(()=>{const key = access?.premium && saved in fonts ? saved as keyof typeof fonts : 'default'; document.documentElement.style.setProperty('--font-ui',fonts[key]);},[access?.premium,saved]);
   return null;
 }
-export function FontSelector() {
+export function FontSelector({ group = 'all' }: { group?: 'all' | 'free' | 'premium' }) {
   useLanguage();
   const access = usePlan().data?.data;
   const sync = useProfileAppearance();
@@ -26,9 +26,10 @@ export function FontSelector() {
     { id: 'source', name: 'Source Sans 3', description: 'Sóbria e confortável para textos longos.' },
   ] as const;
   const effective = access?.premium ? selected : 'default';
+  const visibleGroups = group === 'all' ? [false, true] : [group === 'premium'];
   return <section className="font-selector" aria-label={t('Fonte de leitura')}>
     <p className="font-selector-intro">{t('Escolha a fonte para os textos e menus do Moment.')}</p>
-    <div className="appearance-groups">{[false, true].map(premium => <section className="appearance-group" key={String(premium)}>
+    <div className="appearance-groups">{visibleGroups.map(premium => <section className="appearance-group" key={String(premium)}>
       <header className="appearance-group-heading"><h3>{t(premium ? 'Fontes Premium' : 'Fonte padrão')}</h3><span className={premium ? 'appearance-badge premium' : 'appearance-badge'}>{t(premium ? 'Exclusivo Premium' : 'Incluso no Free')}</span></header>
       <div className="font-options">{options.filter(option => (option.id !== 'default') === premium).map(option => <button type="button" key={option.id} className={`font-option${premium ? '' : ' font-option-default'}`} aria-pressed={effective === option.id} disabled={(premium && !access?.premium) || sync.isPending} onClick={() => {
         setSelected(option.id);localStorage.setItem('moment-font', option.id);window.dispatchEvent(new Event('moment-font-change'));

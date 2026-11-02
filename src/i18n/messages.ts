@@ -1269,6 +1269,12 @@ Segurança|Security|Seguridad
 Segurança da conta|Account security|Seguridad de la cuenta
 Bloqueios e conteúdo|Blocks and content|Bloqueos y contenido
 Conta|Account|Cuenta
+Perfil e preferências|Profile and preferences|Perfil y preferencias
+Segurança e privacidade|Security and privacy|Seguridad y privacidad
+Conta e plano|Account and plan|Cuenta y plan
+Opções de aparência|Appearance options|Opciones de apariencia
+Temas e fontes gratuitos|Free themes and fonts|Temas y fuentes gratuitos
+Temas e fontes Premium|Premium themes and fonts|Temas y fuentes Premium
 Ações sensíveis|Sensitive actions|Acciones sensibles
 Ajuste sua conta com calma. O Moment foi feito para parecer leve, seguro e confortável.|Make yourself at home. Moment is designed to feel calm, safe and comfortable.|Ajusta tu cuenta con calma. Moment está diseñado para ser ligero, seguro y cómodo.
 Atualize sua presença no Moment com calma. Nome, username e foto devem parecer seus.|Make your Moment profile yours with your name, username and photo.|Personaliza tu perfil de Moment con tu nombre, usuario y foto.

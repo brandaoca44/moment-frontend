@@ -122,6 +122,12 @@ const menuItems: Array<{ id: Section; label: string; description: string; icon: 
   },
 ];
 
+const menuGroups: Array<{ id: string; label: string; sections: Section[] }> = [
+  { id: 'preferences', label: 'Perfil e preferências', sections: ['profile', 'appearance', 'language'] },
+  { id: 'protection', label: 'Segurança e privacidade', sections: ['password', 'privacy'] },
+  { id: 'account', label: 'Conta e plano', sections: ['plan', 'account-status', 'danger'] },
+];
+
 export function SettingsPage() {
   useLanguage();
   const { data: meData } = useMe();
@@ -262,6 +268,20 @@ export function SettingsPage() {
           box-shadow: var(--shadow-sm);
           backdrop-filter: blur(22px);
           -webkit-backdrop-filter: blur(22px);
+        }
+
+        .settings-menu-group + .settings-menu-group {
+          margin-top: 10px;
+          padding-top: 10px;
+          border-top: 1px solid var(--border-soft);
+        }
+
+        .settings-menu-heading {
+          margin: 0;
+          padding: 5px 12px 7px;
+          color: var(--text-muted);
+          font: 500 11px/1.5 var(--font-ui);
+          letter-spacing: .02em;
         }
 
         .settings-menu-item {
@@ -739,6 +759,10 @@ export function SettingsPage() {
 
           .settings-menu {
             position: static;
+            display: block;
+          }
+
+          .settings-menu-group-items {
             display: grid;
             grid-template-columns: repeat(2, minmax(0, 1fr));
           }
@@ -757,7 +781,7 @@ export function SettingsPage() {
             flex-direction: column;
           }
 
-          .settings-menu {
+          .settings-menu-group-items {
             grid-template-columns: 1fr;
           }
 
@@ -833,11 +857,16 @@ export function SettingsPage() {
 
         <div className="settings-layout">
           <aside className="settings-menu">
-            {menuItems.map((item) => (
+            {menuGroups.map((group) => (
+              <section key={group.id} className="settings-menu-group" aria-labelledby={`settings-group-${group.id}`}>
+                <h2 id={`settings-group-${group.id}`} className="settings-menu-heading">{t(group.label)}</h2>
+                <div className="settings-menu-group-items">
+            {menuItems.filter((item) => group.sections.includes(item.id)).map((item) => (
               <button
                 key={item.id}
                 type="button"
                 onClick={() => setActiveSection(item.id)}
+                aria-current={activeSection === item.id ? 'page' : undefined}
                 className={[
                   'settings-menu-item',
                   activeSection === item.id ? 'active' : '',
@@ -850,6 +879,9 @@ export function SettingsPage() {
                   <span>{item.description}</span>
                 </span>
               </button>
+            ))}
+                </div>
+              </section>
             ))}
           </aside>
 
@@ -900,16 +932,35 @@ function PrivacySection(){
 }
 function AppearanceSection() {
   useLanguage();
+  const [params, setParams] = useSearchParams();
+  const selected = params.get('appearanceTab') === 'premium' ? 'premium' : 'free';
+  const options = [
+    { id: 'free', label: 'Temas e fontes gratuitos' },
+    { id: 'premium', label: 'Temas e fontes Premium' },
+  ];
   return (
+    <div className="settings-profile-workspace settings-appearance-workspace">
+      <nav className="settings-profile-tabs" aria-label={t('Opções de aparência')}>
+        {options.map(option => (
+          <button type="button" key={option.id} aria-pressed={selected === option.id} onClick={() => setParams(previous => {
+            const next = new URLSearchParams(previous);
+            next.set('appearanceTab', option.id);
+            return next;
+          })}>
+            {t(option.label)}
+          </button>
+        ))}
+      </nav>
     <section className="settings-section">
       <div className="settings-section-header">
         <h2 className="settings-section-title">{t("Aparência")}</h2>
         <p className="settings-section-subtitle">
           {t(" Escolha o tema que combina com o seu momento. Cada opção mantém a leitura confortável. ")}</p>
       </div>
-      <ThemeSelector />
-      <FontSelector />
+      <ThemeSelector group={selected} />
+      <FontSelector group={selected} />
     </section>
+    </div>
   );
 }
 
